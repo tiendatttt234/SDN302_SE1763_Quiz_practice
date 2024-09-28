@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import PrivateRoute from './components/core/PrivateRoute';
 import UserDefaultPage from './components/common/layout/user-default-layout';
@@ -19,6 +20,9 @@ function App() {
           <Route path='/user/*' element={<UserDefaultPage/>} />
           {/* <PrivateRoute element={<DefaultLayoutAdmin />} allowedRoles={['admin']} /> */}
           <Route path="/no-access" element={<NoAccessPage />} />
+            <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
       </Routes>
     </div>
     </BrowserRouter>
