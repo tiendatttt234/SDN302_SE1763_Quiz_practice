@@ -6,7 +6,7 @@
   }
   
   .quiz-content.without-sidebar {
-    margin-left: 0; /* Full width when sidebar is hidden */
+    margin-left: 0;
   }
   
   .toggle-button {
