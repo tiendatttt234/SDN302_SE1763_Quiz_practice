@@ -1,0 +1,58 @@
+.side-nav {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .quiz-content.without-sidebar {
+    margin-left: 0; /* Full width when sidebar is hidden */
+  }
+  
+  .toggle-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+  }
+  
+  .toggle-button button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  
+  .toggle-button button:hover {
+    background-color: #0056b3;
+  }
+  
+  .quiz-content {
+    width: 300px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;     
+    flex-direction: column;
+
+  }
+  .card {
+    width: 60%;               /* Adjust width for responsiveness */
+    max-width: 800px;
+    min-width: 300px;
+    margin: 20px 0;           /* Margin between each question */
+  }
+  
+  
+  
+  .list-group-item input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+  /* Center the Submit button */
+  .text-center {
+    margin-top: 20px;
+  }
+
+  
