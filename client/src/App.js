@@ -13,6 +13,7 @@ import NoAccessPage from './components/common/pages/NoAccessPage';
 import HomePage from './components/authen/Homepage';
 import Login from './components/authen/Login/Login';
 import Register from './components/authen/Register/Register';
+import Flashcard from './components/user/FlashCard';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/managerdb/viewques" element={<ViewQuestionDetail />} />
           <Route path="/managerdb/viewques/:id" element={<ViewQuestionDetail />} />
           <Route path="/managerdb/manaques" element={<ManageQuestion />} />
+          <Route path='/flash' element={<Flashcard/>}/>
           
       </Routes>
     </div>
