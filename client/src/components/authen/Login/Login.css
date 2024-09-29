@@ -1,0 +1,110 @@
+
+
+.login-left {
+  background-color: #d9a7e0;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+  padding: 20px;
+}
+
+.login-left img {
+  width: 80%;
+  max-width: 400px;
+}
+
+.login-left h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.login-right {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
+
+.login-container {
+  width: 80%;
+  max-width: 400px;
+}
+
+.login-container h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.login-container h2 span {
+  cursor: pointer;
+}
+
+.login-container h2 span.login-active {
+  color: #333;
+  border-bottom: 2px solid #ff69b4;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.login-container button.login-google {
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.login-container button.login-facebook {
+  background-color: #3b5998;
+  color: #fff;
+}
+
+.login-container button.login-apple {
+  background-color: #000;
+  color: #fff;
+}
+
+.login-container .login-divider {
+  text-align: center;
+  margin: 20px 0;
+  color: #aaa;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.login-container .login-forgot-password {
+  text-align: right;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.login-container .login-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.login-container .login-signup-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #007bff;
+  cursor: pointer;
+}
