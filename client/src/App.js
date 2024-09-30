@@ -22,7 +22,7 @@ function App() {
   return (
     <BrowserRouter>
     <div className="App">
-      <Header/>
+      {/* <Header/> */}
       <Routes>
           {/* <Route path='/*' element={<AuthRoutes />} />
           <Route path='*' element={<PageNotFound />} />

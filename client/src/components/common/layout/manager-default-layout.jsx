@@ -17,7 +17,7 @@ export default function ManagerDefaultPage() {
         <Route path="/viewques/:id" element={<ViewQuestionDetail />}/>
         <Route path="/manaques" element={<ManageQuestion />} />
         <Route path='/updatequestion/:id' element={<UpdateQuestion/>} />
-        <Route path="/manageBlog/" element={<ManageBlog />} />
+        <Route path="/manageBlog" element={<ManageBlog />} />
         <Route path="/manageBlog/add-blog" element={<ManageCreateBlog />} />
         <Route
             path="/manageBlog/edit-blog/:id"
