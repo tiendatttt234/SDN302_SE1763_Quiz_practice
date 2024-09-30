@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
 import "./QuizAttempt.css";
 import { useNavigate } from "react-router-dom";
+import Flashcard from "./FlashCard";
 
 export default function QuizWithNavigation() {
   const quizData = [
