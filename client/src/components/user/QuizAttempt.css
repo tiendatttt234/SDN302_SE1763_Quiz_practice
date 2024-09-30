@@ -37,12 +37,7 @@
     flex-direction: column;
 
   }
-  .card {
-    width: 60%;               /* Adjust width for responsiveness */
-    max-width: 800px;
-    min-width: 300px;
-    margin: 20px 0;           /* Margin between each question */
-  }
+
   
   
   

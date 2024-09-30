@@ -9,7 +9,6 @@ export default function UserDefaultPage(){
             {/* <Header/> */}
             <div className = 'container-fluid' >
                 <div className = {`container-fluid `}>
-                    <Link to='/user/quiz/attempt'>Click here</Link>
                     <Routes>
                         <Route path='/quiz/attempt' element={<QuizAttempt/>}/>
                         <Route path='/quiz-result' element={<QuizResults/>}/>

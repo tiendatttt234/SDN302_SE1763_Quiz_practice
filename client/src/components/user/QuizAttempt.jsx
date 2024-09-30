@@ -2,9 +2,18 @@ import React, { useState, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
 import "./QuizAttempt.css";
 import { useNavigate } from "react-router-dom";
-import Flashcard from "./FlashCard";
+
 
 export default function QuizWithNavigation() {
+  const style ={
+    
+      card: {
+        width: "60%",              
+        maxWidth: "800px",
+        minWidth: "300px",
+        margin: "20px 0 "          
+      }
+  }
   const quizData = [
     {
       question:
@@ -125,6 +134,7 @@ export default function QuizWithNavigation() {
             ref={(el) => (questionRefs.current[index] = el)}
             id={`question-${index}`}
             className="mb-3"
+            style={style.card}
           >
             <Card.Header>
               <h5>

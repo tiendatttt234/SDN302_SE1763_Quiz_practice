@@ -18,6 +18,7 @@ import AddQuestion from './components/manager/question/question';
 import ViewQuestionDetail from './components/manager/question/viewQuesDetail';
 import ManageQuestion from './components/manager/question/viewQues';
 import Flashcard from './components/user/FlashCard';
+import ManagerDefaultPage from "./components/common/layout/manager-default-layout";
 
 function App() {
   return (
@@ -36,19 +37,21 @@ function App() {
           <Route path='/user/*' element={<UserDefaultPage/>} />
           {/* <PrivateRoute element={<DefaultLayoutAdmin />} allowedRoles={['admin']} /> */}
           <Route path="/no-access" element={<NoAccessPage />} />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/managerdb" element={<ManagerDashboard />} />
-          <Route path="/managerdb/question" element={<AddQuestion />} />
-          <Route path="/managerdb/viewques" element={<ViewQuestionDetail />} />
-          <Route path="/managerdb/viewques/:id" element={<ViewQuestionDetail />} />
-          <Route path="/managerdb/manaques" element={<ManageQuestion />} />
-          <Route path='/flash' element={<Flashcard/>}/>
-          
+
+
           <Route path="/resetpassword" element={<ForgotPassword />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/mycourse" element={<MyCourse />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+
+          <Route path="/managerdb/*" element={<ManagerDefaultPage/>}/>
+
+          <Route path='/flash' element={<Flashcard/>}/> 
+
+
         
 
       </Routes>
