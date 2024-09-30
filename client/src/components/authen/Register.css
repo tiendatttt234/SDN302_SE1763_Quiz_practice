@@ -1,5 +1,4 @@
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
 }
 
@@ -57,67 +56,15 @@ body {
   border-bottom: 2px solid #6a1b9a;
 }
 
-.register-social-login {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.register-social-login button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
-  cursor: pointer;
-  font-size: 1em;
-}
-
-.register-social-login button i {
-  margin-right: 10px;
-}
-
-.register-email-login {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
 .register-email-login input {
-  padding: 10px;
-  border: 1px solid #ccc;
+  width: 100%;
+  padding: 10px 0;
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1em;
-}
-
-.register-forgot-password {
-  text-align: right;
-  font-size: 0.9em;
-  color: #6a1b9a;
-  cursor: pointer;
 }
 
 .register-login-button {
   background-color: #3b82f6;
   color: #fff;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  margin-bottom: 20px;
-}
-
-.register-signup-link {
-  text-align: center;
-  font-size: 0.9em;
-}
-
-.register-signup-link a {
-  color: #6a1b9a;
-  text-decoration: none;
 }

@@ -15,16 +15,15 @@ const Login = () => {
         <h1>Học hiệu quả mà thật thoải mái.</h1>
         <img
           alt="Colorful notebooks and white headphones"
-          src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-RcpoXHkzChYnDbFAyeQ8tamr/user-ehrvabJ3DufsCu8YJ7PqY5gl/img-BZrjwp80ZO6JZujEsVM053Xs.png?st=2024-09-27T13%3A19%3A45Z&se=2024-09-27T15%3A19%3A45Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-09-26T23%3A09%3A32Z&ske=2024-09-27T23%3A09%3A32Z&sks=b&skv=2024-08-04&sig=Wbq6WUsrakCwUa1ou99oidbdt3XMslCENme86vzGag0%3D"
-          width="400"
-          height="400"
+          height="00"
+          src="https://th.bing.com/th/id/OIG4._8czaS_hxnpxvorG7z_D?w=1024&h=1024&rs=1&pid=ImgDetMain"
+          width="800"
         />
-        <div>Quizlet</div>
       </div>
       <div className="login-right">
         <div className="login-container">
           <h2>
-            <Link to="/Register">
+            <Link to="/Register" style={{ textDecoration: "none" }}>
               <span
                 className={isLogin ? "" : "login-active"}
                 onClick={() => setIsLogin(false)}
@@ -35,6 +34,7 @@ const Login = () => {
             <span
               className={isLogin ? "login-active" : ""}
               onClick={() => setIsLogin(true)}
+              style={{ borderBottom: "2px solid #6a1b9a" }}
             >
               Đăng nhập
             </span>
@@ -48,19 +48,35 @@ const Login = () => {
           <button className="login-apple">
             <i className="fab fa-apple"></i> Đăng nhập bằng Apple
           </button>
-          <div className="login-divider">hoặc email</div>
+          <div className="login-divider">Hoặc tài khoản</div>
           <input
             type="email"
             placeholder="Nhập địa chỉ email hoặc tên người dùng của bạn"
           />
           <input type="password" placeholder="Nhập mật khẩu của bạn" />
-          <div className="login-forgot-password">Quên mật khẩu</div>
+          <Link to={"/resetpassword"} style={{ textDecoration: "none" }}>
+            <div className="login-forgot-password">Quên mật khẩu</div>
+          </Link>
+
           <button className="login-button">Đăng nhập</button>
-          <div className="login-signup-link">
-            {isLogin
-              ? "Mới sử dụng Quizlet? Tạo tài khoản"
-              : "Đăng nhập bằng liên kết nhanh"}
-          </div>
+          <Link to={"/register"} style={{ textDecoration: "none" }}>
+            <button
+              className="register-login-button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                padding: "10px",
+                margin: "10px 0",
+                backgroundColor: "#4CAF50",
+                color: "white",
+                border: "none",
+              }}
+            >
+              Bạn chưa có tài khoản?Đăng Ký
+            </button>
+          </Link>
         </div>
       </div>
     </div>
