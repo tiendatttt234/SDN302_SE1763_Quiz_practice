@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -6,158 +6,211 @@ import {
   Book,
   Clipboard2Check,
 } from "react-bootstrap-icons";
-import "./Header.css";
+import { Dropdown } from "react-bootstrap";
 
 const Header = () => {
-  const [isToolDropdownOpen, setIsToolDropdownOpen] = useState(false);
-  const [isSubjectDropdownOpen, setIsSubjectDropdownOpen] = useState(false);
-  const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
-
-  const toggleToolDropdown = () => {
-    setIsToolDropdownOpen(!isToolDropdownOpen);
-  };
-
-  const toggleSubjectDropdown = () => {
-    setIsSubjectDropdownOpen(!isSubjectDropdownOpen);
-  };
-
-  const toggleAvatarDropdown = () => {
-    setIsAvatarDropdownOpen(!isAvatarDropdownOpen);
-  };
-
   return (
     <header
       style={{
-        position: "fixed",
+        position: "sticky",
         top: 0,
         left: 0,
         right: 0,
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "#fff",
+        zIndex: 1000,
       }}
     >
-      <div className="container">
+      <div
+        className="container"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "10px 20px",
+        }}
+      >
+        {/* Logo */}
         <Link to="/" style={{ textDecoration: "none" }}>
-          <h1>Quizlet</h1>
+          <h1 style={{ margin: 0 }}>Quizlet</h1>
         </Link>
 
-        <nav>
-          <ul>
-            <li>
-              <a href="#" onClick={toggleToolDropdown}>
-                Công cụ học
-              </a>
-              {isToolDropdownOpen && (
-                <ul className="dropdown">
-                  <li>
-                    <CardChecklist
-                      style={{
-                        color: "black",
-                        fontSize: "25px",
-                        marginRight: "8px",
-                      }}
-                    />
-                    <a href="#">Thẻ ghi nhớ</a>
-                  </li>
-                  <li>
-                    <Book
-                      style={{
-                        color: "black",
-                        fontSize: "25px",
-                        marginRight: "8px",
-                      }}
-                    />
-                    <a href="#">Học</a>
-                  </li>
-                  <li>
-                    <Clipboard2Check
-                      style={{
-                        color: "black",
-                        fontSize: "25px",
-                        marginRight: "8px",
-                      }}
-                    />
-                    <a href="#">Kiểm tra</a>
-                  </li>
-                </ul>
-              )}
-            </li>
-            <li>
-              <a href="#" onClick={toggleSubjectDropdown}>
-                Chủ đề
-              </a>
-              {isSubjectDropdownOpen && (
-                <ul className="dropdown">
-                  <li>
-                    <a href="#">Toán học</a>
-                  </li>
-                  <li>
-                    <a href="#">Văn học</a>
-                  </li>
-                  <li>
-                    <a href="#">Lịch sử</a>
-                  </li>
-                </ul>
-              )}
-            </li>
-          </ul>
-        </nav>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "20px",
+          }}
+        >
+          {/* Dropdown for Công cụ học */}
+          <Dropdown>
+            <Dropdown.Toggle variant="light" id="dropdown-basic">
+              Công cụ học
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Book
+                  style={{
+                    color: "black",
+                    fontSize: "25px",
+                    marginRight: "8px",
+                  }}
+                />
+                Học
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <CardChecklist
+                  style={{
+                    color: "black",
+                    fontSize: "25px",
+                    marginRight: "8px",
+                  }}
+                />
+                Thẻ ghi nhớ
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Clipboard2Check
+                  style={{
+                    color: "black",
+                    fontSize: "25px",
+                    marginRight: "8px",
+                  }}
+                />
+                Kiểm tra
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
 
-        <div className="search">
-          <button className="search-button" style={{ borderRadius: "10%" }}>
-            <Search />
-          </button>
-          <input type="text" placeholder="Tìm kiếm" />
+          {/* Dropdown for Chủ đề */}
+          <Dropdown>
+            <Dropdown.Toggle variant="light" id="dropdown-basic">
+              Chủ đề
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  Toán học
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  Văn học
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link to="#" style={{ textDecoration: "none", color: "black" }}>
+                  Lịch sử
+                </Link>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
 
-        <div className="user-menu">
+        {/* Search */}
+        <div
+          className="search"
+          style={{ display: "flex", alignItems: "center", flexGrow: 0.8 }}
+        >
+          <input
+            type="text"
+            placeholder="Tìm kiếm"
+            style={{
+              padding: "10px",
+              borderRadius: "4px",
+              border: "1px solid #ddd",
+              marginRight: "10px",
+              width: "300px",
+            }}
+          />
+          <button
+            className="search-button"
+            style={{
+              borderRadius: "50%",
+              backgroundColor: "#f1f1f1",
+              padding: "10px 20px",
+              border: "none",
+              cursor: "pointer",
+              backgroundColor: "rgb(66,85,255)",
+              fontSize: "16px",
+            }}
+          >
+            <Search />
+          </button>
+        </div>
+
+        {/* User Menu */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+          }}
+        >
+          {/* Login Button */}
           <Link to={"/login"}>
-            <button style={{ marginRight: "10px", borderRadius: "50%" }}>
+            <button
+              style={{
+                padding: "5px 10px",
+                borderRadius: "10px",
+                border: "1px solid #ddd",
+                cursor: "pointer",
+                backgroundColor: "rgb(66,85,255)",
+              }}
+            >
               Đăng nhập
             </button>
           </Link>
-        </div>
-        <div
-          className="avatar"
-          onClick={toggleAvatarDropdown}
-          style={{ position: "relative" }}
-        >
-          <img
-            src="http://pm1.aminoapps.com/7239/b508c8e2b879561f650574466b86531cc90138d9r1-768-768v2_uhq.jpg"
-            alt="User Avatar"
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              cursor: "pointer",
-            }}
-          />
-          {isAvatarDropdownOpen && (
-            <ul
-              className="dropdown avatar-dropdown"
-              style={{
-                top: "50px",
-                right: "0",
-                backgroundColor: "#fff",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                borderRadius: "4px",
-                padding: "10px",
-                width: "130px",
-              }}
-            >
-              <li>
-                <Link to="/profile">Hồ sơ</Link>
-              </li>
-              <li>
-                <Link to="/mycourse">Khóa học của tôi</Link>
-              </li>
-              <li>
-                <Link to="/upgrade">Nâng cấp</Link>
-              </li>
-              <li>
-                <Link to="/logout">Đăng xuất</Link>
-              </li>
-            </ul>
-          )}
+
+          {/* Dropdown for Avatar */}
+          <Dropdown>
+            <Dropdown.Toggle variant="light" id="dropdown-avatar">
+              <img
+                src="http://pm1.aminoapps.com/7239/b508c8e2b879561f650574466b86531cc90138d9r1-768-768v2_uhq.jpg"
+                alt="User Avatar"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  cursor: "pointer",
+                }}
+              />
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item>
+                <Link
+                  to="/profile"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  Hồ sơ
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link
+                  to="/mycourse"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  Khóa học của tôi
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link
+                  to="/upgrade"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  Nâng cấp
+                </Link>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <Link
+                  to="/logout"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  Đăng xuất
+                </Link>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </div>
     </header>

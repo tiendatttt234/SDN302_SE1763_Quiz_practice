@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Google, Facebook } from "react-bootstrap-icons";
 import "./Login.css";
 
 const Login = () => {
@@ -40,13 +41,27 @@ const Login = () => {
             </span>
           </h2>
           <button className="login-google">
-            <i className="fab fa-google"></i> Đăng nhập bằng Google
+            Đăng nhập bằng Google
+            <i className="fab fa-google">
+              <Google
+                style={{
+                  fontSize: "16px",
+                  marginLeft: "5px",
+                }}
+              />
+            </i>
           </button>
+
           <button className="login-facebook">
-            <i className="fab fa-facebook-f"></i> Đăng nhập bằng Facebook
-          </button>
-          <button className="login-apple">
-            <i className="fab fa-apple"></i> Đăng nhập bằng Apple
+            Đăng nhập bằng Facebook
+            <i className="fab fa-facebook-f">
+              <Facebook
+                style={{
+                  fontSize: "20px",
+                  marginLeft: "5px",
+                }}
+              />
+            </i>
           </button>
           <div className="login-divider">Hoặc tài khoản</div>
           <input
@@ -54,7 +69,7 @@ const Login = () => {
             placeholder="Nhập địa chỉ email hoặc tên người dùng của bạn"
           />
           <input type="password" placeholder="Nhập mật khẩu của bạn" />
-          <Link to={"/resetpassword"} style={{ textDecoration: "none" }}>
+          <Link to={"/forgotpassword"} style={{ textDecoration: "none" }}>
             <div className="login-forgot-password">Quên mật khẩu</div>
           </Link>
 

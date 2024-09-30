@@ -5,18 +5,17 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import PrivateRoute from './components/core/PrivateRoute';
 import Header from "./components/common/layout/Header";
 import HomePage from "./components/authen/Homepage";
-import Footer from "./components/common/layout/Footer";
 import Login from "./components/authen/Login";
 import Register from "./components/authen/Register";
-import ForgotPassword from "./components/authen/ForgotPassword";
-import Profile from "./components/authen/Profile";
+import Header from "./components/common/layout/Header";
 import MyCourse from "./components/authen/MyCourse";
 import UserDefaultPage from './components/common/layout/user-default-layout';
 import NoAccessPage from './components/common/pages/NoAccessPage';
 import Flashcard from './components/user/FlashCard';
 import ManagerDefaultPage from "./components/common/layout/manager-default-layout";
 import AdminProfit from "./components/admin/viewProfit";
-
+import Profile from "./components/authen/Profile";
+import ForgotPassword from "./components/authen/ForgotPassword";
 
 function App() {
   return (
@@ -42,7 +41,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/admin/profit" element={<AdminProfit />} />
 
           <Route path="/managerdb/*" element={<ManagerDefaultPage/>}/>
