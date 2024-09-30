@@ -14,6 +14,7 @@ import Register from "./components/authen/Register/Register";
 import ManageBlog from "./components/manager/blog/manageBlog";
 import ManageCreateBlog from "./components/manager/blog/createBlog";
 import ManageEditBlog from "./components/manager/blog/editBlog";
+import AdminProfit from "./components/admin/viewProfit";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             path="/manageBlog/edit-blog/:id"
             element={<ManageEditBlog />}
           />
+          <Route path="/admin/profit" element={<AdminProfit />} />
         </Routes>
       </div>
     </BrowserRouter>
