@@ -20,6 +20,7 @@ import ManageQuestion from './components/manager/question/viewQues';
 import Flashcard from './components/user/FlashCard';
 import ManagerDefaultPage from "./components/common/layout/manager-default-layout";
 
+
 function App() {
   return (
 
@@ -46,14 +47,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-
           <Route path="/managerdb/*" element={<ManagerDefaultPage/>}/>
-
           <Route path='/flash' element={<Flashcard/>}/> 
 
 
-        
-
+      
       </Routes>
       <Footer />
     </div>

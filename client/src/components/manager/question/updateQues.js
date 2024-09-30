@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify"; // Import Toastify
+import "react-toastify/dist/ReactToastify.css"; // Import CSS
 import "../managerCSS/question.css";
 
-function AddQuestion() {
+function UpdateQuestion() {
+  const { id } = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState([
@@ -21,22 +24,23 @@ function AddQuestion() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchMaxId = async () => {
+    const fetchQuestion = async () => {
       try {
-        const response = await fetch("http://localhost:9999/questions");
+        const response = await fetch(`http://localhost:9999/questions/${id}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        const maxId = Math.max(...data.map((q) => parseInt(q.id) || 0), 0);
-        setNextId(maxId + 1);
+        setTitle(data.title);
+        setDescription(data.description);
+        setQuestions(data.questions);
       } catch (error) {
-        console.error("Error fetching max ID:", error);
+        console.error("Error fetching question:", error);
       }
     };
 
-    fetchMaxId();
-  }, []);
+    fetchQuestion();
+  }, [id]);
 
   const validateFields = () => {
     let tempErrors = {};
@@ -52,6 +56,9 @@ function AddQuestion() {
       ) {
         tempErrors[`answers-${index}`] = "Phải có ít nhất một đáp án.";
       }
+      if (q.answers.every((answer) => !answer.correct)) {
+        tempErrors[`correctAnswer-${index}`] = "Phải chọn ít nhất một đáp án đúng.";
+      }
       if (
         q.type === "true-false" &&
         (!q.answers[0].text || !q.answers[1].text)
@@ -64,37 +71,38 @@ function AddQuestion() {
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     if (validateFields()) {
-      const newQuestionData = {
+      const updatedQuestionData = {
         title,
         description,
         questions,
       };
-  
+
       try {
-        const response = await fetch("http://localhost:9999/questions", {
-          method: "POST",
+        const response = await fetch(`http://localhost:9999/questions/${id}`, {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(newQuestionData),
+          body: JSON.stringify(updatedQuestionData),
         });
-  
+
         if (response.ok) {
-          const createdQuestion = await response.json(); // Lấy dữ liệu của câu hỏi mới tạo, bao gồm cả ID
-          navigate(`/managerdb/viewques/${createdQuestion.id}`, { // Sử dụng ID từ phản hồi
-            state: { id: createdQuestion.id, title, description, questions },
+          toast.success("Cập nhật câu hỏi thành công!"); // Thông báo thành công
+          navigate(`/managerdb/viewques/${id}`, {
+            state: { id, title, description, questions },
           });
         } else {
-          console.error("Error saving questions");
+          console.error("Error updating question");
         }
       } catch (error) {
         console.error("Error:", error);
       }
+    } else {
+      toast.error("Bạn cập nhật thiếu thông tin!");
     }
   };
-  
 
   const handleBack = () => {
     navigate("/managerdb");
@@ -130,12 +138,10 @@ function AddQuestion() {
           if (field === "type") {
             let updatedAnswers;
             if (value === "true-false") {
-              // Switching to True/False
               updatedAnswers = [
                 { text: "Đúng", correct: false },
                 { text: "Sai", correct: false },
               ];
-              // Store the original answers in a new field
               return {
                 ...q,
                 [field]: value,
@@ -146,12 +152,10 @@ function AddQuestion() {
               (value === "multiple-choice" || value === "multiple-answers") &&
               q.type === "true-false"
             ) {
-              // Switching back from True/False
               updatedAnswers = q.originalAnswers || [
                 { text: "", correct: false },
                 { text: "", correct: false },
               ];
-              // Remove the originalAnswers field
               const { originalAnswers, ...restOfQ } = q;
               return {
                 ...restOfQ,
@@ -159,7 +163,6 @@ function AddQuestion() {
                 answers: updatedAnswers,
               };
             } else {
-              // Switching between multiple-choice and multiple-answers
               return { ...q, [field]: value };
             }
           }
@@ -171,19 +174,33 @@ function AddQuestion() {
   };
 
   const updateAnswer = (qId, index, field, value) => {
-    setQuestions(
-      questions.map((q) =>
-        q.id === qId
-          ? {
-              ...q,
-              answers: q.answers.map((a, i) =>
-                i === index ? { ...a, [field]: value } : a
-              ),
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) => {
+        if (q.id === qId) {
+          const updatedAnswers = q.answers.map((a, i) => {
+            if (i === index) {
+              if (field === "text") {
+                return {
+                  ...a,
+                  text: value, // Cập nhật trường 'text' cho đáp án hiện tại
+                };
+              } else if (field === "correct") {
+                return {
+                  ...a,
+                  correct: value, // Cập nhật trường 'correct' cho đáp án hiện tại
+                };
+              }
             }
-          : q
-      )
+            return a; // Không thay đổi các đáp án khác
+          });
+          return { ...q, answers: updatedAnswers }; // Trả về câu hỏi với đáp án đã được cập nhật
+        }
+        return q; // Trả về câu hỏi không thay đổi
+      })
     );
   };
+  
+  
 
   const removeQuestion = (id) => {
     setQuestions(questions.filter((q) => q.id !== id));
@@ -193,7 +210,7 @@ function AddQuestion() {
     setQuestions([
       ...questions,
       {
-        id: nextId, // Sử dụng nextId cho id mới
+        id: nextId,
         question: "",
         type: "true-false",
         answers: [
@@ -202,15 +219,13 @@ function AddQuestion() {
         ],
       },
     ]);
-    setNextId((prevId) => prevId + 1); // Tăng nextId sau khi thêm câu hỏi mới
+    setNextId((prevId) => prevId + 1);
   };
-
-  
 
   return (
     <div className="ques-manager">
-      <h1 className="title">Tạo học phần mới</h1>
-
+      <h1 className="title">Cập nhật câu hỏi</h1>
+      <ToastContainer />
       <input
         className="input-field input-title"
         type="text"
@@ -249,6 +264,9 @@ function AddQuestion() {
             />
             {errors[`question-${index}`] && (
               <p className="error">{errors[`question-${index}`]}</p>
+            )}
+            {errors[`correctAnswer-${index}`] && (
+              <p className="error">{errors[`correctAnswer-${index}`]}</p>
             )}
 
             <select
@@ -290,7 +308,6 @@ function AddQuestion() {
               </>
             )}
 
-            
             {q.type === "multiple-choice" && (
               <>
                 {q.answers.map((answer, idx) => (
@@ -323,7 +340,7 @@ function AddQuestion() {
                     </button>
                   </div>
                 ))}
-                 </>
+              </>
             )}
 
             {q.type === "multiple-answers" &&
@@ -357,7 +374,6 @@ function AddQuestion() {
                 </div>
               ))}
 
-
             {q.type !== "true-false" && (
               <button
                 className="add-answer-button"
@@ -377,13 +393,19 @@ function AddQuestion() {
       <div className="container mt-4">
         <div className="row">
           <div className="col text-start">
-            <button className="btn btn-secondary btn-lg back-button" onClick={handleBack}>
+            <button
+              className="btn btn-secondary btn-lg back-button"
+              onClick={handleBack}
+            >
               Trở về
             </button>
           </div>
           <div className="col d-flex justify-content-end align-items-center">
-            <button className="btn btn-primary btn-lg create-button" onClick={handleCreate}>
-              Tạo
+            <button
+              className="btn btn-primary btn-lg create-button"
+              onClick={handleUpdate}
+            >
+              Lưu thay đổi
             </button>
           </div>
         </div>
@@ -392,4 +414,4 @@ function AddQuestion() {
   );
 }
 
-export default AddQuestion;
+export default UpdateQuestion;
