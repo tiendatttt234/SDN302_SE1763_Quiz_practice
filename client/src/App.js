@@ -1,21 +1,23 @@
-import React from "react";
+// import { BrowserRouter as Router, Routes ,Route } from 'react-router-dom';
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/common/layout/Header";
+// import PrivateRoute from './components/core/PrivateRoute';
+import UserDefaultPage from "./components/common/layout/user-default-layout";
+import NoAccessPage from "./components/common/pages/NoAccessPage";
 import HomePage from "./components/authen/Homepage";
-import Footer from "./components/common/layout/Footer";
 import Login from "./components/authen/Login";
 import Register from "./components/authen/Register";
-import ForgotPassword from "./components/authen/ForgotPassword";
-import Profile from "./components/authen/Profile";
+import Header from "./components/common/layout/Header";
 import MyCourse from "./components/authen/MyCourse";
-import UserDefaultPage from './components/common/layout/user-default-layout';
-import NoAccessPage from './components/common/pages/NoAccessPage';
+import Profile from "./components/authen/Profile";
+import ForgotPassword from "./components/authen/ForgotPassword";
+
 function App() {
   return (
     <BrowserRouter>
-    <div className="App">
-      <Header/>
-      <Routes>
+      <div className="App">
+        <Header />
+        <Routes>
           {/* <Route path='/*' element={<AuthRoutes />} />
           <Route path='*' element={<PageNotFound />} />
           <Route path='/manager/*' element={<PrivateRoute element={<DefaultLayoutManager />} allowedRoles={['manager']} />} />
@@ -23,20 +25,17 @@ function App() {
           <Route path='/trainer/*' element={<PrivateRoute element={<DefaultLayoutTrainer />} allowedRoles={['trainer']} />} />
           <Route path={`${link.trainee}/*`} element={<PrivateRoute element={<DefaultLayoutTrainee />} allowedRoles={['trainee']} />} />
           */}
-          <Route path='/user/*' element={<UserDefaultPage/>} />
+          <Route path="/user/*" element={<UserDefaultPage />} />
           {/* <PrivateRoute element={<DefaultLayoutAdmin />} allowedRoles={['admin']} /> */}
           <Route path="/no-access" element={<NoAccessPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/resetpassword" element={<ForgotPassword />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/mycourse" element={<MyCourse />} />
-        
-
-      </Routes>
-      <Footer />
-    </div>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

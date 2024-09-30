@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CaretLeft, CaretRight } from "react-bootstrap-icons";
 import "./Homepage.css";
 
 function HomePage() {
@@ -8,48 +9,25 @@ function HomePage() {
   const cards1 = [
     {
       title: "Học",
-      imgSrc: "path/to/painting.jpg",
-      alt: "Bức tranh",
-      content: "la pintura",
-      input: true,
     },
     {
       title: "Thẻ ghi nhớ",
-      imgSrc: "path/to/heart.jpg",
-      alt: "Trái tim",
-      content: "tĩnh mạch chủ trên",
     },
     {
       title: "Kiểm tra",
-      progress: 75,
-      time: "6 phút",
-      correct: 9,
-      incorrect: 3,
     },
     {
       title: "Ghép thẻ",
-      imgSrc: "path/to/stomach.jpg",
-      alt: "Dạ dày",
-      matching: [{ content: "phổi", imgSrc: "path/to/lungs.jpg" }],
     },
   ];
 
   const cards2 = [
     {
       title2: "IELTS Speaking 1: Hometown",
-      terms2: "21 terms",
-      teacher2: "do_huyen_trang",
-      imgSrc2:
-        "https://images.unsplash.com/photo-1490730141103-66a8b44f646f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
     },
     {
       title2: "CKPX - Business - Auditory",
-      terms2: "17 terms",
-      teacher2: "mysheotool",
-      imgSrc2:
-        "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
     },
-    // Additional card objects...
   ];
 
   const visibleCount1 = 4;
@@ -94,7 +72,7 @@ function HomePage() {
             className="homepage-arrow-button homepage-left"
             onClick={prev1}
           >
-            {"<"}
+            <CaretLeft />
           </button>
           <div className="homepage-card-container">
             {visibleCards1.map((card, index) => (
@@ -149,7 +127,7 @@ function HomePage() {
             className="homepage-arrow-button homepage-right"
             onClick={next1}
           >
-            {">"}
+            <CaretRight />
           </button>
         </div>
       </div>
@@ -161,7 +139,7 @@ function HomePage() {
             className="homepage-arrow-button homepage-left"
             onClick={prev2}
           >
-            {"<"}
+            <CaretLeft />
           </button>
           <div className="homepage-card-container">
             {visibleCards2.map((card, index) => (
@@ -169,7 +147,6 @@ function HomePage() {
                 <h2>{card.title2}</h2>
                 <p>{card.terms2}</p>
                 <p>Giáo viên: {card.teacher2}</p>
-                <img src={card.imgSrc2} alt={card.title2} />
               </div>
             ))}
           </div>
@@ -177,7 +154,7 @@ function HomePage() {
             className="homepage-arrow-button homepage-right"
             onClick={next2}
           >
-            {">"}
+            <CaretRight />
           </button>
         </div>
       </div>
