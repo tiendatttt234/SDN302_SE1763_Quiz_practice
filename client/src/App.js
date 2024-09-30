@@ -42,7 +42,7 @@ function App() {
           <Route path="/managerdb/manaques" element={<ManageQuestion />} />
           <Route path="/admin" element={<AdminDashboard/>}></Route>
           <Route path="/admin/users" element={<UserManagement/>}></Route>
-          <Route path="/admin/dashboard" component={<Dashboard/>} />
+          <Route path="/admin/dashboard" element={<Dashboard/>} />
 
           
           
