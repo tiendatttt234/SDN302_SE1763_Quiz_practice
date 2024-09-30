@@ -1,5 +1,5 @@
 header {
-  background-color: #333;
+  background-color: #ffffff;
   color: #fff;
   padding: 1rem;
 }
@@ -38,7 +38,7 @@ nav li {
 }
 
 nav a {
-  color: #fff;
+  color: #333;
   text-decoration: none;
 }
 
@@ -57,6 +57,7 @@ nav a:hover {
   border: none;
   border-radius: 5px;
   width: 300px;
+  background-color: rgb(149, 167, 203);
 }
 
 button {
@@ -94,6 +95,8 @@ button:hover {
   padding: 10px;
   border-bottom: 1px solid #eee;
   width: 200px;
+  display: flex;
+  align-items: center;
 }
 
 .dropdown li a {

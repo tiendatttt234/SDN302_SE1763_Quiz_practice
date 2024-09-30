@@ -1,18 +1,22 @@
-// import { BrowserRouter as Router, Routes ,Route } from 'react-router-dom';
+
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// import PrivateRoute from './components/core/PrivateRoute';
+import Header from "./components/common/layout/Header";
+import HomePage from "./components/authen/Homepage";
+import Footer from "./components/common/layout/Footer";
+import Login from "./components/authen/Login";
+import Register from "./components/authen/Register";
+import ForgotPassword from "./components/authen/ForgotPassword";
+import Profile from "./components/authen/Profile";
+import MyCourse from "./components/authen/MyCourse";
+import UserDefaultPage from './components/common/layout/user-default-layout';
+import NoAccessPage from './components/common/pages/NoAccessPage';
 import ManagerDashboard from './components/manager/dashboard/dashboard';
 import AddQuestion from './components/manager/question/question';
 import ViewQuestionDetail from './components/manager/question/viewQuesDetail';
 import ManageQuestion from './components/manager/question/viewQues';
-
-
-
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// import PrivateRoute from './components/core/PrivateRoute';
-import UserDefaultPage from './components/common/layout/user-default-layout';
-import NoAccessPage from './components/common/pages/NoAccessPage';
-import HomePage from './components/authen/Homepage';
-import Login from './components/authen/Login/Login';
-import Register from './components/authen/Register/Register';
 import Flashcard from './components/user/FlashCard';
 
 function App() {
@@ -20,6 +24,7 @@ function App() {
 
     <BrowserRouter>
     <div className="App">
+      <Header/>
       <Routes>
           {/* <Route path='/*' element={<AuthRoutes />} />
           <Route path='*' element={<PageNotFound />} />
@@ -41,7 +46,13 @@ function App() {
           <Route path="/managerdb/manaques" element={<ManageQuestion />} />
           <Route path='/flash' element={<Flashcard/>}/>
           
+          <Route path="/resetpassword" element={<ForgotPassword />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/mycourse" element={<MyCourse />} />
+        
+
       </Routes>
+      <Footer />
     </div>
     </BrowserRouter>
 
