@@ -1,0 +1,34 @@
+.statistics {
+  display: flex;
+  height: 100vh; /* Ensure full height for layout */
+}
+
+.statistics h2 {
+  margin-bottom: 20px;
+}
+
+.statistics .content {
+  flex: 1;
+  padding: 20px; /* Internal spacing */
+  background-color: #f8f9fa; /* Background color for content */
+  margin-left: 250px; /* Space on the left to not be covered by sidebar */
+  overflow-y: auto; /* Allow scrolling if content exceeds height */
+}
+
+.statistics .table {
+  background-color: #ffffff; /* White background for table */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for table */
+}
+
+.statistics .table th, .statistics .table td {
+  text-align: center; /* Center align table content */
+}
+
+.statistics .table th {
+  background-color: #007bff; /* Header background color */
+  color: white; /* Header text color */
+}
+
+.statistics .table tbody tr:hover {
+  background-color: #f1f1f1; /* Hover effect for table rows */
+}
