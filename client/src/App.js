@@ -13,17 +13,13 @@ import Profile from "./components/authen/Profile";
 import MyCourse from "./components/authen/MyCourse";
 import UserDefaultPage from './components/common/layout/user-default-layout';
 import NoAccessPage from './components/common/pages/NoAccessPage';
-import ManagerDashboard from './components/manager/dashboard/dashboard';
-import AddQuestion from './components/manager/question/question';
-import ViewQuestionDetail from './components/manager/question/viewQuesDetail';
-import ManageQuestion from './components/manager/question/viewQues';
 import Flashcard from './components/user/FlashCard';
 import ManagerDefaultPage from "./components/common/layout/manager-default-layout";
+import AdminProfit from "./components/admin/viewProfit";
 
 
 function App() {
   return (
-
     <BrowserRouter>
     <div className="App">
       <Header/>
@@ -35,7 +31,7 @@ function App() {
           <Route path='/trainer/*' element={<PrivateRoute element={<DefaultLayoutTrainer />} allowedRoles={['trainer']} />} />
           <Route path={`${link.trainee}/*`} element={<PrivateRoute element={<DefaultLayoutTrainee />} allowedRoles={['trainee']} />} />
           */}
-          <Route path='/user/*' element={<UserDefaultPage/>} />
+          <Route path="/user/*" element={<UserDefaultPage />} />
           {/* <PrivateRoute element={<DefaultLayoutAdmin />} allowedRoles={['admin']} /> */}
           <Route path="/no-access" element={<NoAccessPage />} />
 
@@ -47,6 +43,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
+          <Route path="/admin/profit" element={<AdminProfit />} />
+
           <Route path="/managerdb/*" element={<ManagerDefaultPage/>}/>
           <Route path='/flash' element={<Flashcard/>}/> 
 
@@ -56,7 +54,6 @@ function App() {
       <Footer />
     </div>
     </BrowserRouter>
-
   );
 }
 
