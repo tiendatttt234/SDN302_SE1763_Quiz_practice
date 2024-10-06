@@ -3,7 +3,6 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // import PrivateRoute from './components/core/PrivateRoute';
-import Header from "./components/common/layout/Header";
 import HomePage from "./components/authen/Homepage";
 import Login from "./components/authen/Login";
 import Register from "./components/authen/Register";
@@ -16,12 +15,15 @@ import ManagerDefaultPage from "./components/common/layout/manager-default-layou
 import AdminProfit from "./components/admin/viewProfit";
 import Profile from "./components/authen/Profile";
 import ForgotPassword from "./components/authen/ForgotPassword";
+import Footer from "./components/common/layout/Footer";
+import Test from "./components/user/test";
+
 
 function App() {
   return (
     <BrowserRouter>
     <div className="App">
-      {/* <Header/> */}
+      <Header/>
       <Routes>
           {/* <Route path='/*' element={<AuthRoutes />} />
           <Route path='*' element={<PageNotFound />} />
@@ -31,7 +33,10 @@ function App() {
           <Route path={`${link.trainee}/*`} element={<PrivateRoute element={<DefaultLayoutTrainee />} allowedRoles={['trainee']} />} />
           */}
           <Route path="/user/*" element={<UserDefaultPage />} />
+          <Route path="/managerdb/*" element={<ManagerDefaultPage/>}/>
+          <Route path="/admin/profit" element={<AdminProfit />} />
           {/* <PrivateRoute element={<DefaultLayoutAdmin />} allowedRoles={['admin']} /> */}
+          
           <Route path="/no-access" element={<NoAccessPage />} />
 
 
@@ -43,9 +48,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route path="/admin/profit" element={<AdminProfit />} />
 
-          <Route path="/managerdb/*" element={<ManagerDefaultPage/>}/>
+          <Route path="/test" element={<Test/>}/>
+
+          
           <Route path='/flash' element={<Flashcard/>}/> 
 
 

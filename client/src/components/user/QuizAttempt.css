@@ -1,53 +1,66 @@
-.side-nav {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  
-  .quiz-content.without-sidebar {
-    margin-left: 0;
-  }
-  
-  .toggle-button {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1000;
-  }
-  
-  .toggle-button button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-  }
-  
-  .toggle-button button:hover {
-    background-color: #0056b3;
-  }
-  
-  .quiz-content {
-    width: 300px;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;     
-    flex-direction: column;
+/* Container for the answers */
+.answer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px; /* Space between the answer boxes */
+  margin-bottom: 20px;
+}
 
-  }
+/* Styles for each answer box */
+.answer-style {
+  flex: 1 1 calc(50% - 10px); /* Two answers per row */
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: right;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  transition: all 0.3s;
+  min-height: 100px; /* Ensure consistent box height */
+  cursor: pointer;
+}
 
-  
-  
-  
-  .list-group-item input[type="radio"] {
-    margin-right: 10px;
-  }
-  
-  /* Center the Submit button */
-  .text-center {
-    margin-top: 20px;
-  }
+.answer-style:hover {
+  border-color: #007bff;
+  background-color: #e6f7ff;
+}
 
-  
+/* Selected answer styling */
+.answer-style.selected {
+  background-color: #e6f7ff;
+  border-color: #007bff;
+}
+
+/* Responsive text inside the answer */
+.answer-label {
+  font-size: 18px;
+  font-weight: 400;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.questionCard {
+  color: white; /* White text */
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 25px;
+  border-bottom: 2px solid #0056b3; 
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 5px 5px 0 0; /* Rounded corners for the top */
+}
+
+.quiz-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh; /* Full viewport height */
+  margin: auto;
+  padding: 20px;
+  background-color: #f5f5f5; /* Soft background color */
+}

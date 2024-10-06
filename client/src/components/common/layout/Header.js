@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <header
       style={{
-        position: "sticky",
+        position: "",
         top: 0,
         left: 0,
         right: 0,

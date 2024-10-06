@@ -1,21 +1,22 @@
 import React, { useState, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
-import "./QuizAttempt.css";
+import "./QuizAttempt.css"; // Ensure CSS has been updated
 import { useNavigate } from "react-router-dom";
 
+export default function QuizAttempt() {
+  const style = {
+    card: {
+      width: "60%",
+      maxWidth: "800px",
+      minWidth: "300px",
+      margin: "20px 0 ",
+      
+    },
+  };
 
-export default function QuizWithNavigation() {
-  const style ={
-    
-      card: {
-        width: "60%",              
-        maxWidth: "800px",
-        minWidth: "300px",
-        margin: "20px 0 "          
-      }
-  }
   const quizData = [
     {
+      id: 1,
       question:
         "Điền thêm từ để có câu trả lời đúng theo quan niệm duy vật lịch sử và xác định đó là nhận định của ai?",
       type: "MAQ", // Multiple Answer Question
@@ -24,10 +25,12 @@ export default function QuizWithNavigation() {
         { id: 2, text: "Tổng hòa những quan hệ xã hội /C.Mác" },
         { id: 3, text: "Tổng hòa các quan hệ kinh tế VI Lênin" },
         { id: 4, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
+        { id: 5, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
       ],
       correctAnswers: [1, 2], // Correct answer for this question
     },
     {
+      id: 2,
       question: "Triết học Mác ra đời vào thời gian nào?",
       type: "MCQ", // Multiple Choice Question
       answers: [
@@ -39,6 +42,7 @@ export default function QuizWithNavigation() {
       correctAnswers: [1], // Correct answer for this question
     },
     {
+      id: 3,
       question: "Triết học Mác ra đời vào thời gian nào?",
       type: "BOOLEAN", // Boolean Question
       answers: [
@@ -49,9 +53,9 @@ export default function QuizWithNavigation() {
     },
   ];
 
-  // Initialize userAnswers to an array of empty arrays for MAQ questions and undefined for others
+  // Initialize userAnswers with arrays for all types
   const initialAnswers = quizData.map((quizItem) =>
-    quizItem.type === "MAQ" ? [] : undefined
+    quizItem.type === "MAQ" ? [] : null // MAQ as empty array, others as null
   );
 
   const [userAnswers, setUserAnswers] = useState(initialAnswers);
@@ -60,22 +64,25 @@ export default function QuizWithNavigation() {
 
   const handleAnswerSelect = (questionIndex, answerId) => {
     setUserAnswers((prevAnswers) => {
-      const currentAnswers = prevAnswers[questionIndex] || [];
+      const currentAnswers = prevAnswers[questionIndex] || []; // Default to empty array for MAQ
 
       if (quizData[questionIndex].type === "MAQ") {
         if (currentAnswers.includes(answerId)) {
+          // If answer is already selected, remove it
           return {
             ...prevAnswers,
-            [questionIndex]: currentAnswers.filter((id) => id !== answerId),
+            [questionIndex]: currentAnswers.filter((id) => id !== answerId), // Remove answer if already selected
           };
         } else {
+          // Add the new answer
           return {
             ...prevAnswers,
-            [questionIndex]: [...currentAnswers, answerId],
+            [questionIndex]: [...currentAnswers, answerId], // Add new answer
           };
         }
       }
 
+      // For MCQ and BOOLEAN types, set selected answer
       return {
         ...prevAnswers,
         [questionIndex]: answerId,
@@ -103,11 +110,10 @@ export default function QuizWithNavigation() {
       }
     });
 
-    // Navigate to the results page with the results data
-    // Assume navigate function exists
     navigate("/user/quiz-result", { state: { results } });
   };
 
+  console.log(userAnswers[1]);
   return (
     <div className="d-flex">
       {/* Sidebar Navigation */}
@@ -130,41 +136,51 @@ export default function QuizWithNavigation() {
       <div className={`quiz-content flex-grow-1 p-3`}>
         {quizData.map((quizItem, index) => (
           <Card
-            key={index}
-            ref={(el) => (questionRefs.current[index] = el)}
-            id={`question-${index}`}
-            className="mb-3"
-            style={style.card}
-          >
-            <Card.Header>
-              <h5>
-                Câu hỏi {index + 1}/{quizData.length}
-              </h5>
-            </Card.Header>
-            <Card.Body>
-              <Card.Title>{quizItem.question}</Card.Title>
-              <ul className="list-group list-group-flush">
-                {quizItem.answers.map((answer) => (
-                  <li key={answer.id} className="list-group-item">
-                    <input
-                      type={quizItem.type === "MAQ" ? "checkbox" : "radio"}
-                      name={`question-${index}`}
-                      id={`answer-${answer.id}`}
-                      onChange={() => handleAnswerSelect(index, answer.id)}
-                      checked={
-                        quizItem.type === "MAQ"
-                          ? userAnswers[index]?.includes(answer.id) || false // ensure it defaults to false
-                          : userAnswers[index] === answer.id
-                      }
-                    />
-                    <label htmlFor={`answer-${answer.id}`} className="ml-2">
-                      {answer.text}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </Card.Body>
-          </Card>
+          key={index}
+          ref={(el) => (questionRefs.current[index] = el)}
+          id={`question-${index}`}
+          className="mb-3"
+          style={style.card}
+        >
+          <Card.Header className="questionCard">
+            <h5>{quizItem.question}</h5>
+          </Card.Header>
+          <Card.Body>
+            <Card.Title>
+            {quizItem.type === "MAQ" ? "Chọn nhiều đáp án" : "Chọn một đáp án"}
+            </Card.Title>
+            
+            {/* Container for the answers with flexbox layout */}
+            <div className="answer-container">
+              {quizItem.answers.map((answer) => (
+                <div
+                  className={`answer-style ${
+                    quizItem.type === "MAQ"
+                      ? Array.isArray(userAnswers[index]) && userAnswers[index].includes(answer.id) ? "selected" : ""
+                      : userAnswers[index] === answer.id ? "selected" : ""
+                  }`}
+                  key={answer.id}
+                  onClick={() => handleAnswerSelect(index, answer.id)} // Clicking answer will select it
+                >
+                  <input
+                    type={quizItem.type === "MAQ" ? "checkbox" : "radio"}
+                    name={`question-${index}`} // Ensure unique names per question
+                    id={`answer-${index}-${answer.id}`} // Unique ID for each answer
+                    checked={quizItem.type === "MAQ"
+                      ? userAnswers[index]?.includes(answer.id) || false
+                      : userAnswers[index] === answer.id}
+                    onChange={() => handleAnswerSelect(index, answer.id)}
+                    style={{ visibility: 'hidden' }} // Hide native checkbox/radio for custom styling
+                  />
+                  <label htmlFor={`answer-${index}-${answer.id}`} className="answer-label">
+                    {answer.text}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </Card.Body>
+        </Card>
+        
         ))}
         <div className="text-center">
           <Button variant="primary" onClick={handleSubmit}>
