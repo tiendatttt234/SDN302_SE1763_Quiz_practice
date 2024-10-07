@@ -230,17 +230,7 @@ function AddQuestion() {
         onChange={(e) => setDescription(e.target.value)}
       />
       {errors.description && <p className="error">{errors.description}</p>}
-      <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
-        Category
-      </Dropdown.Toggle>
-
-      <Dropdown.Menu>
-        <Dropdown.Item value="1">Action</Dropdown.Item>
-        <Dropdown.Item value="2">Another action</Dropdown.Item>
-        <Dropdown.Item value="3">Something else</Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+      
       {questions.map((q, index) => (
         <div key={q.id} className="question-card">
           <div className="question-header">
@@ -276,7 +266,7 @@ function AddQuestion() {
             {q.type === "true-false" && (
               <>
                 {q.answers.slice(0, 2).map((answer, idx) => (
-                  <div key={idx} className="answer-container">
+                  <div key={idx} className="answer-contain">
                     <input
                       className="input-field answer-input"
                       type="text"
@@ -306,7 +296,7 @@ function AddQuestion() {
             {q.type === "multiple-choice" && (
               <>
                 {q.answers.map((answer, idx) => (
-                  <div key={idx} className="answer-container">
+                  <div key={idx} className="answer-contain">
                     <input
                       className="input-field answer-input"
                       type="text"
@@ -340,7 +330,7 @@ function AddQuestion() {
 
             {q.type === "multiple-answers" &&
               q.answers.map((answer, idx) => (
-                <div key={idx} className="answer-container">
+                <div key={idx} className="answer-contain">
                   <input
                     className="input-field answer-input"
                     type="text"

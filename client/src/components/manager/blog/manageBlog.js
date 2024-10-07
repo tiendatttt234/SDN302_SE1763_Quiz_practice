@@ -54,7 +54,7 @@ function ManageBlog() {
   return (
     <Container>
       <h2>Blog List</h2>
-      <Button variant="primary" href="/manageBlog/add-blog">
+      <Button variant="primary" href="/managerdb/manageBlog/add-blog">
         Add New
       </Button>
       <Table striped bordered hover>
@@ -92,7 +92,7 @@ function ManageBlog() {
               </td>
               <td>
                 <Link
-                  to={`/manageBlog/edit-blog/${blog.id}`}
+                  to={`/managerdb/manageBlog/edit-blog/${blog.id}`}
                   className="btn btn-info"
                   style={{ color: "white" }}
                 >

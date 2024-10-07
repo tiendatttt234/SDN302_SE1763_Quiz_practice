@@ -96,7 +96,7 @@ function ManageCreateBlog() {
             style={{ height: "500px" }} // Đặt chiều cao cụ thể cho ReactQuill
           />
         </div>
-        <div className="col-md-3 sidebar">
+        <div className="col-md-3 blog-sidebar">
           <div className="preview-image">
             {image === "/img/posts/image_null.png" ? (
               <div className="image-placeholder">Choose an image</div>

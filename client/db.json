@@ -11,15 +11,15 @@
           "answers": [
             {
               "text": "rrrfd",
-              "correct": true
-            },
-            {
-              "text": "rrfgg",
               "correct": false
             },
             {
-              "text": "rrrtrr",
+              "text": "rrfgg",
               "correct": true
+            },
+            {
+              "text": "rrrtrr",
+              "correct": false
             }
           ],
           "isEditing": true

@@ -90,7 +90,7 @@
   color: white; /* Màu chữ trong sidebar */
   padding: 20px; /* Khoảng cách bên trong */
   height: 100vh; /* Chiều cao 100% */
-  position: fixed; /* Gắn cố định để sidebar không bị cuộn */
+  position: fixed; 
   overflow-y: auto; /* Cho phép cuộn khi nội dung quá nhiều */
 }
 
