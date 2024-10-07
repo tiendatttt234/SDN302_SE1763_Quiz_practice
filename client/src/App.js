@@ -19,6 +19,11 @@ import Footer from "./components/common/layout/Footer";
 import AdminDashboard from '../src/components/admin/adminComponnents/admin'
 import UserManagement from './components/admin/adminComponnents/usermanagement';
 import Dashboard from './components/admin/adminComponnents/dashboard';
+import UpgradePage from "./components/common/pages/UpgradePage";
+import CheckoutPage from "./components/common/pages/CheckOutPage";
+import CheckoutForm from "./components/common/pages/CheckOutPage";
+import BlogList from "./components/user/BlogList";
+import BlogDetail from "./components/user/BlogDetail";
 
 
 function App() {
@@ -57,10 +62,13 @@ function App() {
           <Route path="/admin/users" element={<UserManagement/>}></Route>
           <Route path="/admin/dashboard" element={<Dashboard/>} />
 
-          
+          <Route path="/upgrade" element={<UpgradePage/>}/>
+          <Route path="/checkout" element={<CheckoutForm />} />
           
           <Route path='/flash' element={<Flashcard/>}/> 
 
+          <Route path="/blogList" element={<BlogList/>}/>
+          <Route path="/blogDetail" element={<BlogDetail/>}/>
 
       
       </Routes>

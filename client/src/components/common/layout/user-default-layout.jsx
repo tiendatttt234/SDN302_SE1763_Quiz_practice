@@ -6,7 +6,6 @@ export default function UserDefaultPage(){
 
     return(
         <div className = 'container-fluid' >
-            <Link to="/">hehe</Link>
             <div className = 'container-fluid' >
                 <div className = {`container-fluid `}>
                     <Routes>

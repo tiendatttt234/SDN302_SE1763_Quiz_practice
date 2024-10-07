@@ -52,11 +52,7 @@ export default function QuizAttempt() {
     },
   ];
 
-  const initialAnswers = quizData.map((quizItem) =>
-    quizItem.type === "MAQ" ? [] : null
-  );
-
-  const [userAnswers, setUserAnswers] = useState(initialAnswers);
+  const [userAnswers, setUserAnswers] = useState([]);
   const questionRefs = useRef([]);
   const navigate = useNavigate();
 
@@ -108,6 +104,8 @@ export default function QuizAttempt() {
     navigate("/user/quiz-result", { state: { results } });
   };
 
+  console.log(userAnswers);
+  
   return (
     <div className="d-flex">
       <div className="side-nav p-3">
