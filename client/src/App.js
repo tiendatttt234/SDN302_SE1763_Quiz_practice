@@ -16,7 +16,6 @@ import AdminProfit from "./components/admin/viewProfit";
 import Profile from "./components/authen/Profile";
 import ForgotPassword from "./components/authen/ForgotPassword";
 import Footer from "./components/common/layout/Footer";
-import Test from "./components/user/test";
 
 
 function App() {
@@ -48,8 +47,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
-
-          <Route path="/test" element={<Test/>}/>
 
           
           <Route path='/flash' element={<Flashcard/>}/> 

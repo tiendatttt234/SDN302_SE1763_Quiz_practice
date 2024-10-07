@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
-import "./QuizAttempt.css"; // Ensure CSS has been updated
+import "./QuizAttempt.css";
 import { useNavigate } from "react-router-dom";
+import QuestionComponent from "./QuestionComponent"; // Import the QuestionComponent
 
 export default function QuizAttempt() {
   const style = {
@@ -9,17 +10,15 @@ export default function QuizAttempt() {
       width: "60%",
       maxWidth: "800px",
       minWidth: "300px",
-      margin: "20px 0 ",
-      
+      margin: "20px 0",
     },
   };
 
   const quizData = [
     {
       id: 1,
-      question:
-        "Điền thêm từ để có câu trả lời đúng theo quan niệm duy vật lịch sử và xác định đó là nhận định của ai?",
-      type: "MAQ", // Multiple Answer Question
+      question: "Điền thêm từ để có câu trả lời đúng theo quan niệm duy vật lịch sử và xác định đó là nhận định của ai?",
+      type: "MAQ", 
       answers: [
         { id: 1, text: "Toàn bộ các quan hệ xã hội (Ph.Ăngghen)" },
         { id: 2, text: "Tổng hòa những quan hệ xã hội /C.Mác" },
@@ -27,35 +26,34 @@ export default function QuizAttempt() {
         { id: 4, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
         { id: 5, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
       ],
-      correctAnswers: [1, 2], // Correct answer for this question
+      correctAnswers: [1, 2],
     },
     {
       id: 2,
       question: "Triết học Mác ra đời vào thời gian nào?",
-      type: "MCQ", // Multiple Choice Question
+      type: "MCQ",
       answers: [
         { id: 1, text: "Những năm 40 của thế kỷ XIX" },
         { id: 2, text: "Những năm 50 của thế kỷ XIX" },
         { id: 3, text: "Những năm 20 của thế kỷ XIX" },
         { id: 4, text: "Những năm 30 của thế kỷ XIX" },
       ],
-      correctAnswers: [1], // Correct answer for this question
+      correctAnswers: [1],
     },
     {
       id: 3,
       question: "Triết học Mác ra đời vào thời gian nào?",
-      type: "BOOLEAN", // Boolean Question
+      type: "BOOLEAN",
       answers: [
         { id: 1, text: "Đúng" },
         { id: 2, text: "Sai" },
       ],
-      correctAnswers: [1], // Correct answer for this question
+      correctAnswers: [1],
     },
   ];
 
-  // Initialize userAnswers with arrays for all types
   const initialAnswers = quizData.map((quizItem) =>
-    quizItem.type === "MAQ" ? [] : null // MAQ as empty array, others as null
+    quizItem.type === "MAQ" ? [] : null
   );
 
   const [userAnswers, setUserAnswers] = useState(initialAnswers);
@@ -64,25 +62,22 @@ export default function QuizAttempt() {
 
   const handleAnswerSelect = (questionIndex, answerId) => {
     setUserAnswers((prevAnswers) => {
-      const currentAnswers = prevAnswers[questionIndex] || []; // Default to empty array for MAQ
+      const currentAnswers = prevAnswers[questionIndex] || [];
 
       if (quizData[questionIndex].type === "MAQ") {
         if (currentAnswers.includes(answerId)) {
-          // If answer is already selected, remove it
           return {
             ...prevAnswers,
-            [questionIndex]: currentAnswers.filter((id) => id !== answerId), // Remove answer if already selected
+            [questionIndex]: currentAnswers.filter((id) => id !== answerId),
           };
         } else {
-          // Add the new answer
           return {
             ...prevAnswers,
-            [questionIndex]: [...currentAnswers, answerId], // Add new answer
+            [questionIndex]: [...currentAnswers, answerId],
           };
         }
       }
 
-      // For MCQ and BOOLEAN types, set selected answer
       return {
         ...prevAnswers,
         [questionIndex]: answerId,
@@ -113,10 +108,8 @@ export default function QuizAttempt() {
     navigate("/user/quiz-result", { state: { results } });
   };
 
-  console.log(userAnswers[1]);
   return (
     <div className="d-flex">
-      {/* Sidebar Navigation */}
       <div className="side-nav p-3">
         <ul className="list-unstyled">
           {quizData.map((_, index) => (
@@ -132,55 +125,34 @@ export default function QuizAttempt() {
         </ul>
       </div>
 
-      {/* Main Quiz Content */}
-      <div className={`quiz-content flex-grow-1 p-3`}>
+      <div className="quiz-content flex-grow-1 p-3">
         {quizData.map((quizItem, index) => (
           <Card
-          key={index}
-          ref={(el) => (questionRefs.current[index] = el)}
-          id={`question-${index}`}
-          className="mb-3"
-          style={style.card}
-        >
-          <Card.Header className="questionCard">
-            <h5>{quizItem.question}</h5>
-          </Card.Header>
-          <Card.Body>
-            <Card.Title>
-            {quizItem.type === "MAQ" ? "Chọn nhiều đáp án" : "Chọn một đáp án"}
-            </Card.Title>
-            
-            {/* Container for the answers with flexbox layout */}
-            <div className="answer-container">
-              {quizItem.answers.map((answer) => (
-                <div
-                  className={`answer-style ${
-                    quizItem.type === "MAQ"
-                      ? Array.isArray(userAnswers[index]) && userAnswers[index].includes(answer.id) ? "selected" : ""
-                      : userAnswers[index] === answer.id ? "selected" : ""
-                  }`}
-                  key={answer.id}
-                  onClick={() => handleAnswerSelect(index, answer.id)} // Clicking answer will select it
-                >
-                  <input
-                    type={quizItem.type === "MAQ" ? "checkbox" : "radio"}
-                    name={`question-${index}`} // Ensure unique names per question
-                    id={`answer-${index}-${answer.id}`} // Unique ID for each answer
-                    checked={quizItem.type === "MAQ"
-                      ? userAnswers[index]?.includes(answer.id) || false
-                      : userAnswers[index] === answer.id}
-                    onChange={() => handleAnswerSelect(index, answer.id)}
-                    style={{ visibility: 'hidden' }} // Hide native checkbox/radio for custom styling
-                  />
-                  <label htmlFor={`answer-${index}-${answer.id}`} className="answer-label">
-                    {answer.text}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </Card.Body>
-        </Card>
-        
+            key={index}
+            ref={(el) => (questionRefs.current[index] = el)}
+            id={`question-${index}`}
+            className="mb-3"
+            style={style.card}
+          >
+            <Card.Header className="questionCard">
+              <h5>{quizItem.question}</h5>
+            </Card.Header>
+            <Card.Body>
+              <Card.Title>
+                {quizItem.type === "MAQ"
+                  ? "Chọn nhiều đáp án"
+                  : "Chọn một đáp án"}
+              </Card.Title>
+
+              {/* Use the QuestionComponent here */}
+              <QuestionComponent
+                quizItem={quizItem}
+                userAnswer={userAnswers[index]}
+                index={index}
+                handleAnswerSelect={handleAnswerSelect}
+              />
+            </Card.Body>
+          </Card>
         ))}
         <div className="text-center">
           <Button variant="primary" onClick={handleSubmit}>

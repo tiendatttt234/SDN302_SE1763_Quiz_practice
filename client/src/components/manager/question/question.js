@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../managerCSS/question.css";
+import { Dropdown } from "react-bootstrap";
 
 function AddQuestion() {
   const [title, setTitle] = useState("");
@@ -19,6 +20,7 @@ function AddQuestion() {
   const [nextId, setNextId] = useState(1);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     const fetchMaxId = async () => {
@@ -228,7 +230,17 @@ function AddQuestion() {
         onChange={(e) => setDescription(e.target.value)}
       />
       {errors.description && <p className="error">{errors.description}</p>}
+      <Dropdown>
+      <Dropdown.Toggle variant="success" id="dropdown-basic">
+        Category
+      </Dropdown.Toggle>
 
+      <Dropdown.Menu>
+        <Dropdown.Item value="1">Action</Dropdown.Item>
+        <Dropdown.Item value="2">Another action</Dropdown.Item>
+        <Dropdown.Item value="3">Something else</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
       {questions.map((q, index) => (
         <div key={q.id} className="question-card">
           <div className="question-header">

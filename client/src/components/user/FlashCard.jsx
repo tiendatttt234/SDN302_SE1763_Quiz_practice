@@ -1,160 +1,177 @@
 import React, { useState } from "react";
-import "./FlashCard.css"; // You will define the styles here
-import { Modal, Button, Form, Row, Col, Container } from "react-bootstrap"; // Import Bootstrap for Modal
-import { useNavigate } from "react-router-dom";
+import { Modal, Button, Form, Card, Row, Col } from "react-bootstrap";
+import "./FlashCard.css"; // Assuming you keep your CSS file here
 
-const Flashcard = () => {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [showQuizSetup, setShowQuizSetup] = useState(false);
-  const [quizName, setQuizName] = useState("");
-  const [numQuestions, setNumQuestions] = useState(0);
-  const navigate = useNavigate();
-
-  const questions = [
-    { question: "What is the capital of France?", answer: "Paris" },
+const FlashcardPage = () => {
+  const quizData = [
     {
-      question: "What is the largest ocean on Earth?",
-      answer: "Pacific Ocean",
+      id: 1,
+      question:
+        "Điền thêm từ để có câu trả lời đúng theo quan niệm duy vật lịch sử và xác định đó là nhận định của ai?",
+      type: "MAQ",
+      answers: [
+        { id: 1, text: "Toàn bộ các quan hệ xã hội (Ph.Ăngghen)" },
+        { id: 2, text: "Tổng hòa những quan hệ xã hội /C.Mác" },
+        { id: 3, text: "Tổng hòa các quan hệ kinh tế VI Lênin" },
+        { id: 4, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
+      ],
+      correctAnswers: [1, 2],
     },
-    { question: 'Who wrote "Hamlet"?', answer: "William Shakespeare" },
     {
-      question: "What is the boiling point of water?",
-      answer: "100°C (212°F)",
+      id: 2,
+      question: "Triết học Mác ra đời vào thời gian nào?",
+      type: "MCQ",
+      answers: [
+        { id: 1, text: "Những năm 40 của thế kỷ XIX" },
+        { id: 2, text: "Những năm 50 của thế kỷ XIX" },
+        { id: 3, text: "Những năm 20 của thế kỷ XIX" },
+        { id: 4, text: "Những năm 30 của thế kỷ XIX" },
+      ],
+      correctAnswers: [1],
+    },
+    {
+      id: 3,
+      question: "Triết học Mác ra đời vào thời gian nào?",
+      type: "BOOLEAN",
+      answers: [
+        { id: 1, text: "Đúng" },
+        { id: 2, text: "Sai" },
+      ],
+      correctAnswers: [1],
     },
   ];
 
-  const handleCardClick = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [quizName, setQuizName] = useState("");
+  const [questionCount, setQuestionCount] = useState(0);
+
+  const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
 
-  const handleNextQuestion = () => {
-    setIsFlipped(false); // Reset to show question side
-    setCurrentQuestionIndex((prevIndex) =>
-      prevIndex === questions.length - 1 ? 0 : prevIndex + 1
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === quizData.length - 1 ? 0 : prevIndex + 1
     );
+    setIsFlipped(false); // Reset the flip when moving to the next card
   };
 
-  const handlePreviousQuestion = () => {
-    setIsFlipped(false); // Reset to show question side
-    setCurrentQuestionIndex((prevIndex) =>
-      prevIndex === 0 ? questions.length - 1 : prevIndex - 1
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? quizData.length - 1 : prevIndex - 1
     );
+    setIsFlipped(false); // Reset the flip when moving to the previous card
   };
 
-  // Modal controls for quiz setup
-  const handleShowQuizSetup = () => setShowQuizSetup(true);
-  const handleCloseQuizSetup = () => setShowQuizSetup(false);
-
-  const handleQuizSubmit = (e) => {
-    e.preventDefault();
-    if (numQuestions > questions.length) {
-      alert(`Số lượng câu hỏi không được vượt quá ${questions.length}`);
-    } else {
-      navigate("/user/quiz/attempt");
-    }
+  const handleCreateQuiz = () => {
+    // Handle the creation of a new quiz (store the quizName and questionCount)
+    console.log("Quiz Created:", quizName, questionCount);
+    setShowModal(false); // Close the modal
   };
 
   return (
     <div className="flashcard-wrapper">
-      <Container fluid>
-        <Row>
-          <Col xs={3}></Col>
-        </Row>
-        <Row style={{ marginBottom: "10px" }}>
-          <Col xs={6} md={4}></Col>
-          <Col xs={6} md={4}>
-            <div className="flashcard-container" onClick={handleCardClick}>
-              <div className={`flashcard ${isFlipped ? "flipped" : ""}`}>
-                <div className="front">
-                  <p>{questions[currentQuestionIndex].question}</p>
-                </div>
-                <div className="back">
-                  <p>{questions[currentQuestionIndex].answer}</p>
-                </div>
-              </div>
-            </div>
-          </Col>
-          <Col xs={6} md={4}>
-            <div style={{marginBottom: "10px"}}>
-              <Button
-                variant="primary"
-                onClick={handleShowQuizSetup}
-                className="create-quiz-btn"
-              >
-                Tạo bài kiểm tra
-              </Button>
-              </div>
-            <div>
-              <Button>test</Button>
-              </div>
-          </Col>
-        </Row>
+      {/* Create Quiz Button */}
+      <Button variant="primary" onClick={() => setShowModal(true)}>
+        Tạo Bài Kiểm Tra
+      </Button>
 
-        <Row>
-          <div className="navigation-buttons">
-            <button onClick={handlePreviousQuestion} className="prev-button">
-              ←
-            </button>
+      {/* Modal for Creating a Quiz */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tạo Bài Kiểm Tra</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="quizName">
+              <Form.Label>Tên bài kiểm tra</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Nhập tên bài kiểm tra"
+                value={quizName}
+                onChange={(e) => setQuizName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="questionCount" className="mt-3">
+              <Form.Label>Số lượng câu hỏi</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Nhập số lượng câu hỏi"
+                value={questionCount}
+                onChange={(e) => setQuestionCount(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Hủy
+          </Button>
+          <Button variant="primary" onClick={handleCreateQuiz}>
+            Tạo bài kiểm tra
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
-            <div className="question-counter">
-              {currentQuestionIndex + 1} / {questions.length}
-            </div>
+      <div className="question-counter">
+        Question {currentIndex + 1} of {quizData.length}
+      </div>
 
-            <button onClick={handleNextQuestion} className="next-button">
-              →
-            </button>
+      <div className="flashcard-container" onClick={handleFlip}>
+        <div className={`flashcard ${isFlipped ? "flipped" : ""}`}>
+          <div className="front">{quizData[currentIndex].question}</div>
+          <div className="back">
+            <ul>
+              {quizData[currentIndex].answers
+                .filter((answer) =>
+                  quizData[currentIndex].correctAnswers.includes(answer.id)
+                )
+                .map((answer) => (
+                  <li key={answer.id}>{answer.text}</li>
+                ))}
+            </ul>
           </div>
-        </Row>
+        </div>
+      </div>
 
-        {/* Flashcard */}
+      <div className="navigation-buttons">
+        <button className="prev-button" onClick={handlePrev}>
+          Previous
+        </button>
+        <button className="next-button" onClick={handleNext}>
+          Next
+        </button>
+      </div>
 
-        {/* Hiển thị số câu hiện tại / tổng số câu */}
-
-        {/* Nút Previous và Next */}
-
-        {/* Quiz setup modal */}
-        <Modal show={showQuizSetup} onHide={handleCloseQuizSetup}>
-          <Modal.Header closeButton>
-            <Modal.Title>Thiết lập bài kiểm tra</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={handleQuizSubmit}>
-              <Form.Group controlId="quizName">
-                <Form.Label>Tên bài kiểm tra</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Nhập tên bài kiểm tra"
-                  value={quizName}
-                  onChange={(e) => setQuizName(e.target.value)}
-                  required
-                />
-              </Form.Group>
-
-              <Form.Group controlId="numQuestions" className="mt-3">
-                <Form.Label>
-                  Số lượng câu hỏi (tối đa {questions.length})
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder={`Nhập số lượng câu hỏi (tối đa ${questions.length})`}
-                  value={numQuestions}
-                  onChange={(e) => setNumQuestions(e.target.value)}
-                  required
-                  min="1"
-                  max={questions.length}
-                />
-              </Form.Group>
-
-              <Button variant="primary" type="submit" className="mt-3">
-                Bắt đầu bài kiểm tra
-              </Button>
-            </Form>
-          </Modal.Body>
-        </Modal>
-      </Container>
+      <div className="terminology-section">
+        {quizData.map((quiz) => (
+          <Card key={quiz.id} className="terminology-card">
+            <Card.Header>thuật ngữ</Card.Header>
+            <Card.Body className="question-answer-block">
+              <Row>
+                <Col xs={4} className="question">
+                  <p>{quiz.question}</p>
+                </Col>
+                <Col xs={8} className="answer">
+                  <ul>
+                    {quiz.answers
+                      .filter((answer) =>
+                        quiz.correctAnswers.includes(answer.id)
+                      )
+                      .map((answer) => (
+                        <li key={answer.id}>{answer.text}</li>
+                      ))}
+                  </ul>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default Flashcard;
+export default FlashcardPage;
