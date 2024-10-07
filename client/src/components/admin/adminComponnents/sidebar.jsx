@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'; // Change import from Link to NavLin
 import { Nav } from 'react-bootstrap';
 import { FaTachometerAlt, FaUsers, FaShoppingCart, FaBox, FaSignOutAlt } from 'react-icons/fa'; // Import icons
 
-import '../adminCss/sidebar.css';
+import '../adminCSS/sidebar.css';
 
 const Sidebar = () => {
   const adminName = "Admin Name"; // Replace with the actual admin name or prop

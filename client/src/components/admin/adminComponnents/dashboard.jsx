@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
 import Sidebar from './sidebar';
-import '../adminCss/dashboard.css';
+import '../adminCSS/dashboard.css';
 import { FaSortUp, FaSortDown } from 'react-icons/fa';
 import { Pie } from 'react-chartjs-2';
 

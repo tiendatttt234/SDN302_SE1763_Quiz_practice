@@ -4,7 +4,7 @@ import ModalAddNewUser from './modalAdd';
 import ModalEditUser from './modalEdit';
 import ModalDeleteUser from './modalDelete';
 import Sidebar from './sidebar'; // Import Sidebar
-import '../adminCss/usermanagement.css'; // Import CSS cho User Management
+import '../adminCSS/usermanagement.css'; // Import CSS cho User Management
 import { FaSortUp, FaSortDown } from 'react-icons/fa'; // Import icons for sorting
 
 const fakeUsers = [

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import '../adminCss/navbar.css'; // Tạo file CSS để tùy chỉnh
+import '../adminCSS/navbar.css'; // Tạo file CSS để tùy chỉnh
 
 const AdminNavbar = ({ adminName }) => {
   return (
