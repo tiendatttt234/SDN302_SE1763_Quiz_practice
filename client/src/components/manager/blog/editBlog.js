@@ -111,7 +111,7 @@ function ManageEditBlog() {
             style={{ height: "500px" }}
           />
         </div>
-        <div className="col-md-3 sidebar">
+        <div className="col-md-3 blog-sidebar">
           <div className="preview-image">
             {image === "/img/posts/image_null.png" ? (
               <div className="image-placeholder">Choose an image</div>

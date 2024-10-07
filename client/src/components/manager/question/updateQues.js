@@ -282,7 +282,7 @@ function UpdateQuestion() {
             {q.type === "true-false" && (
               <>
                 {q.answers.slice(0, 2).map((answer, idx) => (
-                  <div key={idx} className="answer-container">
+                  <div key={idx} className="answer-contain">
                     <input
                       className="input-field answer-input"
                       type="text"
@@ -311,7 +311,7 @@ function UpdateQuestion() {
             {q.type === "multiple-choice" && (
               <>
                 {q.answers.map((answer, idx) => (
-                  <div key={idx} className="answer-container">
+                  <div key={idx} className="answer-contain">
                     <input
                       className="input-field answer-input"
                       type="text"
@@ -345,7 +345,7 @@ function UpdateQuestion() {
 
             {q.type === "multiple-answers" &&
               q.answers.map((answer, idx) => (
-                <div key={idx} className="answer-container">
+                <div key={idx} className="answer-contain">
                   <input
                     className="input-field answer-input"
                     type="text"
