@@ -16,6 +16,9 @@ import AdminProfit from "./components/admin/viewProfit";
 import Profile from "./components/authen/Profile";
 import ForgotPassword from "./components/authen/ForgotPassword";
 import Footer from "./components/common/layout/Footer";
+import AdminDashboard from '../src/components/admin/adminComponnents/admin'
+import UserManagement from './components/admin/adminComponnents/usermanagement';
+import Dashboard from './components/admin/adminComponnents/dashboard';
 
 
 function App() {
@@ -48,6 +51,13 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
 
+
+
+          <Route path="/admin" element={<AdminDashboard/>}></Route>
+          <Route path="/admin/users" element={<UserManagement/>}></Route>
+          <Route path="/admin/dashboard" element={<Dashboard/>} />
+
+          
           
           <Route path='/flash' element={<Flashcard/>}/> 
 
