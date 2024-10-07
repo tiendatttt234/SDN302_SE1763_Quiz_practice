@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
 import { Button } from "react-bootstrap";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -48,7 +47,7 @@ export default function QuizResult() {
         <Pie data={data} />
       </div>
       <div className="mt-4">
-        <Button variant="primary" onClick={() => navigate("/")}>
+        <Button variant="primary" onClick={() => navigate("/flash")}>
           Go to Quiz
         </Button>
       </div>

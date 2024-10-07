@@ -56,8 +56,6 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
 
-
-
           <Route path="/admin" element={<AdminDashboard/>}></Route>
           <Route path="/admin/users" element={<UserManagement/>}></Route>
           <Route path="/admin/dashboard" element={<Dashboard/>} />

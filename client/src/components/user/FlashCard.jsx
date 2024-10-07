@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Card, Row, Col } from "react-bootstrap";
 import "./FlashCard.css"; // Assuming you keep your CSS file here
+import { useNavigate } from "react-router-dom";
 
 const FlashcardPage = () => {
   const quizData = [
@@ -46,7 +47,7 @@ const FlashcardPage = () => {
   const [showModal, setShowModal] = useState(false); // Modal visibility state
   const [quizName, setQuizName] = useState("");
   const [questionCount, setQuestionCount] = useState(0);
-
+  const navigate = useNavigate();
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
@@ -67,7 +68,7 @@ const FlashcardPage = () => {
 
   const handleCreateQuiz = () => {
     // Handle the creation of a new quiz (store the quizName and questionCount)
-    console.log("Quiz Created:", quizName, questionCount);
+    navigate('/user/quiz/attempt');
     setShowModal(false); // Close the modal
   };
 
