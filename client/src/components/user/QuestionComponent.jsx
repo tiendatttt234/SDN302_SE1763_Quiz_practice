@@ -1,5 +1,5 @@
 import React from "react";
-import "./QuestionComponent.css"; // Add CSS for specific styling if needed
+import "./styles/QuestionComponent.css"; // Add CSS for specific styling if needed
 
 export default function QuestionComponent({
   quizItem,

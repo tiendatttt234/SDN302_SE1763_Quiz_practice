@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 const AnswerSchema = new mongoose.Schema({
     question: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'QuestionFile.arrayQuestion', // Tham chiếu đến từng câu hỏi trong QuestionFile
+        ref: 'QuestionFile.arrayQuestion', 
         required: true
     },
     selectedAnswer: [{
-        type: String, // Hoặc có thể là ObjectId nếu bạn lưu đáp án bằng _id của nó
+        type: String, 
         required: true
     }],
     isCorrect: {

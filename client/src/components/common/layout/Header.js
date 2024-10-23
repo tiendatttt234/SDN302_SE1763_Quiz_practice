@@ -45,7 +45,7 @@ const Header = () => {
           {/* Dropdown for Công cụ học */}
           <Dropdown>
             <Dropdown.Toggle variant="light" id="dropdown-basic">
-              Công cụ học
+              Công cụ
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item>
@@ -56,9 +56,11 @@ const Header = () => {
                     marginRight: "8px",
                   }}
                 />
-                Học
+                <Link to="/blogList">
+                Blog
+                </Link>
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item >
                 <CardChecklist
                   style={{
                     color: "black",
@@ -66,9 +68,11 @@ const Header = () => {
                     marginRight: "8px",
                   }}
                 />
+                <Link to="/flash">
                 Thẻ ghi nhớ
+                </Link>
               </Dropdown.Item>
-              <Dropdown.Item>
+              {/* <Dropdown.Item>
                 <Clipboard2Check
                   style={{
                     color: "black",
@@ -77,7 +81,7 @@ const Header = () => {
                   }}
                 />
                 Kiểm tra
-              </Dropdown.Item>
+              </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
 
@@ -190,7 +194,7 @@ const Header = () => {
                   to="/mycourse"
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  Khóa học của tôi
+                  Các quiz đã thích
                 </Link>
               </Dropdown.Item>
               <Dropdown.Item>

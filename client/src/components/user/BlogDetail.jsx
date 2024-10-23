@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
 import { format } from "date-fns";
 import { Container, Card } from 'react-bootstrap';
-import './BlogDetail.css';
+import './styles/BlogDetail.css';
 
 function BlogDetail() {
     const { blogId } = useParams();

@@ -8,13 +8,13 @@ function HomePage() {
 
   const cards1 = [
     {
-      title: "Học",
+      title: "Test1",
     },
     {
-      title: "Thẻ ghi nhớ",
+      title: "Test2",
     },
     {
-      title: "Kiểm tra",
+      title: "Test3",
     },
     {
       title: "Ghép thẻ",

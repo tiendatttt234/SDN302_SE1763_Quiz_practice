@@ -21,7 +21,6 @@ const QuestionSchema = new mongoose.Schema({
             required: true
         }
     }],
-    // explanation: String // Nếu không dùng thì xóa hẳn, hoặc thêm nếu cần
 
 });
 

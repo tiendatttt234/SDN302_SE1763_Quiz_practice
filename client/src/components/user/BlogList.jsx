@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Pagination from 'react-bootstrap/Pagination';
-import './BlogList.css';
+import './styles/BlogList.css';
 
 function BlogList() {
     // Static blog data
@@ -103,7 +103,7 @@ function BlogList() {
                     {currentBlogs.map((blog) => (
                         <div key={blog.id} className="col-md-3 mb-4">
                             <div className="home-blog-entry">
-                                <Link to={`/blogs/${blog.id}`} className="home-blog-img-link">
+                                <Link to={`/blogDetail`} className="home-blog-img-link">
                                     <div className="home-blog-image-container">
                                         <img
                                             src={`${blog.image}`}

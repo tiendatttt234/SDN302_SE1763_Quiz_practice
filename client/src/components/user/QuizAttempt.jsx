@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
-import "./QuizAttempt.css";
+import "./styles/QuizAttempt.css";
 import { useNavigate } from "react-router-dom";
 import QuestionComponent from "./QuestionComponent"; // Import the QuestionComponent
 

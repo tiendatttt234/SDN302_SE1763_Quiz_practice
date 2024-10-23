@@ -1,53 +1,85 @@
-import React, { useState } from "react";
-import { Modal, Button, Form, Card, Row, Col } from "react-bootstrap";
-import "./FlashCard.css"; // Assuming you keep your CSS file here
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import "./styles/FlashCard.css"; // Assuming you keep your CSS file here
 
 const FlashcardPage = () => {
-  const quizData = [
-    {
-      id: 1,
-      question:
-        "Điền thêm từ để có câu trả lời đúng theo quan niệm duy vật lịch sử và xác định đó là nhận định của ai?",
-      type: "MAQ",
-      answers: [
-        { id: 1, text: "Toàn bộ các quan hệ xã hội (Ph.Ăngghen)" },
-        { id: 2, text: "Tổng hòa những quan hệ xã hội /C.Mác" },
-        { id: 3, text: "Tổng hòa các quan hệ kinh tế VI Lênin" },
-        { id: 4, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
-      ],
-      correctAnswers: [1, 2],
-    },
-    {
-      id: 2,
-      question: "Triết học Mác ra đời vào thời gian nào?",
-      type: "MCQ",
-      answers: [
-        { id: 1, text: "Những năm 40 của thế kỷ XIX" },
-        { id: 2, text: "Những năm 50 của thế kỷ XIX" },
-        { id: 3, text: "Những năm 20 của thế kỷ XIX" },
-        { id: 4, text: "Những năm 30 của thế kỷ XIX" },
-      ],
-      correctAnswers: [1],
-    },
-    {
-      id: 3,
-      question: "Triết học Mác ra đời vào thời gian nào?",
-      type: "BOOLEAN",
-      answers: [
-        { id: 1, text: "Đúng" },
-        { id: 2, text: "Sai" },
-      ],
-      correctAnswers: [1],
-    },
-  ];
-
+  const [quizData, setQuizData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [showModal, setShowModal] = useState(false); // Modal visibility state
   const [quizName, setQuizName] = useState("");
+  const [questionFileName, setQuestionFileName] = useState("");
+  const [userId] = useState("6718b44101a9ac9b0e084347");
   const [questionCount, setQuestionCount] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch data from the API when the component mounts
+    const fetchQuizData = async () => {
+      try {
+        const response = await fetch("http://localhost:9999/questionFile/getById/6718b44101a9ac9b0e084347");
+        const data = await response.json();
+        // console.log(data);
+        
+        const fileName = data.questionFile.name || "Tệp câu hỏi";
+        
+        // Transform the data structure to fit the component format
+        const transformedData = data.questionFile.arrayQuestion.map((question) => ({
+          id: question.questionId,
+          question: question.content,
+          type: question.type,
+          answers: question.answers.map((answer) => ({
+            id: answer.answerId,
+            text: answer.answerContent,
+          })),
+          correctAnswers: question.answers
+            .filter((answer) => answer.isCorrect)
+            .map((answer) => answer.answerId),
+        }));
+
+        // console.log(transformedData);
+        setQuestionFileName(fileName);
+        setQuizData(transformedData);
+      } catch (error) {
+        console.error("Error fetching quiz data:", error);
+      }
+    };
+
+    fetchQuizData();
+  }, []);
+
+
+  const handleCreateQuiz = async () => {
+    const quizData = {
+      quizName,
+      questionCount,
+      userId,  // Add userId to the payload
+    };
+
+    try {
+      const response = await fetch("http://localhost:9999/quiz/create-quiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(quizData), // Send the data as JSON
+      });
+
+      if (response.ok) {
+        // Handle success (you could navigate to another page or show a success message)
+        navigate("/user/quiz/attempt");
+      } else {
+        // Handle server errors
+        console.error("Failed to create quiz");
+      }
+    } catch (error) {
+      console.error("Error creating quiz:", error);
+    }
+
+    setShowModal(false); // Close the modal
+  };
+
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
@@ -66,20 +98,19 @@ const FlashcardPage = () => {
     setIsFlipped(false); // Reset the flip when moving to the previous card
   };
 
-  const handleCreateQuiz = () => {
-    // Handle the creation of a new quiz (store the quizName and questionCount)
-    navigate('/user/quiz/attempt');
-    setShowModal(false); // Close the modal
-  };
+  if (!quizData.length) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flashcard-wrapper">
-      {/* Create Quiz Button */}
+      <div>
+        <h1>{questionFileName}</h1>
+      </div>
       <Button variant="primary" onClick={() => setShowModal(true)}>
         Tạo Bài Kiểm Tra
       </Button>
 
-      {/* Modal for Creating a Quiz */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Tạo Bài Kiểm Tra</Modal.Title>
@@ -115,7 +146,7 @@ const FlashcardPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
+      
       <div className="question-counter">
         Question {currentIndex + 1} of {quizData.length}
       </div>
@@ -144,32 +175,6 @@ const FlashcardPage = () => {
         <button className="next-button" onClick={handleNext}>
           Next
         </button>
-      </div>
-
-      <div className="terminology-section">
-        {quizData.map((quiz) => (
-          <Card key={quiz.id} className="terminology-card">
-            <Card.Header>thuật ngữ</Card.Header>
-            <Card.Body className="question-answer-block">
-              <Row>
-                <Col xs={4} className="question">
-                  <p>{quiz.question}</p>
-                </Col>
-                <Col xs={8} className="answer">
-                  <ul>
-                    {quiz.answers
-                      .filter((answer) =>
-                        quiz.correctAnswers.includes(answer.id)
-                      )
-                      .map((answer) => (
-                        <li key={answer.id}>{answer.text}</li>
-                      ))}
-                  </ul>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        ))}
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ const QuizSchema = new mongoose.Schema({
             required: true
         },
         selectedQuestions: [{
-            type: mongoose.Schema.Types.ObjectId, // Tham chiếu _id của từng câu hỏi từ arrayQuestion
+            type: mongoose.Schema.Types.ObjectId, 
             required: true
         }]
     }],
