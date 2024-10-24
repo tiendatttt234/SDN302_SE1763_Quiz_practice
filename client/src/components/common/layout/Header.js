@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Search,
@@ -6,34 +6,37 @@ import {
   Book,
   Clipboard2Check,
   List,
+  X,
 } from "react-bootstrap-icons";
 import { Button, Dropdown } from "react-bootstrap";
-import "./Header.css"; // Tạo file CSS để thêm các style cần thiết
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "./Header.css";
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const handleToggle = () => {
     setShowMenu(!showMenu);
   };
+
   const handleItemClick = () => {
     // Ẩn menu khi chọn 1 item
     setShowMenu(false);
   };
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Thêm trạng thái cho sidebar
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
   const closeSidebar = () => {
     setIsSidebarOpen(false);
-  }
-
+  };
   return (
+    // <div className={`main-content ${isSidebarOpen ? "shifted" : ""}`}>
     <>
-      {/* Sidebar */}
-      <div className={`sidebar ${isSidebarOpen ? "open" : ""}` } style = {{marginTop: "50px"}}> 
+      <div className={`sidebar-menu ${isSidebarOpen ? "open" : ""}`}>
+        <div className="sidebar-header">
+          {/* <h2>Menu</h2> */}
+          <X onClick={toggleSidebar} size={24} className="close-icon" />
+        </div>
         <ul>
           <li>
             <Link to="/" onClick={closeSidebar}>
@@ -45,13 +48,12 @@ const Header = () => {
               <i className="bi bi-collection"></i> Thư viện của bạn
             </Link>
           </li>
-          
         </ul>
       </div>
 
       <header
         style={{
-          position: "fixed",
+          position: "",
           top: 0,
           left: 0,
           right: 0,
@@ -69,14 +71,13 @@ const Header = () => {
             padding: "10px 20px",
           }}
         >
-          {/* Icon menu ở bên trái logo */}
-          <div onClick={toggleSidebar} style={{ cursor: "pointer", color: "#333" }}>
+          <div onClick={toggleSidebar} style={{ cursor: "pointer" }}>
             <List size={24} />
           </div>
 
           {/* Logo */}
           <Link to="/" style={{ textDecoration: "none" }}>
-            <h1 style={{ margin: 0, paddingLeft: "10px" }}>Quizlet</h1>
+            <h1 style={{ margin: 0 }}>Quizlet</h1>
           </Link>
 
           <div
@@ -89,10 +90,10 @@ const Header = () => {
             {/* Dropdown for Công cụ học */}
             <Dropdown>
               <Dropdown.Toggle variant="light" id="dropdown-basic">
-                Công cụ học
+                Công cụ
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={handleItemClick}>
+                <Dropdown.Item>
                   <Book
                     style={{
                       color: "black",
@@ -100,9 +101,9 @@ const Header = () => {
                       marginRight: "8px",
                     }}
                   />
-                  Học
+                  <Link to="/blogList">Blog</Link>
                 </Dropdown.Item>
-                <Dropdown.Item onClick={handleItemClick}>
+                <Dropdown.Item>
                   <CardChecklist
                     style={{
                       color: "black",
@@ -110,18 +111,18 @@ const Header = () => {
                       marginRight: "8px",
                     }}
                   />
-                  Thẻ ghi nhớ
+                  <Link to="/flash">Thẻ ghi nhớ</Link>
                 </Dropdown.Item>
-                <Dropdown.Item onClick={handleItemClick}>
-                  <Clipboard2Check
-                    style={{
-                      color: "black",
-                      fontSize: "25px",
-                      marginRight: "8px",
-                    }}
-                  />
-                  Kiểm tra
-                </Dropdown.Item>
+                {/* <Dropdown.Item>
+                <Clipboard2Check
+                  style={{
+                    color: "black",
+                    fontSize: "25px",
+                    marginRight: "8px",
+                  }}
+                />
+                Kiểm tra
+              </Dropdown.Item> */}
               </Dropdown.Menu>
             </Dropdown>
 
@@ -191,32 +192,39 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Button for Chủ đề */}
           <div>
+            {/* Button for Chủ đề */}
             <Button variant="primary" onClick={handleToggle}>
               +
             </Button>
-
             {showMenu && (
               <Dropdown.Menu show className="custom-dropdown-menu">
                 <Dropdown.Item
                   onClick={handleItemClick}
                   className="custom-dropdown-item"
                 >
-                  <i className="bi bi-book" style={{ marginRight: "8px" }}></i>
-                  <Link to="/user/addquestion" className="custom-dropdown-link">
-                    Học phần
-                  </Link>
+                  <div className="icon-text">
+                    <i className="bi bi-book"></i>
+                    <Link
+                      to="/user/addquestion"
+                      className="custom-dropdown-link"
+                    >
+                      Học phần
+                    </Link>
+                  </div>
                 </Dropdown.Item>
                 <Dropdown.Item
                   onClick={handleItemClick}
                   className="custom-dropdown-item"
-                >
-                  <i className="bi bi-folder" style={{ marginRight: "8px" }}></i>
+                > 
+                <div className="icon-text">
+                <i className="bi bi-folder"></i>
                   <Link to="#" className="custom-dropdown-link">
                     Thư mục
                   </Link>
+                  </div>
                 </Dropdown.Item>
+                
               </Dropdown.Menu>
             )}
           </div>
@@ -273,7 +281,7 @@ const Header = () => {
                     to="/mycourse"
                     style={{ textDecoration: "none", color: "black" }}
                   >
-                    Khóa học của tôi
+                    Các quiz đã thích
                   </Link>
                 </Dropdown.Item>
                 <Dropdown.Item>
