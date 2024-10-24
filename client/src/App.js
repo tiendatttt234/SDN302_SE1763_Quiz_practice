@@ -14,12 +14,14 @@ import HomePage from './components/authen/Homepage';
 import Login from './components/authen/Login/Login';
 import Register from './components/authen/Register/Register';
 import UpdateQuestion from './components/manager/question/updateQues';
+import Header from './components/common/layout/Header';
 
 function App() {
   return (
 
     <BrowserRouter>
     <div className="App">
+      <Header/>
       <Routes>
           {/* <Route path='/*' element={<AuthRoutes />} />
           <Route path='*' element={<PageNotFound />} />

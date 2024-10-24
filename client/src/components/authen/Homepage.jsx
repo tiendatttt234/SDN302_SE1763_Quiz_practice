@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Homepage.css";
+import Header from "../common/layout/Header";
 
 function HomePage() {
   const [currentIndex1, setCurrentIndex1] = useState(0);
@@ -86,6 +87,8 @@ function HomePage() {
   };
 
   return (
+    <>
+    {/* <div><Header /></div> */}
     <div className="homepage-container">
       <div className="homepage-section">
         <h2>Section 1</h2>
@@ -182,6 +185,7 @@ function HomePage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
