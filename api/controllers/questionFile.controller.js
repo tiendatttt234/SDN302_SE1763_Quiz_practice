@@ -9,6 +9,27 @@ async function getAllQuestionFile(req, res, next) {
     }
 }
 
+async function createQuestionFile(req, res, next) {
+    try {
+        const { name, description, isPrivate, arrayQuestion, createdBy } = req.body;
+
+        // Create a new QuestionFile instance
+        const newQuestionFile = new QuestionFile({
+            name,
+            description,
+            isPrivate,
+            arrayQuestion,
+            createdBy
+        });
+
+        // Save the question file to the database
+        const savedQuestionFile = await newQuestionFile.save();
+
+        return res.status(201).json({ message: "Question file created successfully", questionFile: savedQuestionFile });
+    } catch (error) {
+        next(error);
+    }
+}
 async function getQuestionFileById(req, res, next) {
     try {
         const { id } = req.params;
@@ -40,7 +61,8 @@ async function getQuestionFileById(req, res, next) {
 
 const QuestionFileController = {
     getAllQuestionFile,
-    getQuestionFileById
+    getQuestionFileById,
+    createQuestionFile
 };
 
 module.exports = QuestionFileController;

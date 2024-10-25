@@ -9,16 +9,14 @@ const QuizSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    questions: [{
-        questionFile: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'QuestionFile',
-            required: true
-        },
-        selectedQuestions: [{
-            type: mongoose.Schema.Types.ObjectId, 
-            required: true
-        }]
+    questionFile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'QuestionFile',
+        required: true
+    },
+    selectedQuestions: [{
+        type: mongoose.Schema.Types.ObjectId, 
+        required: true
     }],
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,

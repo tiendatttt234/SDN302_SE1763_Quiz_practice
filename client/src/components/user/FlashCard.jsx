@@ -10,15 +10,19 @@ const FlashcardPage = () => {
   const [showModal, setShowModal] = useState(false); // Modal visibility state
   const [quizName, setQuizName] = useState("");
   const [questionFileName, setQuestionFileName] = useState("");
-  const [userId] = useState("6718b44101a9ac9b0e084347");
   const [questionCount, setQuestionCount] = useState(0);
   const navigate = useNavigate();
 
+
+// giả sử có userId và questionfileId của client 
+const [userId] = useState("6718b40f01a9ac9b0e084342");
+const [questionFileId] = useState("6718b44101a9ac9b0e084347");
+
+
   useEffect(() => {
-    // Fetch data from the API when the component mounts
     const fetchQuizData = async () => {
       try {
-        const response = await fetch("http://localhost:9999/questionFile/getById/6718b44101a9ac9b0e084347");
+        const response = await fetch("http://localhost:9999/questionFile/getById/671b067ca0165aeba3d1148a");
         const data = await response.json();
         // console.log(data);
         
@@ -54,7 +58,8 @@ const FlashcardPage = () => {
     const quizData = {
       quizName,
       questionCount,
-      userId,  // Add userId to the payload
+      userId,
+      questionFileId
     };
 
     try {
@@ -67,8 +72,10 @@ const FlashcardPage = () => {
       });
 
       if (response.ok) {
+        const data = await response.json(); // Nhận dữ liệu trả về từ server
+        const quizId = data.quiz._id; // Giả sử server trả về { quizId: "your_quiz_id" }
         // Handle success (you could navigate to another page or show a success message)
-        navigate("/user/quiz/attempt");
+        navigate(`/user/quiz/attempt/${quizId}`);
       } else {
         // Handle server errors
         console.error("Failed to create quiz");

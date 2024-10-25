@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Schema cho Question
 const QuestionSchema = new mongoose.Schema({
     content: {
         type: String,
@@ -20,8 +21,7 @@ const QuestionSchema = new mongoose.Schema({
             type: Boolean,
             required: true
         }
-    }],
-
+    }]
 });
 
 const QuestionFileSchema = new mongoose.Schema({
