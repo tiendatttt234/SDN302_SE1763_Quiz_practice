@@ -23,11 +23,13 @@ async function createQuiz(req, res, next) {
         if (!questionFile) {
             return res.status(404).json({ message: "Question file not found" });
         }
-        console.log(questionFile);
+        // kiểm tra questionFile có tồn tại không
+        // console.log(questionFile);
         
         // Extract question IDs from the questionFile
         const allQuestions = questionFile.arrayQuestion.map(q => q._id);
-        console.log(allQuestions);
+        // map lấy toàn bộ questionId trong questionFile để tiến hành lấy random question theo _id
+        // console.log(allQuestions);
         
         // Shuffle the array and select random questions
         const getRandomQuestions = (questions, count) => {
@@ -40,7 +42,7 @@ async function createQuiz(req, res, next) {
         };
         
         const randomListQuestions = getRandomQuestions(allQuestions, questionCount);
-        console.log(randomListQuestions);
+        // console.log(randomListQuestions);
         
         // Create a new Quiz object
         const newQuiz = new Quiz({
@@ -74,8 +76,8 @@ async function getQuizById(req, res, next) {
                 path: 'questionFile',
                 select: 'name arrayQuestion',
             })
-            .lean(); // Thêm lean() để nhận kết quả đầy đủ
-        console.log(quiz);
+            .lean();
+        // console.log(quiz);
         
         if (!quiz) {
             return res.status(404).json({ message: "Quiz not found" });
@@ -85,11 +87,11 @@ async function getQuizById(req, res, next) {
             return res.status(404).json({ message: "Question file or questions not found" });
         }
 
-        console.log(quiz.questionFile.arrayQuestion);
+        // console.log(quiz.questionFile.arrayQuestion);
         
         // Lấy các câu hỏi đã chọn từ arrayQuestion
         const selectedQuestions = quiz.selectedQuestions.map(questionId => {
-            console.log(questionId);
+            // console.log(questionId);
             
             // Tìm câu hỏi tương ứng trong arrayQuestion
             const question = quiz.questionFile.arrayQuestion.find(q => {
@@ -111,10 +113,7 @@ async function getQuizById(req, res, next) {
                 answers: question.answers.map(answer => ({
                     answerId: answer._id,
                     text: answer.answerContent
-                })),
-                correctAnswers: question.answers
-                    .map((answer, index) => (answer.isCorrect ? index + 1 : null))
-                    .filter(Boolean) 
+                }))
             };
         }).filter(Boolean) ;// Lọc ra các câu hỏi không tồn tại (nếu có)
 

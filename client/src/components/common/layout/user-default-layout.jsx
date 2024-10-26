@@ -9,7 +9,7 @@ export default function UserDefaultPage(){
             <div className = 'container-fluid' >
                 <div className = {`container-fluid `}>
                     <Routes>
-                        <Route path='/quiz/attempt' element={<QuizAttempt/>}/>
+                        <Route path='/quiz/attempt/:id' element={<QuizAttempt/>}/>
                         <Route path='/quiz-result' element={<QuizResults/>}/>
                     </Routes>
                 </div>

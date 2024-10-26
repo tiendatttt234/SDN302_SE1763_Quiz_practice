@@ -1,7 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
 import "./styles/QuizAttempt.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import QuestionComponent from "./QuestionComponent"; // Import the QuestionComponent
 
 export default function QuizAttempt() {
@@ -13,54 +13,41 @@ export default function QuizAttempt() {
       margin: "20px 0",
     },
   };
-
-  const quizData = [
-    {
-      id: 1,
-      question: "Điền thêm từ để có câu trả lời đúng theo quan niệm duy vật lịch sử và xác định đó là nhận định của ai?",
-      type: "MAQ", 
-      answers: [
-        { id: 1, text: "Toàn bộ các quan hệ xã hội (Ph.Ăngghen)" },
-        { id: 2, text: "Tổng hòa những quan hệ xã hội /C.Mác" },
-        { id: 3, text: "Tổng hòa các quan hệ kinh tế VI Lênin" },
-        { id: 4, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
-        { id: 5, text: "Tổng hòa các quan hệ tự nhiên và xã hội (C. Mác)" },
-      ],
-      correctAnswers: [1, 2],
-    },
-    {
-      id: 2,
-      question: "Triết học Mác ra đời vào thời gian nào?",
-      type: "MCQ",
-      answers: [
-        { id: 1, text: "Những năm 40 của thế kỷ XIX" },
-        { id: 2, text: "Những năm 50 của thế kỷ XIX" },
-        { id: 3, text: "Những năm 20 của thế kỷ XIX" },
-        { id: 4, text: "Những năm 30 của thế kỷ XIX" },
-      ],
-      correctAnswers: [1],
-    },
-    {
-      id: 3,
-      question: "Triết học Mác ra đời vào thời gian nào?",
-      type: "BOOLEAN",
-      answers: [
-        { id: 1, text: "Đúng" },
-        { id: 2, text: "Sai" },
-      ],
-      correctAnswers: [1],
-    },
-  ];
-
+  
+  const { id } = useParams();
+  const [quizData, setQuizData] = useState(null); 
   const [userAnswers, setUserAnswers] = useState([]);
   const questionRefs = useRef([]);
   const navigate = useNavigate();
 
+  const [userId] = useState("6718b40f01a9ac9b0e084342");
+  const [questionFileId] = useState("671bb0a19dfaf03952134943");
+
+  // Fetch quiz data on component mount
+  useEffect(() => {
+    const fetchQuizData = async () => {
+      try {
+        const response = await fetch(`http://localhost:9999/quiz/getQuizById/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setQuizData(data); // Set the fetched data
+        } else {
+          console.error("Failed to fetch quiz data");
+        }
+      } catch (error) {
+        console.error("Error fetching quiz data:", error);
+      }
+    };
+    
+    fetchQuizData();
+  }, [id]);
+  console.log(quizData);
+  
   const handleAnswerSelect = (questionIndex, answerId) => {
     setUserAnswers((prevAnswers) => {
       const currentAnswers = prevAnswers[questionIndex] || [];
 
-      if (quizData[questionIndex].type === "MAQ") {
+      if (quizData.questions[questionIndex].type === "MAQ") {
         if (currentAnswers.includes(answerId)) {
           return {
             ...prevAnswers,
@@ -85,32 +72,49 @@ export default function QuizAttempt() {
     questionRefs.current[index].scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSubmit = () => {
-    const results = quizData.map((quizItem, index) => {
-      const userAnswer = userAnswers[index] || [];
-      const correctAnswers = quizItem.correctAnswers;
-
-      if (quizItem.type === "MAQ") {
-        const isCorrect =
-          userAnswer.length === correctAnswers.length &&
-          userAnswer.every((answerId) => correctAnswers.includes(answerId));
-        return { question: quizItem.question, isCorrect };
+  const handleSubmit = async () => {
+    const submissionData = {
+      userId,
+      questionFileId,
+      quizId: id, // quiz id from the params
+      userAnswers: quizData.questions.map((quizItem, index) => {
+        const selectedAnswers = userAnswers[index] || [];
+        return {
+          questionId: quizItem.questId,
+          selectedAnswerId: Array.isArray(selectedAnswers) ? selectedAnswers : [selectedAnswers], // single or multiple answers based on type
+        };
+      }),
+    };
+    //console.log(submissionData);
+    try {
+      const response = await fetch("http://localhost:9999/quizSubmit/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(submissionData),
+      });
+      if (response.ok) {
+        const result = await response.json();
+        console.log("Quiz submitted successfully:", result);
+        // navigate to results page or handle success state
+        // navigate("/user/quiz-result", { state: { results: result } });
       } else {
-        const isCorrect = userAnswer === correctAnswers[0];
-        return { question: quizItem.question, isCorrect };
+        console.error("Failed to submit quiz");
       }
-    });
-
-    navigate("/user/quiz-result", { state: { results } });
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+    }
   };
 
-  console.log(userAnswers);
-  
+  // Show loading or error message until data is available
+  if (!quizData) return <p>Loading...</p>;
+
   return (
     <div className="d-flex">
       <div className="side-nav p-3">
         <ul className="list-unstyled">
-          {quizData.map((_, index) => (
+          {quizData.questions.map((_, index) => (
             <li key={index} className="my-2">
               <Button
                 variant="outline-primary"
@@ -124,16 +128,16 @@ export default function QuizAttempt() {
       </div>
 
       <div className="quiz-content flex-grow-1 p-3">
-        {quizData.map((quizItem, index) => (
+        {quizData.questions.map((quizItem, index) => (
           <Card
-            key={index}
+            key={quizItem.questId}
             ref={(el) => (questionRefs.current[index] = el)}
             id={`question-${index}`}
             className="mb-3"
             style={style.card}
           >
             <Card.Header className="questionCard">
-              <h5>{quizItem.question}</h5>
+              <h5>{quizItem.content}</h5>
             </Card.Header>
             <Card.Body>
               <Card.Title>

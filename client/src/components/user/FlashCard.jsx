@@ -16,13 +16,13 @@ const FlashcardPage = () => {
 
 // giả sử có userId và questionfileId của client 
 const [userId] = useState("6718b40f01a9ac9b0e084342");
-const [questionFileId] = useState("6718b44101a9ac9b0e084347");
+const [questionFileId] = useState("671bb0a19dfaf03952134943");
 
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await fetch("http://localhost:9999/questionFile/getById/671b067ca0165aeba3d1148a");
+        const response = await fetch("http://localhost:9999/questionFile/getById/671bb0a19dfaf03952134943");
         const data = await response.json();
         // console.log(data);
         

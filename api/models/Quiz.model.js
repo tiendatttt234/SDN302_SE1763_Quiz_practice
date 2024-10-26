@@ -14,6 +14,10 @@ const QuizSchema = new mongoose.Schema({
         ref: 'QuestionFile',
         required: true
     },
+    isActive:{
+        type: Boolean,
+        default: true
+    },
     selectedQuestions: [{
         type: mongoose.Schema.Types.ObjectId, 
         required: true

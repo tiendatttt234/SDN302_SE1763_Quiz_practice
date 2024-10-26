@@ -1,27 +1,29 @@
 const mongoose = require('mongoose');
 
-// Schema cho việc lưu đáp án của người dùng
+
 const AnswerSchema = new mongoose.Schema({
-    question: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'QuestionFile.arrayQuestion', 
+    questionId: {
+        type: String,
         required: true
-    },
-    selectedAnswer: [{
-        type: String, 
-        required: true
-    }],
+    }, 
+    selectedAnswerId: [{
+        type: String
+    }], 
     isCorrect: {
         type: Boolean,
         required: true
-    }
+    } 
 });
 
-// Schema lưu kết quả làm bài quiz của người dùng
 const QuizResultSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
+        required: true
+    },
+    questionFile: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'QuestionFile',
         required: true
     },
     quiz: {
@@ -29,7 +31,7 @@ const QuizResultSchema = new mongoose.Schema({
         ref: 'Quiz',
         required: true
     },
-    answers: [AnswerSchema], 
+    userAnswers: [AnswerSchema],
     correctAnswersCount: {
         type: Number,
         required: true

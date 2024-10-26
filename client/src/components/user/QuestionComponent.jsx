@@ -12,25 +12,25 @@ export default function QuestionComponent({
       {quizItem.answers.map((answer) => {
         const isSelected =
           quizItem.type === "MAQ"
-            ? userAnswer?.includes(answer.id)
-            : userAnswer === answer.id;
+            ? userAnswer?.includes(answer.answerId)
+            : userAnswer === answer.answerId;
 
         return (
           <div
             className={`answer-style `}
-            key={answer.id}
-            onClick={() => handleAnswerSelect(index, answer.id)}
+            key={answer.answerId}
+            onClick={() => handleAnswerSelect(index, answer.answerId)}
           >
             <input
               type={quizItem.type === "MAQ" ? "checkbox" : "radio"}
               name={`question-${index}`}
-              id={`answer-${index}-${answer.id}`}
+              id={`answer-${index}-${answer.answerId}`}
               checked={isSelected}
-              onChange={() => handleAnswerSelect(index, answer.id)}
-              // style={{ visibility: "hidden" }} // Hide default input
+              onChange={() => handleAnswerSelect(index, answer.answerId)}
+              // style={{ visibility: "hidden" }}
             />
             <label
-              htmlFor={`answer-${index}-${answer.id}`}
+              htmlFor={`answer-${index}-${answer.answerId}`}
               className="answer-label"
             >
               {answer.text}
