@@ -23,6 +23,11 @@ async function createQuiz(req, res, next) {
         if (!questionFile) {
             return res.status(404).json({ message: "Question file not found" });
         }
+
+
+        if(questionCount > questionFile.arrayQuestion.length) {
+            return res.status(400).json({ message: "Question count exceeds the number of questions in the question file" });    
+        }
         // kiểm tra questionFile có tồn tại không
         // console.log(questionFile);
         

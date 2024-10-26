@@ -10,22 +10,24 @@ export default function QuizResult() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Use useEffect to handle redirect if no results are passed
+  
   useEffect(() => {
     if (!location.state || !location.state.results) {
-      navigate("/no-access"); // Redirect to quiz page
+      navigate("/no-access"); 
     }
   }, [location, navigate]);
 
   if (!location.state || !location.state.results) {
-    // Avoid rendering anything if there's no data
     return null;
   }
 
   const results = location.state.results;
-  const correctCount = results.filter((result) => result.isCorrect).length;
-  const totalCount = results.length;
+  console.log(results.newQuizResult);
+  
+  const correctCount = results.newQuizResult?.correctAnswersCount;
+  const totalCount = results.newQuizResult?.incorrectAnswersCount + correctCount;
 
+  
   // Pie chart data
   const data = {
     labels: ["Correct", "Incorrect"],
@@ -43,12 +45,13 @@ export default function QuizResult() {
       <p>
         Correct Answers: {correctCount} / {totalCount}
       </p>
+      <p>Time taken: {results.newQuizResult?.createdAt}</p>
       <div style={{ width: "300px", margin: "auto" }}>
         <Pie data={data} />
       </div>
       <div className="mt-4">
         <Button variant="primary" onClick={() => navigate("/flash")}>
-          Go to Quiz
+          Go back your folder
         </Button>
       </div>
     </div>
