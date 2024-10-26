@@ -16,14 +16,15 @@ function ViewQuestion() {
   const fetchQuestionSets = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:9999/questions");
+      const response = await fetch("http://localhost:9999/questionFile/getAll");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-
-      const sortedData = data.sort((a, b) => parseInt(a.id) - parseInt(b.id));
-      setQuestionSets(sortedData);
+      console.log("Dữ liệu nhận được từ server:", data);
+ 
+      
+      setQuestionSets(data.questionFileRespone);
     } catch (error) {
       console.error("Error fetching question sets:", error);
       setError("Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.");
@@ -31,6 +32,7 @@ function ViewQuestion() {
       setIsLoading(false);
     }
   };
+  console.log(questionSets);
 
   const handleViewDetail = (id) => {
     navigate(`/user/viewques/${id}`);
@@ -47,12 +49,15 @@ function ViewQuestion() {
 
     if (isConfirmed) {
       try {
-        const response = await fetch(`http://localhost:9999/questions/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `http://localhost:9999/questionFile/delete/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (response.ok) {
-          setQuestionSets((prev) => prev.filter((set) => set.id !== id));
+          setQuestionSets((prev) => prev.filter((set) => set._id !== id)); // Sửa id thành _id
         } else {
           console.error("Error deleting question set");
         }
@@ -83,7 +88,7 @@ function ViewQuestion() {
       <table className="question-table">
         <thead>
           <tr>
-            <th>Tiêu đề</th>
+            <th>Tiêu đề</th> {/* Sửa tiêu đề cột */}
             <th>Mô tả</th>
             <th>Số câu hỏi</th>
             <th>Hành động</th>
@@ -91,20 +96,24 @@ function ViewQuestion() {
         </thead>
         <tbody>
           {questionSets.map((set) => (
-            <tr key={set.id}>
-              <td>{set.title}</td>
-              <td>{set.description}</td>
-              <td>{set.questions.length}</td>
+            <tr key={set._id}>
+              <td>{set.name}</td>
+              <td>{set.description}</td>{" "}
+              <td>{set.arrayQuestion ? set.arrayQuestion.length : 0}</td>
               <td>
-                <button onClick={() => handleViewDetail(set.id)}>
+                <button onClick={() => handleViewDetail(set._id)}>
                   Xem chi tiết
                 </button>
                 <button
                   className="delete-button"
-                  onClick={() => handleDelete(set.id)}
-                  style={{ marginLeft: "10px", background: "none", border: "none" }}
+                  onClick={() => handleDelete(set._id)}
+                  style={{
+                    marginLeft: "10px",
+                    background: "none",
+                    border: "none",
+                  }}
                 >
-                  <i class="bi bi-trash" style={{ color: "black" }}></i>
+                  <i className="bi bi-trash" style={{ color: "black" }}></i>
                 </button>
               </td>
             </tr>

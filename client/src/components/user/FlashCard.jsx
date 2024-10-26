@@ -18,25 +18,29 @@ const FlashcardPage = () => {
     // Fetch data from the API when the component mounts
     const fetchQuizData = async () => {
       try {
-        const response = await fetch("http://localhost:9999/questionFile/getById/6718b44101a9ac9b0e084347");
+        const response = await fetch(
+          "http://localhost:9999/questionFile/getById/671b2ac26296469cb1f81df0"
+        );
         const data = await response.json();
         // console.log(data);
-        
+
         const fileName = data.questionFile.name || "Tệp câu hỏi";
-        
+
         // Transform the data structure to fit the component format
-        const transformedData = data.questionFile.arrayQuestion.map((question) => ({
-          id: question.questionId,
-          question: question.content,
-          type: question.type,
-          answers: question.answers.map((answer) => ({
-            id: answer.answerId,
-            text: answer.answerContent,
-          })),
-          correctAnswers: question.answers
-            .filter((answer) => answer.isCorrect)
-            .map((answer) => answer.answerId),
-        }));
+        const transformedData = data.questionFile.arrayQuestion.map(
+          (question) => ({
+            id: question.questionId,
+            question: question.content,
+            type: question.type,
+            answers: question.answers.map((answer) => ({
+              id: answer.answerId,
+              text: answer.answerContent,
+            })),
+            correctAnswers: question.answers
+              .filter((answer) => answer.isCorrect)
+              .map((answer) => answer.answerId),
+          })
+        );
 
         // console.log(transformedData);
         setQuestionFileName(fileName);
@@ -49,12 +53,11 @@ const FlashcardPage = () => {
     fetchQuizData();
   }, []);
 
-
   const handleCreateQuiz = async () => {
     const quizData = {
       quizName,
       questionCount,
-      userId,  // Add userId to the payload
+      userId, // Add userId to the payload
     };
 
     try {
@@ -146,7 +149,7 @@ const FlashcardPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      
+
       <div className="question-counter">
         Question {currentIndex + 1} of {quizData.length}
       </div>

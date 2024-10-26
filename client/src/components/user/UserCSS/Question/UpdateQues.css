@@ -121,7 +121,7 @@
   /* Add Answer & Add Question Button */
   .add-answer-button,
   .add-question-button {
-    background-color: #28a745;
+    background-color: #4965e2;
     color: white;
     border: none;
     border-radius: 5px;
@@ -135,7 +135,7 @@
   
   .add-answer-button:hover,
   .add-question-button:hover {
-    background-color: #218838;
+    background-color: #4965e2;
   }
   
   /* Action Buttons */

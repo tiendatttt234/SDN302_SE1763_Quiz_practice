@@ -7,7 +7,7 @@ function ViewQuestionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [quizData, setQuizData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [editedData, setEditedData] = useState(null); // State lưu trữ tạm thời các thay đổi
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -15,56 +15,73 @@ function ViewQuestionDetail() {
   }, [id]);
 
   const fetchQuizData = async () => {
-    setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:9999/questions/${id}`);
+      const response = await fetch(
+        `http://localhost:9999/questionFile/getById/${id}`
+      );
+      const data = await response.json();
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
+
       const updatedData = {
-        ...data,
-        questions: data.questions.map((q) => ({ ...q, isEditing: false })),
+        ...data.questionFile,
+        arrayQuestion: data.questionFile.arrayQuestion.map((q) => ({
+          ...q,
+          isEditing: false,
+        })),
       };
+
       setQuizData(updatedData);
+      setEditedData(updatedData); // Khởi tạo editedData từ dữ liệu ban đầu
     } catch (error) {
       console.error("Error fetching quiz data:", error);
       setError("Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.");
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleEditQuestion = (index) => {
-    const updatedQuestions = [...quizData.questions];
+    const updatedQuestions = [...editedData.arrayQuestion];
     updatedQuestions[index].isEditing = true;
-    setQuizData({ ...quizData, questions: updatedQuestions });
+    setEditedData({ ...editedData, arrayQuestion: updatedQuestions });
   };
 
   const handleDeleteQuestion = async (index) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa câu hỏi này không?")) {
-      const updatedQuestions = quizData.questions.filter((_, i) => i !== index);
-      const updatedQuizData = { ...quizData, questions: updatedQuestions };
-      await updateDatabase(updatedQuizData);
-      setQuizData(updatedQuizData);
+      const updatedQuestions = editedData.arrayQuestion.filter(
+        (_, i) => i !== index
+      );
+      const updatedQuizData = {
+        ...editedData,
+        arrayQuestion: updatedQuestions,
+      };
+      setEditedData(updatedQuizData); // Cập nhật editedData với dữ liệu mới
     }
   };
 
   const handleSave = async () => {
-    await updateDatabase(quizData);
-    alert("Lưu thay đổi thành công!");
-    fetchQuizData(); // Reload data after saving
+    if (editedData) {
+      console.log(editedData);
+
+      await updateDatabase(editedData);
+      alert("Lưu thay đổi thành công!");
+      await fetchQuizData();
+    }
   };
 
   const updateDatabase = async (data) => {
     try {
-      const response = await fetch(`http://localhost:9999/questions/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `http://localhost:9999/questionFile/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -78,69 +95,59 @@ function ViewQuestionDetail() {
     navigate("/");
   };
 
-  const handleQuestionChange = async (e, questionIndex, field) => {
-    const updatedQuestions = [...quizData.questions];
+  const handleQuestionChange = (e, questionIndex, field) => {
+    const updatedQuestions = [...editedData.arrayQuestion];
     updatedQuestions[questionIndex][field] = e.target.value;
-    const updatedQuizData = { ...quizData, questions: updatedQuestions };
-    await updateDatabase(updatedQuizData);
-    setQuizData(updatedQuizData);
+    setEditedData({ ...editedData, arrayQuestion: updatedQuestions });
   };
 
-  const handleAnswerChange = async (e, questionIndex, answerIndex, field) => {
-    const updatedQuestions = [...quizData.questions];
-    updatedQuestions[questionIndex].answers[answerIndex][field] = e.target.value;
-    const updatedQuizData = { ...quizData, questions: updatedQuestions };
-    await updateDatabase(updatedQuizData);
-    setQuizData(updatedQuizData);
+  const handleAnswerChange = (e, questionIndex, answerIndex, field) => {
+    const updatedQuestions = [...editedData.arrayQuestion];
+    updatedQuestions[questionIndex].answers[answerIndex][field] =
+      e.target.value;
+    setEditedData({ ...editedData, arrayQuestion: updatedQuestions });
   };
 
-const handleCorrectAnswerChange = async (questionIndex, answerIndex) => {
-  const updatedQuestions = [...quizData.questions];
-  const question = updatedQuestions[questionIndex];
+  const handleCorrectAnswerChange = (questionIndex, answerIndex) => {
+    const updatedQuestions = [...editedData.arrayQuestion];
+    const question = updatedQuestions[questionIndex];
 
-  if (question.type === "true-false") {
-    // Chỉ có 2 đáp án, nếu đáp án 0 được chọn là đúng thì đáp án 1 là sai và ngược lại
-    question.answers[0].correct = answerIndex === 0; // Đáp án đầu tiên
-    question.answers[1].correct = answerIndex === 1; // Đáp án thứ hai
-  } else if (question.type === "multiple-choice") {
-    // Đối với nhiều lựa chọn, cập nhật lại trạng thái của tất cả các đáp án
-    question.answers = question.answers.map((answer, idx) => ({
-      ...answer,
-      correct: idx === answerIndex,
-    }));
-  } else if (question.type === "multiple-answers") {
-    question.answers[answerIndex].correct = !question.answers[answerIndex].correct;
-  }
+    if (question.type === "Boolean") {
+      question.answers[0].isCorrect = answerIndex === 0;
+      question.answers[1].isCorrect = answerIndex === 1;
+    } else if (question.type === "MCQ") {
+      question.answers = question.answers.map((answer, idx) => ({
+        ...answer,
+        isCorrect: idx === answerIndex,
+      }));
+    } else if (question.type === "MAQ") {
+      question.answers[answerIndex].isCorrect =
+        !question.answers[answerIndex].isCorrect;
+    }
 
-  const updatedQuizData = { ...quizData, questions: updatedQuestions };
-  await updateDatabase(updatedQuizData);
-  setQuizData(updatedQuizData);
-};
+    setEditedData({ ...editedData, arrayQuestion: updatedQuestions });
+  };
 
-
-  const isAnyQuestionEditing = quizData?.questions.some((q) => q.isEditing);
-
-  if (isLoading) return <div>Đang tải...</div>;
   if (error) return <div className="error">{error}</div>;
   if (!quizData) return <div>Không tìm thấy dữ liệu câu hỏi.</div>;
 
   return (
     <div className="view-question">
-      <h1 className="view-title">{quizData.title}</h1>
+      <h1 className="view-title">{quizData.name}</h1>
       <p className="view-description">{quizData.description}</p>
 
-      {quizData.questions.map((q, index) => (
-        <div key={q.id} className="question-card">
+      {editedData.arrayQuestion.map((q, index) => (
+        <div key={q.questionId} className="question-card">
           <div className="question-header">
             {q.isEditing ? (
               <input
                 className="edit-question-text"
-                value={q.question}
-                onChange={(e) => handleQuestionChange(e, index, "question")}
+                value={q.content}
+                onChange={(e) => handleQuestionChange(e, index, "content")}
               />
             ) : (
               <h3 className="question-text">
-                {index + 1}. {q.question}
+                {index + 1}. {q.content}
               </h3>
             )}
             <div className="question-actions">
@@ -159,26 +166,28 @@ const handleCorrectAnswerChange = async (questionIndex, answerIndex) => {
             </div>
           </div>
 
-          {(q.type === "multiple-choice" || q.type === "multiple-answers" || q.type === "true-false") &&
+          {(q.type === "MCQ" || q.type === "MAQ" || q.type === "Boolean") &&
             q.answers.map((answer, idx) => (
-              <div key={idx} className="answer-option">
+              <div key={answer.answerId} className="answer-option">
                 <label>
                   <input
-                    type={q.type === "multiple-answers" ? "checkbox" : "radio"}
-                    name={`question-${q.id}`}
-                    checked={answer.correct}
+                    type={q.type === "MAQ" ? "checkbox" : "radio"}
+                    name={`question-${q.questionId}`}
+                    checked={answer.isCorrect}
                     disabled={!q.isEditing}
-                    onChange={() => q.isEditing && handleCorrectAnswerChange(index, idx)}
+                    onChange={() =>
+                      q.isEditing && handleCorrectAnswerChange(index, idx)
+                    }
                   />
                   {q.isEditing ? (
                     <input
-                      value={answer.text}
+                      value={answer.answerContent}
                       onChange={(e) =>
-                        handleAnswerChange(e, index, idx, "text")
+                        handleAnswerChange(e, index, idx, "answerContent")
                       }
                     />
                   ) : (
-                    answer.text
+                    answer.answerContent
                   )}
                 </label>
               </div>
@@ -195,7 +204,7 @@ const handleCorrectAnswerChange = async (questionIndex, answerIndex) => {
         </button>
       </div>
       <div className="action-buttons">
-        {isAnyQuestionEditing && (
+        {editedData && (
           <button className="save-button" onClick={handleSave}>
             Lưu
           </button>

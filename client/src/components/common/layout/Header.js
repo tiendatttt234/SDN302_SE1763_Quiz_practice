@@ -44,7 +44,7 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link to="/library" onClick={closeSidebar}>
+            <Link to="/user/viewques" onClick={closeSidebar}>
               <i className="bi bi-collection"></i> Thư viện của bạn
             </Link>
           </li>
@@ -211,17 +211,6 @@ const Header = () => {
                     >
                       Học phần
                     </Link>
-                  </div>
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={handleItemClick}
-                  className="custom-dropdown-item"
-                > 
-                <div className="icon-text">
-                <i className="bi bi-folder"></i>
-                  <Link to="#" className="custom-dropdown-link">
-                    Thư mục
-                  </Link>
                   </div>
                 </Dropdown.Item>
                 

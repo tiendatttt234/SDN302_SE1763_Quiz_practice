@@ -9,19 +9,19 @@ function AddQuestion() {
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState([
     {
-      id: 1,
-      question: "",
-      type: "multiple-choice",
+      id: Date.now(),
+      content: "", // Thay đổi từ question thành content
+      type: "Boolean", // Mặc định là Boolean
       answers: [
-        { text: "", correct: false },
-        { text: "", correct: false },
+        { answerContent: "Đúng", isCorrect: false }, // Thay đổi từ text thành answerContent và correct thành isCorrect
+        { answerContent: "Sai", isCorrect: false },
       ],
+      key: Date.now()
     },
   ]);
   const [nextId, setNextId] = useState(1);
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  // const [category, setCategory] = useState("");
 
   useEffect(() => {
     const fetchMaxId = async () => {
@@ -46,18 +46,18 @@ function AddQuestion() {
     if (!title) tempErrors.title = "Tiêu đề không được để trống.";
     if (!description) tempErrors.description = "Mô tả không được để trống.";
     questions.forEach((q, index) => {
-      if (!q.question) {
+      if (!q.content) {
         tempErrors[`question-${index}`] = "Câu hỏi không được để trống.";
       }
       if (
-        q.type !== "true-false" &&
-        q.answers.every((answer) => !answer.text)
+        q.type !== "Boolean" &&
+        q.answers.every((answer) => !answer.answerContent)
       ) {
         tempErrors[`answers-${index}`] = "Phải có ít nhất một đáp án.";
       }
       if (
-        q.type === "true-false" &&
-        (!q.answers[0].text || !q.answers[1].text)
+        q.type === "Boolean" &&
+        (!q.answers[0].answerContent || !q.answers[1].answerContent)
       ) {
         tempErrors[`answers-${index}`] =
           "Câu hỏi đúng/sai phải có ít nhất một đáp án.";
@@ -69,14 +69,23 @@ function AddQuestion() {
 
   const handleCreate = async () => {
     if (validateFields()) {
+      const userId = "671b2a90ecde6e67149e114e";
       const newQuestionData = {
-        title,
+        name: title,
         description,
-        questions,
+        arrayQuestion: questions.map((q) => ({
+          content: q.content,
+          type: q.type,
+          answers: q.answers.map((a) => ({
+            answerContent: a.answerContent,
+            isCorrect: a.isCorrect,
+          })),
+        })),
+        createdBy: userId, 
       };
-  
+      console.log('Data being sent:', JSON.stringify(newQuestionData, null, 2));
       try {
-        const response = await fetch("http://localhost:9999/questions", {
+        const response = await fetch("http://localhost:9999/questionFile/create", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -85,8 +94,8 @@ function AddQuestion() {
         });
   
         if (response.ok) {
-          const createdQuestion = await response.json(); // Lấy dữ liệu của câu hỏi mới tạo, bao gồm cả ID
-          navigate(`/user/viewques/${createdQuestion.id}`, { // Sử dụng ID từ phản hồi
+          const createdQuestion = await response.json(); 
+          navigate(`/user/viewques/${createdQuestion.id}`, { 
             state: { id: createdQuestion.id, title, description, questions },
           });
         } else {
@@ -109,7 +118,7 @@ function AddQuestion() {
         q.id === qId
           ? {
               ...q,
-              answers: [...q.answers, { text: "", correct: false }],
+              answers: [...q.answers, { answerContent: "", isCorrect: false }],
             }
           : q
       )
@@ -125,53 +134,47 @@ function AddQuestion() {
       )
     );
   };
+  const getDefaultAnswers = (type) => {
+    switch (type) {
+      case "Boolean":
+        return [
+          { answerContent: "Đúng", isCorrect: false },
+          { answerContent: "Sai", isCorrect: false }
+        ];
+      case "MCQ":
+      case "MAQ":
+        return [
+          { answerContent: "", isCorrect: false },
+          { answerContent: "", isCorrect: false }
+        ];
+      default:
+        return [];
+    }
+  };
+
 
   const updateQuestion = (id, field, value) => {
     setQuestions((prevQuestions) =>
       prevQuestions.map((q) => {
         if (q.id === id) {
+          // Nếu đang cập nhật loại câu hỏi
           if (field === "type") {
-            let updatedAnswers;
-            if (value === "true-false") {
-              // Switching to True/False
-              updatedAnswers = [
-                { text: "Đúng", correct: false },
-                { text: "Sai", correct: false },
-              ];
-              // Store the original answers in a new field
-              return {
-                ...q,
-                [field]: value,
-                answers: updatedAnswers,
-                originalAnswers: q.answers,
-              };
-            } else if (
-              (value === "multiple-choice" || value === "multiple-answers") &&
-              q.type === "true-false"
-            ) {
-              // Switching back from True/False
-              updatedAnswers = q.originalAnswers || [
-                { text: "", correct: false },
-                { text: "", correct: false },
-              ];
-              // Remove the originalAnswers field
-              const { originalAnswers, ...restOfQ } = q;
-              return {
-                ...restOfQ,
-                [field]: value,
-                answers: updatedAnswers,
-              };
-            } else {
-              // Switching between multiple-choice and multiple-answers
-              return { ...q, [field]: value };
-            }
+            const newAnswers = getDefaultAnswers(value);
+            return {
+              ...q,
+              type: value,
+              answers: newAnswers,
+              key: Date.now() // Cập nhật key để force re-render
+            };
           }
+          // Cập nhật các trường khác
           return { ...q, [field]: value };
         }
         return q;
       })
     );
   };
+  
 
   const updateAnswer = (qId, index, field, value) => {
     setQuestions(
@@ -192,22 +195,35 @@ function AddQuestion() {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
-  const addQuestion = () => {
-    setQuestions([
-      ...questions,
-      {
-        id: nextId, // Sử dụng nextId cho id mới
-        question: "",
-        type: "true-false",
-        answers: [
-          { text: "", correct: false },
-          { text: "", correct: false },
-        ],
-      },
-    ]);
-    setNextId((prevId) => prevId + 1); // Tăng nextId sau khi thêm câu hỏi mới
-  };
+  // const addQuestion = () => {
+  //   setQuestions([
+  //     ...questions,
+  //     {
+  //       id: nextId, // Sử dụng nextId cho id mới
+  //       content: "",
+  //       type: "Boolean", // Mặc định là Boolean
+  //       answers: [
+  //         { answerContent: "Đúng", isCorrect: false }, // Thay đổi từ text thành answerContent
+  //         { answerContent: "Sai", isCorrect: false },
+  //       ],
+  //     },
+  //   ]);
+    
+  //   setNextId((prevId) => prevId + 1); // Tăng nextId sau khi thêm câu hỏi mới
+  // };
 
+  const addQuestion = () => {
+    const currentTimestamp = Date.now();
+    const newQuestion = {
+      id: currentTimestamp,
+      content: "",
+      type: "Boolean",
+      answers: getDefaultAnswers("Boolean"),
+      key: currentTimestamp // Thêm key cho câu hỏi mới
+    };
+    setQuestions(prev => [...prev, newQuestion]);
+    // setNextId(prev => prev + 1);
+  };
   
 
   return (
@@ -233,7 +249,7 @@ function AddQuestion() {
       {errors.description && <p className="error">{errors.description}</p>}
       
       {questions.map((q, index) => (
-        <div key={q.id} className="question-card">
+        <div key={q.key} className="question-card">
           <div className="question-header">
             <span className="question-number">{index + 1}</span>
             <button
@@ -247,8 +263,8 @@ function AddQuestion() {
             <textarea
               className="input-field question-input"
               placeholder="CÂU HỎI"
-              value={q.question}
-              onChange={(e) => updateQuestion(q.id, "question", e.target.value)}
+              value={q.content}
+              onChange={(e) => updateQuestion(q.id, "content", e.target.value)}
             />
             {errors[`question-${index}`] && (
               <p className="error">{errors[`question-${index}`]}</p>
@@ -259,12 +275,12 @@ function AddQuestion() {
               value={q.type}
               onChange={(e) => updateQuestion(q.id, "type", e.target.value)}
             >
-              <option value="multiple-choice">Chọn đáp án</option>
-              <option value="multiple-answers">Nhiều đáp án</option>
-              <option value="true-false">Đúng/Sai</option>
+              <option value="Boolean">Đúng/Sai</option>
+              <option value="MCQ">Chọn đáp án</option>
+              <option value="MAQ">Nhiều đáp án</option>
             </select>
 
-            {q.type === "true-false" && (
+            {q.type === "Boolean" && (
               <>
                 {q.answers.slice(0, 2).map((answer, idx) => (
                   <div key={idx} className="answer-contain">
@@ -272,21 +288,22 @@ function AddQuestion() {
                       className="input-field answer-input"
                       type="text"
                       placeholder={`ĐÁP ÁN ${idx + 1}`}
-                      value={answer.text}
+                      value={answer.answerContent}
+                      disabled
                       onChange={(e) =>
-                        updateAnswer(q.id, idx, "text", e.target.value)
+                        updateAnswer(q.id, idx, "answerContent", e.target.value)
                       }
                     />
                     <label>
                       <input
                         type="radio"
                         name={`correct-${q.id}`}
-                        checked={answer.correct}
+                        checked={answer.isCorrect}
                         onChange={() =>
-                          updateAnswer(q.id, idx, "correct", true)
+                          updateAnswer(q.id, idx, "isCorrect", true)
                         }
                       />
-                      {idx === 0 ? "Đúng" : "Sai"}
+                      Đúng
                     </label>
                   </div>
                 ))}
@@ -294,7 +311,7 @@ function AddQuestion() {
             )}
 
             
-            {q.type === "multiple-choice" && (
+            {q.type === "MCQ" && (
               <>
                 {q.answers.map((answer, idx) => (
                   <div key={idx} className="answer-contain">
@@ -302,18 +319,18 @@ function AddQuestion() {
                       className="input-field answer-input"
                       type="text"
                       placeholder={`ĐÁP ÁN ${idx + 1}`}
-                      value={answer.text}
+                      value={answer.answerContent}
                       onChange={(e) =>
-                        updateAnswer(q.id, idx, "text", e.target.value)
+                        updateAnswer(q.id, idx, "answerContent", e.target.value)
                       }
                     />
                     <label>
                       <input
                         type="radio"
                         name={`correct-${q.id}`}
-                        checked={answer.correct}
+                        checked={answer.isCorrect}
                         onChange={() =>
-                          updateAnswer(q.id, idx, "correct", true)
+                          updateAnswer(q.id, idx, "isCorrect", !answer.isCorrect)
                         }
                       />
                       Đúng
@@ -329,24 +346,24 @@ function AddQuestion() {
                  </>
             )}
 
-            {q.type === "multiple-answers" &&
+            {q.type === "MAQ" &&
               q.answers.map((answer, idx) => (
                 <div key={idx} className="answer-contain">
                   <input
                     className="input-field answer-input"
                     type="text"
                     placeholder={`ĐÁP ÁN ${idx + 1}`}
-                    value={answer.text}
+                    value={answer.answerContent}
                     onChange={(e) =>
-                      updateAnswer(q.id, idx, "text", e.target.value)
+                      updateAnswer(q.id, idx, "answerContent", e.target.value)
                     }
                   />
                   <label>
                     <input
                       type="checkbox"
-                      checked={answer.correct}
+                      checked={answer.isCorrect}
                       onChange={(e) =>
-                        updateAnswer(q.id, idx, "correct", e.target.checked)
+                        updateAnswer(q.id, idx, "isCorrect", !answer.isCorrect)
                       }
                     />
                     Đúng
@@ -361,7 +378,7 @@ function AddQuestion() {
               ))}
 
 
-            {q.type !== "true-false" && (
+            {q.type !== "Boolean" && (
               <button
                 className="add-answer-button"
                 onClick={() => addAnswer(q.id)}
