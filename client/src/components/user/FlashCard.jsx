@@ -13,34 +13,36 @@ const FlashcardPage = () => {
   const [questionCount, setQuestionCount] = useState(0);
   const navigate = useNavigate();
 
-
-// giả sử có userId và questionfileId của client 
-const [userId] = useState("6718b40f01a9ac9b0e084342");
-const [questionFileId] = useState("671bb0a19dfaf03952134943");
-
+  // giả sử có userId và questionfileId của client
+  const [userId] = useState("6718b40f01a9ac9b0e084342");
+  const [questionFileId] = useState("671bb0a19dfaf03952134943");
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await fetch("http://localhost:9999/questionFile/getById/671bb0a19dfaf03952134943");
+        const response = await fetch(
+          "http://localhost:9999/questionFile/getById/671bb0a19dfaf03952134943"
+        );
         const data = await response.json();
-        // console.log(data);
-        
+        console.log(data);
+
         const fileName = data.questionFile.name || "Tệp câu hỏi";
-        
+
         // Transform the data structure to fit the component format
-        const transformedData = data.questionFile.arrayQuestion.map((question) => ({
-          id: question.questionId,
-          question: question.content,
-          type: question.type,
-          answers: question.answers.map((answer) => ({
-            id: answer.answerId,
-            text: answer.answerContent,
-          })),
-          correctAnswers: question.answers
-            .filter((answer) => answer.isCorrect)
-            .map((answer) => answer.answerId),
-        }));
+        const transformedData = data.questionFile.arrayQuestion.map(
+          (question) => ({
+            id: question.questionId,
+            question: question.content,
+            type: question.type,
+            answers: question.answers.map((answer) => ({
+              id: answer.answerId,
+              text: answer.answerContent,
+            })),
+            correctAnswers: question.answers
+              .filter((answer) => answer.isCorrect)
+              .map((answer) => answer.answerId),
+          })
+        );
 
         // console.log(transformedData);
         setQuestionFileName(fileName);
@@ -53,15 +55,16 @@ const [questionFileId] = useState("671bb0a19dfaf03952134943");
     fetchQuizData();
   }, []);
 
-
   const handleCreateQuiz = async () => {
     const quizData = {
       quizName,
       questionCount,
       userId,
-      questionFileId
+      questionFileId,
     };
-
+    if (questionCount > quizData.length) {
+      return;
+    }
     try {
       const response = await fetch("http://localhost:9999/quiz/create-quiz", {
         method: "POST",
@@ -153,7 +156,7 @@ const [questionFileId] = useState("671bb0a19dfaf03952134943");
           </Button>
         </Modal.Footer>
       </Modal>
-      
+
       <div className="question-counter">
         Question {currentIndex + 1} of {quizData.length}
       </div>
