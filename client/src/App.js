@@ -24,6 +24,7 @@ import CheckoutPage from "./components/common/pages/CheckOutPage";
 import CheckoutForm from "./components/common/pages/CheckOutPage";
 import BlogList from "./components/user/BlogList";
 import BlogDetail from "./components/user/BlogDetail";
+import ImportFilePage from "./components/admin/adminComponnents/importQuestion";
 
 
 function App() {
@@ -67,6 +68,8 @@ function App() {
 
           <Route path="/blogList" element={<BlogList/>}/>
           <Route path="/blogDetail" element={<BlogDetail/>}/>
+
+          <Route path="/addQuestion" element={<ImportFilePage/>}/>
 
       
       </Routes>
