@@ -11,7 +11,7 @@ const uploadQuestions = async (req, res, next) => {
 
         const filePath = path.normalize(req.file.path);
         const fileContent = fs.readFileSync(filePath, 'utf-8');
-        console.log("File content read successfully:", fileContent);
+      
 
         // Phân tích nội dung file thành danh sách câu hỏi
         const questions = [];

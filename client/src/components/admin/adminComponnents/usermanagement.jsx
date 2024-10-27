@@ -1,29 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Button, Form } from 'react-bootstrap';
 import ModalAddNewUser from './modalAdd';
 import ModalEditUser from './modalEdit';
 import ModalDeleteUser from './modalDelete';
-import Sidebar from './sidebar'; // Import Sidebar
-import '../adminCSS/usermanagement.css'; // Import CSS cho User Management
-import { FaSortUp, FaSortDown } from 'react-icons/fa'; // Import icons for sorting
-
-const fakeUsers = [
-  { id: 1, email: 'user1@example.com', fullname: 'User One', gender: 'Male', status: 'Active' },
-  { id: 2, email: 'user2@example.com', fullname: 'User Two', gender: 'Female', status: 'Inactive' },
-  { id: 3, email: 'user3@example.com', fullname: 'User Three', gender: 'Male', status: 'Active' },
-  { id: 4, email: 'user4@example.com', fullname: 'User Four', gender: 'Female', status: 'Inactive' },
-];
+import Sidebar from './sidebar';
+import '../adminCSS/usermanagement.css';
+import { FaSortUp, FaSortDown } from 'react-icons/fa';
 
 const UserManagement = () => {
-  const [users, setUsers] = useState(fakeUsers);
+  const [users, setUsers] = useState([]);
   const [searchName, setSearchName] = useState('');
-  const [genderFilter, setGenderFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
+  // Gọi API để lấy danh sách người dùng
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:9999/account/list');
+        const data = await response.json();
+        setUsers(data.accounts); // Gán dữ liệu người dùng từ API vào state users
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleAddUser = (newUser) => {
     setUsers((prev) => [...prev, { ...newUser, id: Date.now() }]);
@@ -40,16 +47,12 @@ const UserManagement = () => {
     setShowDeleteModal(false);
   };
 
-  // Hàm lọc người dùng
   const filteredUsers = users.filter(user => {
-    const matchesName = user.fullname.toLowerCase().includes(searchName.toLowerCase());
-    const matchesGender = genderFilter ? user.gender === genderFilter : true;
-    const matchesStatus = statusFilter ? user.status === statusFilter : true;
-
-    return matchesName && matchesGender && matchesStatus;
+    const matchesName = user.username.toLowerCase().includes(searchName.toLowerCase());
+    const matchesRole = roleFilter ? user.roles.some(role => role.name === roleFilter) : true;
+    return matchesName && matchesRole;
   });
 
-  // Hàm sắp xếp
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === 'asc' ? -1 : 1;
@@ -60,7 +63,6 @@ const UserManagement = () => {
     return 0;
   });
 
-  // Hàm thay đổi trạng thái sắp xếp
   const requestSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -71,7 +73,7 @@ const UserManagement = () => {
 
   return (
     <div className="user-management">
-      <Sidebar /> {/* Sidebar được nhúng */}
+      <Sidebar />
       <div className="content">
         <h2>User Management</h2>
 
@@ -81,27 +83,18 @@ const UserManagement = () => {
             placeholder="Search by name..."
             value={searchName}
             onChange={(e) => setSearchName(e.target.value)}
-            className="me-2" // Cách với các bộ lọc
+            className="me-2"
           />
           <Form.Select
-            value={genderFilter}
-            onChange={(e) => setGenderFilter(e.target.value)}
-            aria-label="Filter by Gender"
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            aria-label="Filter by Role"
             className="me-2"
           >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </Form.Select>
-
-          <Form.Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            aria-label="Filter by Status"
-          >
-            <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="">Select Role</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+            {/* Thêm các role khác nếu cần */}
           </Form.Select>
         </div>
 
@@ -115,50 +108,33 @@ const UserManagement = () => {
                 {sortConfig.key === 'id' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
               </th>
               <th>Email</th>
-              <th onClick={() => requestSort('fullname')} style={{ cursor: 'pointer' }}>
-                Full Name
-                {sortConfig.key === 'fullname' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
+              <th onClick={() => requestSort('username')} style={{ cursor: 'pointer' }}>
+                Username
+                {sortConfig.key === 'username' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
               </th>
-              <th onClick={() => requestSort('gender')} style={{ cursor: 'pointer' }}>
-                Gender
-                {sortConfig.key === 'gender' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
-              </th>
-              <th onClick={() => requestSort('status')} style={{ cursor: 'pointer' }}>
-                Status
-                {sortConfig.key === 'status' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
+              <th>Avatar</th>
+              <th onClick={() => requestSort('roles')} style={{ cursor: 'pointer' }}>
+                Roles
+                {sortConfig.key === 'roles' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
               </th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {sortedUsers.map(user => (
-              <tr key={user.id}>
-                <td>{user.id}</td> {/* Thêm cột ID */}
+            {sortedUsers.map((user, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
                 <td>{user.email}</td>
-                <td>{user.fullname}</td>
-                <td>{user.gender}</td>
+                <td>{user.username}</td>
+                <td><img src={user.avatar} alt="Avatar" style={{ width: '50px', height: '50px' }} /></td>
+                <td>{user.roles.map(role => role.name).join(', ')}</td>
                 <td>
-                  <span className={`status-badge ${user.status === 'Active' ? 'active' : 'inactive'}`}>
-                    {user.status}
-                  </span>
-                </td>
-                <td>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}> {/* Use flex to arrange buttons in a row */}
-                    <Button
-                      variant="warning"
-                      className="w-100 me-1"  // Add margin end to create space between buttons
-                      onClick={() => { setSelectedUser(user); setShowEditModal(true); }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      className="w-100"
-                      onClick={() => { setSelectedUser(user); setShowDeleteModal(true); }}
-                    >
-                      Delete
-                    </Button>
-                  </div>
+                  <Button variant="warning" onClick={() => { setSelectedUser(user); setShowEditModal(true); }}>
+                    Edit
+                  </Button>
+                  <Button variant="danger" onClick={() => { setSelectedUser(user); setShowDeleteModal(true); }}>
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
