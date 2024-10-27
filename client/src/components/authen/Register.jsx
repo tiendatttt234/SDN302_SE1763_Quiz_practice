@@ -1,155 +1,86 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "./Register.css";
-import { Link } from "react-router-dom";
-
-const BirthdaySelector = () => {
-  // States for day, month, year selection
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-
-  // Generate days (1-31)
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
-
-  // Generate months (1-12)
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-
-  // Generate years (1900-2023 or whatever range you need)
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 124 }, (_, i) => currentYear - i);
-
-  return (
-    <div style={{ fontFamily: "Arial, sans-serif", color: "#4A4A4A" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            fontSize: "14px",
-            color: "#4A4A4A",
-          }}
-        >
-          Ngày/Tháng/Năm Sinh{" "}
-          <i
-            className="fas fa-info-circle"
-            style={{ marginLeft: "5px", fontSize: "12px", color: "#4A4A4A" }}
-          ></i>
-        </div>
-        <div style={{ display: "flex", gap: "10px" }}>
-          {/* Day Dropdown */}
-          <div
-            style={{
-              padding: "10px",
-              border: "1px solid #D1D1D1",
-              borderRadius: "5px",
-              backgroundColor: "#F9F9F9",
-              color: "#4A4A4A",
-              fontSize: "14px",
-              width: "100px",
-              textAlign: "left",
-            }}
-          >
-            <select
-              style={{
-                border: "none",
-                background: "transparent",
-                fontSize: "14px",
-                color: "#4A4A4A",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              value={day}
-              onChange={(e) => setDay(e.target.value)}
-            >
-              <option value="">Ngày</option>
-              {days.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Month Dropdown */}
-          <div
-            style={{
-              padding: "10px",
-              border: "1px solid #D1D1D1",
-              borderRadius: "5px",
-              backgroundColor: "#F9F9F9",
-              color: "#4A4A4A",
-              fontSize: "14px",
-              width: "100px",
-              textAlign: "left",
-            }}
-          >
-            <select
-              style={{
-                border: "none",
-                background: "transparent",
-                fontSize: "14px",
-                color: "#4A4A4A",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-            >
-              <option value="">Tháng</option>
-              {months.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Year Dropdown */}
-          <div
-            style={{
-              padding: "10px",
-              border: "1px solid #D1D1D1",
-              borderRadius: "5px",
-              backgroundColor: "#F9F9F9",
-              color: "#4A4A4A",
-              fontSize: "14px",
-              width: "100px",
-              textAlign: "left",
-            }}
-          >
-            <select
-              style={{
-                border: "none",
-                background: "transparent",
-                fontSize: "14px",
-                color: "#4A4A4A",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-            >
-              <option value="">Năm</option>
-              {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    userName: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    setError('');
+  };
+
+  const validateForm = () => {
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!formData.email || !formData.userName || !formData.password) {
+      setError('Vui lòng điền đầy đủ thông tin');
+      return false;
+    }
+    if (!emailRegex.test(formData.email)) {
+      setError('Email không hợp lệ');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:9999/account/register', formData);
+      
+      if (response.data.accessToken) {
+        localStorage.setItem('accessToken', response.data.accessToken);
+        toast.success('Đăng ký thành công!', {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        
+        // Đợi 2 giây trước khi chuyển hướng để người dùng thấy thông báo
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Đã có lỗi xảy ra khi đăng ký', {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      setError(err.response?.data?.message || 'Đã có lỗi xảy ra khi đăng ký');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{ display: "flex", height: "100vh" }}>
+      <ToastContainer />
       <div className="register-left-section">
         <h1>Cách tốt nhất để học. Đăng ký miễn phí.</h1>
         <img
           alt="Colorful notebooks and white headphones"
-          height="00"
+          height="800"
           src="https://th.bing.com/th/id/OIG4._8czaS_hxnpxvorG7z_D?w=1024&h=1024&rs=1&pid=ImgDetMain"
           width="800"
         />
@@ -158,37 +89,63 @@ const Register = () => {
         <div className="register-login-container">
           <div className="register-tabs">
             <h2 className="register-active">Đăng ký</h2>
-            <Link to={"/login"} style={{ textDecoration: "none" }}>
+            <Link to="/login" style={{ textDecoration: "none" }}>
               <h2>Đăng nhập</h2>
             </Link>
           </div>
 
-          <div className="register-email-login">
-            <BirthdaySelector />
+          <form onSubmit={handleSubmit} className="register-email-login">
+            {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
+            
             <p>Email</p>
-            <input placeholder="Nhập địa chỉ email của bạn" type="email" />
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Nhập địa chỉ email của bạn"
+              type="email"
+            />
+            
             <p>Tên người dùng</p>
-            <input placeholder="Nhập tên người dùng của bạn" type="text" />
+            <input
+              name="userName"
+              value={formData.userName}
+              onChange={handleChange}
+              placeholder="Nhập tên người dùng của bạn"
+              type="text"
+            />
+            
             <p>Mật khẩu</p>
-            <input placeholder="Nhập mật khẩu của bạn" type="password" />
-          </div>
-          <button
-            className="register-login-button"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              padding: "10px",
-              margin: "10px 0",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-            }}
-          >
-            Đăng ký
-          </button>
-          <Link to={"/login"} style={{ textDecoration: "none" }}>
+            <input
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Nhập mật khẩu của bạn"
+              type="password"
+            />
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="register-login-button"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                padding: "10px",
+                margin: "10px 0",
+                backgroundColor: loading ? "#cccccc" : "#4CAF50",
+                color: "white",
+                border: "none",
+                cursor: loading ? "not-allowed" : "pointer",
+              }}
+            >
+              {loading ? 'Đang xử lý...' : 'Đăng ký'}
+            </button>
+          </form>
+
+          <Link to="/login" style={{ textDecoration: "none" }}>
             <button
               className="register-login-button"
               style={{
