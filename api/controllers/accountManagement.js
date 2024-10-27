@@ -65,7 +65,7 @@ const updateAccount = async (req, res, next) => {
 };
 
 const addAccount = async (req, res, next) => {
-    const { email, phone, username, avatar, roles } = req.body; 
+    const { email, phone, username,password, avatar, roles } = req.body; 
 
     try {
         let roleIds = [];
@@ -78,6 +78,7 @@ const addAccount = async (req, res, next) => {
             email,
             phone,
             userName: username,
+            password,
             avatar,
             roles: roleIds  
         });

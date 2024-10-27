@@ -49,7 +49,7 @@ const UserManagement = () => {
 
   const filteredUsers = users.filter(user => {
     const matchesName = user.username.toLowerCase().includes(searchName.toLowerCase());
-    const matchesRole = roleFilter ? user.roles.some(role => role.name === roleFilter) : true;
+    const matchesRole = roleFilter ? user.roles.includes(roleFilter) : true;
     return matchesName && matchesRole;
   });
 
@@ -127,7 +127,7 @@ const UserManagement = () => {
                 <td>{user.email}</td>
                 <td>{user.username}</td>
                 <td><img src={user.avatar} alt="Avatar" style={{ width: '50px', height: '50px' }} /></td>
-                <td>{user.roles.map(role => role.name).join(', ')}</td>
+                <td>{Array.isArray(user.roles) ? user.roles.join(', ') : ''}</td>
                 <td>
                   <Button variant="warning" onClick={() => { setSelectedUser(user); setShowEditModal(true); }}>
                     Edit
