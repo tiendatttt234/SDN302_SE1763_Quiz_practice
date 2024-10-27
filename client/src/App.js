@@ -8,11 +8,6 @@ import Footer from "./components/common/layout/Footer/Footer";
 import UserDefaultPage from './components/common/layout/user-default-layout';
 import NoAccessPage from './components/common/pages/NoAccessPage';
 import ManagerDefaultPage from "./components/common/layout/manager-default-layout";
-import AdminProfit from "./components/admin/viewProfit";
-import ForgotPassword from "./components/authen/ForgotPassword/ForgotPassword";
-import AdminDashboard from '../src/components/admin/adminComponnents/admin'
-import UserManagement from './components/admin/adminComponnents/usermanagement';
-import Dashboard from './components/admin/adminComponnents/dashboard';
 import UpgradePage from "./components/common/pages/UpgradePage";
 import CheckoutForm from "./components/common/pages/CheckOutPage";
 import BlogList from "./components/user/BlogList";

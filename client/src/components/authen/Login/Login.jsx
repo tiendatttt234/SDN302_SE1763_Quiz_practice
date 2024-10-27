@@ -23,13 +23,14 @@ const Login = () => {
         password,
       });
       
-      const { accessToken, roles } = response.data;
+      const { accessToken, roles, userId } = response.data;
       
       // Store user data
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("userName", userName);
       localStorage.setItem("roles", JSON.stringify(roles));
-
+      localStorage.setItem("userId", userId); // Store userId in localStorage
+  
       // Determine redirect path based on role name
       let redirectPath = "/"; // Default path for users
       
@@ -45,7 +46,7 @@ const Login = () => {
             redirectPath = "/";
         }
       }
-
+  
       setSuccessMessage("Đăng nhập thành công! Chuyển hướng trong giây lát...");
       setTimeout(() => {
         navigate(redirectPath);
@@ -55,6 +56,7 @@ const Login = () => {
       setSuccessMessage("");
     }
   };
+    
 
   return (
     <div style={{ display: "flex", height: "100vh", margin: 0 }}>
