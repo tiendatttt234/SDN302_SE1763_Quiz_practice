@@ -1,0 +1,115 @@
+/* uploadQuestion.css */
+
+/* Container chính */
+.uploadPage-container {
+    padding: 30px;
+    max-width: 600px;
+    margin: auto;
+    margin-top: 50px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Tiêu đề trang */
+  .uploadPage-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: bold;
+  }
+  
+  /* Nhãn của các trường nhập liệu */
+  .uploadPage-label {
+    display: block;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    color: #444;
+    font-size: 1em;
+  }
+  
+  /* Ô nhập liệu và file input */
+  .uploadPage-input,
+  .uploadPage-file-input,
+  .uploadPage-textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  /* Hiệu ứng khi ô nhập liệu được focus */
+  .uploadPage-input:focus,
+  .uploadPage-file-input:focus,
+  .uploadPage-textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+  
+  /* Nút */
+  .uploadPage-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  /* Hiệu ứng hover và active cho nút */
+  .uploadPage-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .uploadPage-button:active {
+    transform: scale(0.98);
+  }
+  
+  /* Trạng thái disabled của nút */
+  .uploadPage-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Phần tiêu đề phụ */
+  .uploadPage-subtitle {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: 500;
+  }
+  
+  /* Định dạng textarea */
+  .uploadPage-textarea {
+    font-family: inherit;
+    resize: vertical;
+  }
+  
+  /* Tạo hiệu ứng hộp khi chọn file */
+  .uploadPage-file-input {
+    border: 1px dashed #ccc;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    padding: 12px;
+    text-align: center;
+    color: #888;
+    transition: border-color 0.3s ease;
+  }
+  
+  .uploadPage-file-input:hover {
+    border-color: #007bff;
+  }
+  
