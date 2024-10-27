@@ -1,0 +1,101 @@
+/* src/components/admin/adminCss/usermanagement.css */
+
+/* Tổ chức lại các lớp để tránh xung đột */
+.user-management {
+  display: flex;
+  height: 100vh; /* Đảm bảo chiều cao đầy đủ cho layout */
+}
+
+.user-management h2 {
+  margin-bottom: 20px;
+}
+
+.user-management .status-badge.active {
+  color: green; /* Màu xanh cho trạng thái Active */
+  font-weight: bold;
+}
+
+.user-management .status-badge.inactive {
+  color: red; /* Màu đỏ cho trạng thái Inactive */
+  font-weight: bold;
+}
+
+.user-management .content {
+  flex: 1;
+  padding: 20px; /* Khoảng cách bên trong */
+  background-color: #f8f9fa; /* Màu nền cho content */
+  margin-left: 250px; /* Khoảng cách bên trái để không bị che bởi sidebar */
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung vượt quá chiều cao */
+}
+
+.user-management .table {
+  background-color: #ffffff; /* Nền trắng cho bảng */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho bảng */
+  table-layout: fixed; /* Đặt layout cố định cho bảng */
+  width: 100%; /* Đặt chiều rộng cho bảng */
+}
+
+.user-management .table th, 
+.user-management .table td {
+  text-align: center; /* Căn giữa nội dung bảng */
+  overflow: hidden; /* Ngăn chặn tràn nội dung */
+  white-space: nowrap; /* Ngăn ngừa xuống dòng */
+  text-overflow: ellipsis; /* Hiện ellipsis cho nội dung tràn */
+}
+
+.user-management .table th {
+  background-color: #007bff; /* Màu nền cho tiêu đề bảng */
+  color: white; /* Màu chữ tiêu đề bảng */
+}
+
+.user-management .table tbody tr:hover {
+  background-color: #f1f1f1; /* Hiệu ứng hover cho hàng bảng */
+}
+
+/* Đặt chiều rộng cho các cột */
+.user-management .table th:nth-child(1),
+.user-management .table td:nth-child(1) {
+  width: 50px; /* ID column */
+}
+
+.user-management .table th:nth-child(2),
+.user-management .table td:nth-child(2) {
+  width: 200px; /* Email column */
+}
+
+.user-management .table th:nth-child(3),
+.user-management .table td:nth-child(3) {
+  width: 150px; /* Full Name column */
+}
+
+.user-management .table th:nth-child(4),
+.user-management .table td:nth-child(4) {
+  width: 100px; /* Gender column */
+}
+
+.user-management .table th:nth-child(5),
+.user-management .table td:nth-child(5) {
+  width: 100px; /* Status column */
+}
+
+.user-management .table th:nth-child(6),
+.user-management .table td:nth-child(6) {
+  width: 150px; /* Actions column */
+}
+
+/* CSS cho Sidebar */
+.sidebar {
+  width: 250px; /* Độ rộng sidebar */
+  background-color: #343a40; /* Màu nền tối cho sidebar */
+  color: white; /* Màu chữ trong sidebar */
+  padding: 20px; /* Khoảng cách bên trong */
+  height: 100vh; /* Chiều cao 100% */
+  position: fixed; 
+  overflow-y: auto; /* Cho phép cuộn khi nội dung quá nhiều */
+}
+
+/* Các quy tắc cụ thể cho button trong bảng */
+.user-management .table .btn {
+  width: 100%; /* Đặt chiều rộng button */
+  margin: 5px 0; /* Khoảng cách giữa các button */
+}
