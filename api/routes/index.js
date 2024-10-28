@@ -1,12 +1,11 @@
 
 const QuizRouter = require("./quiz.router");
 const QuizSubmitRouter = require("./quizSubmit.router");
-const questionUpload= require('./QuestionFileRouter')
-const accountRouter= require('./account.routes')
-
+const AccountRouter = require("./account.router");
+const QuestionFileRouter = require('./questionFile.router');
 module.exports = {
-    QuizRouter,
-    QuizSubmitRouter,
-    questionUpload,
-    accountRouter
-}
+  QuizRouter,
+  QuestionFileRouter,
+  QuizSubmitRouter,
+  AccountRouter,
+};
