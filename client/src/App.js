@@ -12,6 +12,9 @@ import Header from "./components/common/layout/Header/Header";
 import Login from "./components/authen/Login/Login";
 import Register from "./components/authen/Register/Register";
 import Footer from "./components/common/layout/Footer/Footer";
+import AdminManageBlog from "./components/admin/adminComponnents/blogManagement";
+import BlogList from "./components/user/BlogList";
+import BlogDetail from "./components/user/BlogDetail";
 function App() {
   return (
     <BrowserRouter>
@@ -38,6 +41,15 @@ function App() {
             }
           />
           <Route
+            path="/admin/blog"
+            element={
+              <PrivateRoute
+                element={<AdminManageBlog />}
+                requiredRole="admin"
+              />
+            }
+          />
+          <Route
             path="/admin/users"
             element={
               <PrivateRoute element={<UserManagement />} requiredRole="admin" />
@@ -54,6 +66,9 @@ function App() {
               />
             }
           />
+
+          <Route path="/blogList" element={<BlogList />} />
+          <Route path="/blog/detail/:blogId" element={<BlogDetail />} />
         </Routes>
         <Footer />
       </div>
