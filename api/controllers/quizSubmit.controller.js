@@ -1,6 +1,6 @@
 const QuizResult = require('../models/QuizResult.model');
 const QuestionFile = require('../models/QuestionFile.model');
-
+const mongoose = require('mongoose');
 async function getQuiz(req,res,next) {
     // const getAll = await QuizResult.find({});
      res.status(200).json({message: "hehe"});
@@ -10,7 +10,13 @@ async function submitQuiz(req, res, next) {
     try {
         const { userId, quizId, questionFileId, userAnswers } = req.body;
         
-        // Retrieve the QuestionFile to check correct answers
+
+        //Check if quizId are valid ObjectIds
+        if (!mongoose.Types.ObjectId.isValid(quizId)) {
+            return res.status(400).json({ message: 'Invalid quiz' });
+        }
+
+        //Get QuestionFile to check correct answers
         const questionFile = await QuestionFile.findById(questionFileId);
         if (!questionFile) {
             return res.status(404).json({ message: "Question file not found" });
@@ -19,23 +25,12 @@ async function submitQuiz(req, res, next) {
         let correctAnswersCount = 0;
         let incorrectAnswersCount = 0;
 
-        // Map userAnswers to determine correctness
         const evaluatedAnswers = userAnswers.map(userAnswer => {
-            const question = questionFile.arrayQuestion.find(q => q._id.toString() === userAnswer.questionId);
-            if (!question) {
-                return { ...userAnswer, isCorrect: false };
-            }
-
-            const isCorrect =
-                question.type === "MAQ"
-                    ? userAnswer.selectedAnswerId.length === question.answers.filter(a => a.isCorrect).length &&
-                      userAnswer.selectedAnswerId.every(answerId =>
-                          question.answers.some(a => a.isCorrect && a._id.toString() === answerId)
-                      )
-                    : userAnswer.selectedAnswerId[0] === question.answers.find(a => a.isCorrect)._id.toString();
-
-            if (isCorrect) correctAnswersCount++;
-            else incorrectAnswersCount++;
+            const question = questionFile.arrayQuestion.find(file => file._id.toString() === userAnswer.questionId);
+            console.log(question);
+            
+            const isCorrect = isAnswerCorrect(question, userAnswer);
+            isCorrect ? correctAnswersCount++ : incorrectAnswersCount++;
 
             return { ...userAnswer, isCorrect };
         });
@@ -58,6 +53,20 @@ async function submitQuiz(req, res, next) {
     }
 }
 
+function isAnswerCorrect(question, userAnswer) {
+    if (question.type === "MAQ") {
+        // Check if both sets (user-selected and correct answers) match
+        const correctAnswerIds = question.answers.filter(a => a.isCorrect).map(a => a._id.toString());
+        return (
+            userAnswer.selectedAnswerId.length === correctAnswerIds.length &&
+            userAnswer.selectedAnswerId.every(id => correctAnswerIds.includes(id))
+        );
+    } else {
+        // For single-answer questions, check if selected answer matches correct answer
+        const correctAnswerId = question.answers.find(a => a.isCorrect)?._id.toString();
+        return userAnswer.selectedAnswerId[0] === correctAnswerId;
+    }
+}
 const QuizSubmitController = {
     getQuiz,
     submitQuiz

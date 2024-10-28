@@ -1,8 +1,10 @@
+// controllers/uploadQuestion.controller.js
 const fs = require('fs');
 const path = require('path');
 const QuestionFile = require('../models/QuestionFile.model');
 const httpError = require('http-errors');
 
+// Xử lý upload file câu hỏi
 const uploadQuestions = async (req, res, next) => {
     try {
         
@@ -90,6 +92,7 @@ const uploadQuestions = async (req, res, next) => {
     }
 };
 
+// Lấy danh sách câu hỏi
 const listQuestions = async (req, res, next) => {
     try {
         // Lấy danh sách tất cả QuestionFile từ cơ sở dữ liệu và bao gồm thông tin người tạo

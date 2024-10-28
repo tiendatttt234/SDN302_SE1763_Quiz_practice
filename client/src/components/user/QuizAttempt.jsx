@@ -81,11 +81,11 @@ export default function QuizAttempt() {
         const selectedAnswers = userAnswers[index] || [];
         return {
           questionId: quizItem.questId,
-          selectedAnswerId: Array.isArray(selectedAnswers) ? selectedAnswers : [selectedAnswers], // single or multiple answers based on type
+          selectedAnswerId: Array.isArray(selectedAnswers) ? selectedAnswers : [selectedAnswers], 
         };
       }),
     };
-    //console.log(submissionData);
+    // console.log(submissionData);
     try {
       const response = await fetch("http://localhost:9999/quizSubmit/submit", {
         method: "POST",
@@ -96,9 +96,9 @@ export default function QuizAttempt() {
       });
       if (response.ok) {
         const result = await response.json();
-        console.log("Quiz submitted successfully:", result);
+        // console.log("Quiz submitted successfully:", result);
         // navigate to results page or handle success state
-        // navigate("/user/quiz-result", { state: { results: result } });
+        navigate("/user/quiz-result", { state: { results: result } });
       } else {
         console.error("Failed to submit quiz");
       }

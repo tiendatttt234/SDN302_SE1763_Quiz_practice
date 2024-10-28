@@ -4,7 +4,8 @@ const { json } = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const db = require('./models');
-const { QuizRouter, QuestionFileRouter, QuizSubmitRouter, questionUpload } = require('./routes');
+const { QuizRouter, QuestionFileRouter, QuizSubmitRouter, questionUpload, accountRouter } = require('./routes');
+
 
 // const cors = require('cors')
 require('dotenv').config();
@@ -20,10 +21,9 @@ app.use(cors());
 //app.use("Router");
 
 app.use('/quiz', QuizRouter);
-
 app.use('/quizSubmit', QuizSubmitRouter);
-
 app.use('/questionFile', questionUpload);
+app.use('/account', accountRouter )
 
 
 //kiem soat cac loi khi xu ly tren router, controller va model
