@@ -3,12 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const QuestionFile = require('../models/QuestionFile.model');
 const httpError = require('http-errors');
+const { log } = require('console');
 
 // Xử lý upload file câu hỏi
 const uploadQuestions = async (req, res, next) => {
     try {
         
-
+        console.log( "debug here : "+req.body);
+        
         // Kiểm tra nếu file không tồn tại
         if (!req.file) {
             throw new Error("File is required and must be a .txt file.");

@@ -11,6 +11,7 @@ import Register from "./components/authen/Register/Register";
 import Footer from "./components/common/layout/Footer/Footer";
 import UserDefaultPage from "./components/common/layout/user-default-layout";
 import FlashcardPage from "./components/user/FlashCard";
+import ImportFilePage from "./components/admin/adminComponnents/importQuestion";
 function App() {
   return (
     <BrowserRouter>
@@ -23,7 +24,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/no-access" element={<NoAccessPage />} />
           <Route path='/flash' element={<FlashcardPage/>}/>
-
 
 
           {/* User Routes  */}

@@ -9,6 +9,7 @@ import FlashCardPage from "../../user/FlashCard";
 import Profile from "../../authen/Profile";
 import MyCourse from "../../authen/MyCourse";
 import PageNotFound from "../../errorPage/PageNotFound";
+import ImportFilePage from "../../admin/adminComponnents/importQuestion";
 
 export default function UserDefaultPage() {
   return (
@@ -22,12 +23,12 @@ export default function UserDefaultPage() {
             <Route path="/quiz-result" element={<QuizResults />} />
 
             {/* Chỉnh sửa tệp câu hỏi  */}
-            <Route path='/flash' element={FlashCardPage}/>
+            <Route path='/flash' element={<FlashCardPage/>}/>
             <Route path="/addquestion" element={<AddQuestion />} />
             <Route path="/viewques" element={<ViewQuestion />} />
             <Route path="/viewques/:id" element={<ViewQuestionDetail />} />
             <Route path="/updatequestion/:id" element={<EditQuestion />} />
-            
+            <Route path="/questionUpload" element={<ImportFilePage/>}/>
 
             {/* user profile */}
             <Route path="/profile" element={<Profile />} />
