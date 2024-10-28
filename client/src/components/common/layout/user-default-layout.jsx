@@ -8,6 +8,7 @@ import ViewQuestion from "../../user/question/ViewQues";
 import FlashCardPage from "../../user/FlashCard";
 import Profile from "../../authen/Profile";
 import MyCourse from "../../authen/MyCourse";
+import PageNotFound from "../../errorPage/PageNotFound";
 
 export default function UserDefaultPage() {
   return (
@@ -31,6 +32,10 @@ export default function UserDefaultPage() {
             {/* user profile */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/mycourse" element={<MyCourse />} />
+
+
+            {/* Error page */}
+            <Route path="/*" element={<PageNotFound/>} />
           </Routes>
         </div>
       </div>

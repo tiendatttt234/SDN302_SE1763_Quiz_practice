@@ -22,13 +22,13 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/no-access" element={<NoAccessPage />} />
-          <Route path='/flash' element={FlashcardPage}/>
+          <Route path='/flash' element={<FlashcardPage/>}/>
 
 
 
           {/* User Routes  */}
           <Route
-            path="/admin/*"
+            path="/user/*"
             element={
               <PrivateRoute element={<UserDefaultPage />} requiredRole="user" />
             }
