@@ -4,7 +4,7 @@ const { json } = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const db = require('./models');
-const { QuizRouter, QuestionFileRouter, QuizSubmitRouter, questionUpload, AccountRouter} = require('./routes');
+const { QuizRouter, QuestionFileRouter, QuizSubmitRouter, AccountRouter, BlogRouter} = require('./routes');
 
 
 // const cors = require('cors')
@@ -23,7 +23,7 @@ app.use('/quizSubmit', QuizSubmitRouter);
 app.use("/account", AccountRouter);
 app.use("/questionFile", QuestionFileRouter);
 app.use("/quizSubmit", QuizSubmitRouter);
-
+app.use("/blog", BlogRouter);
 
 
 //kiem soat cac loi khi xu ly tren router, controller va model
