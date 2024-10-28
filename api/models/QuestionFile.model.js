@@ -53,7 +53,7 @@ const QuestionFileSchema = new mongoose.Schema({
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
-        required: [true, "Creator of question bank is required"]
+        required: [false, "Creator of question bank is required"]
     }
 }, {
     timestamps: true  

@@ -1,28 +1,16 @@
-// controllers/uploadQuestion.controller.js
 const fs = require('fs');
 const path = require('path');
 const QuestionFile = require('../models/QuestionFile.model');
 const httpError = require('http-errors');
-const { log } = require('console');
 
 // Xử lý upload file câu hỏi
 const uploadQuestions = async (req, res, next) => {
     try {
-        
-        console.log( "debug here : "+req.body);
-        
-        // Kiểm tra nếu file không tồn tại
-        if (!req.file) {
-            throw new Error("File is required and must be a .txt file.");
-        }
+        console.log("Received file upload request...");
 
-        // Chuẩn hóa đường dẫn để tương thích đa nền tảng
         const filePath = path.normalize(req.file.path);
-       
-
-        // Đọc nội dung file
         const fileContent = fs.readFileSync(filePath, 'utf-8');
-        
+      
 
         // Phân tích nội dung file thành danh sách câu hỏi
         const questions = [];
@@ -32,17 +20,13 @@ const uploadQuestions = async (req, res, next) => {
         lines.forEach(line => {
             line = line.trim();
             if (line.startsWith('Q:')) {
-                // Bắt đầu một câu hỏi mới
-                if (currentQuestion) {
-                    questions.push(currentQuestion);
-                }
+                if (currentQuestion) questions.push(currentQuestion);
                 currentQuestion = {
                     content: line.substring(2).trim(),
-                    type: 'MCQ', // Mặc định là MCQ; có thể điều chỉnh nếu cần
+                    type: 'MCQ', // Mặc định là MCQ
                     answers: []
                 };
             } else if (line.startsWith('A:')) {
-                // Thêm một đáp án vào câu hỏi hiện tại
                 const isCorrect = line.endsWith('(correct)');
                 currentQuestion.answers.push({
                     answerContent: line.replace('(correct)', '').substring(2).trim(),
@@ -51,60 +35,38 @@ const uploadQuestions = async (req, res, next) => {
             }
         });
 
-        // Thêm câu hỏi cuối cùng vào danh sách nếu có
-        if (currentQuestion) {
-            questions.push(currentQuestion);
-        }
+        if (currentQuestion) questions.push(currentQuestion);
 
-        
+        if (questions.length === 0) throw new Error("No questions parsed from the file");
 
-        // Kiểm tra nếu không có câu hỏi nào được phân tích
-        if (questions.length === 0) {
-            throw new Error("No questions parsed from the file");
-        }
-
-        // Chuẩn bị dữ liệu để lưu vào cơ sở dữ liệu
+        // Chuẩn bị dữ liệu để lưu vào database
         const questionFile = new QuestionFile({
             name: req.body.name || 'Uploaded Question Bank',
             description: req.body.description || '',
-            createdBy: null, // Đặt là null hoặc thông tin người tạo nếu có
+            createdBy: req.body.createdBy || null,
             arrayQuestion: questions
         });
 
-        console.log("Prepared question file data for database:", questionFile);
-
-        // Lưu câu hỏi đã phân tích vào cơ sở dữ liệu
         await questionFile.save();
-       
+        console.log("Saved question file successfully:", questionFile);
 
         res.json({ message: 'Questions uploaded and saved successfully', questionFile });
-
-        // Xóa file đã tải lên sau khi xử lý xong
         fs.unlinkSync(filePath);
     } catch (error) {
-        
-        // Xử lý lỗi chi tiết
-        if (error.message === "File is required and must be a .txt file.") {
-            next(httpError(400, error.message));
-        } else if (error.message === "No questions parsed from the file") {
-            next(httpError(400, error.message));
-        } else {
-            next(httpError(500, 'Failed to process the uploaded file'));
-        }
+        console.error("Error during file processing:", error.message);
+        next(httpError(500, 'Failed to process the uploaded file'));
     }
 };
 
 // Lấy danh sách câu hỏi
 const listQuestions = async (req, res, next) => {
     try {
-        // Lấy danh sách tất cả QuestionFile từ cơ sở dữ liệu và bao gồm thông tin người tạo
         const questionFiles = await QuestionFile.find().populate('createdBy', 'username email');
-        
         res.json({ message: 'List of question files', questionFiles });
     } catch (error) {
-        
+        console.error("Error fetching question files:", error.message);
         next(httpError(500, 'Failed to fetch question files'));
     }
-}; 
+};
 
 module.exports = { uploadQuestions, listQuestions };
