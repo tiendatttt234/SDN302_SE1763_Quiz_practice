@@ -2,9 +2,26 @@ const QuestionFile = require("../models/QuestionFile.model");
 
 async function getAllQuestionFile(req, res, next) {
   try {
-    const listQuestionFile = await QuestionFile.find({});
-    return res.status(200).json({ questionFileRespone: listQuestionFile });
+    const userId = req.query.userId; // Lấy userId từ query params
+
+    if (!userId) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "userId is required" 
+      });
+    }
+
+    // Tìm tất cả questionFile của user
+    const listQuestionFile = await QuestionFile.find({ createdBy: userId })
+      .sort({ createdAt: 1 }) // Sắp xếp theo thời gian tạo mới nhất
+      .select('name description arrayQuestion createdAt isPrivate'); // Chọn các trường cần thiết
+
+    return res.status(200).json({ 
+      success: true,
+      questionFileRespone: listQuestionFile 
+    });
   } catch (error) {
+    console.error("Error in getAllQuestionFile:", error);
     next(error);
   }
 }
@@ -12,9 +29,17 @@ async function getAllQuestionFile(req, res, next) {
 async function getQuestionFileById(req, res, next) {
   try {
     const { id } = req.params;
+    
 
-    // Lấy questionFile theo ID
-    const questionFile = await QuestionFile.findById(id);
+
+    // Tìm questionFile theo id và userId
+    const questionFile = await QuestionFile.findOne({
+      _id: id,
+      
+    });
+    if (!questionFile) {
+      return res.status(404).json({ message: "Question file not found or unauthorized access" });
+    }
 
     // Định dạng dữ liệu trả về
     const formattedResult = {

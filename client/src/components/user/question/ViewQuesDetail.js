@@ -5,6 +5,7 @@ import "../UserCSS/Question/ViewQuesDetail.css";
 
 function ViewQuestionDetail() {
   const { id } = useParams();
+  console.log(id);
   const navigate = useNavigate();
   const [quizData, setQuizData] = useState(null);
   const [editedData, setEditedData] = useState(null); // State lưu trữ tạm thời các thay đổi
@@ -16,6 +17,8 @@ function ViewQuestionDetail() {
 
   const fetchQuizData = async () => {
     try {
+      
+      console.log("Fetching quiz with ID:", id);
       const response = await fetch(
         `http://localhost:9999/questionFile/getById/${id}`
       );
@@ -92,7 +95,7 @@ function ViewQuestionDetail() {
   };
 
   const handleBack = () => {
-    navigate("/");
+    navigate("/user/viewques");
   };
 
   const handleQuestionChange = (e, questionIndex, field) => {

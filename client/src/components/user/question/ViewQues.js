@@ -16,7 +16,10 @@ function ViewQuestion() {
   const fetchQuestionSets = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:9999/questionFile/getAll");
+      const userId = localStorage.getItem("userId");
+      const response = await fetch(
+        `http://localhost:9999/questionFile/getAll?userId=${userId}`
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -49,8 +52,9 @@ function ViewQuestion() {
 
     if (isConfirmed) {
       try {
+        const userId = localStorage.getItem("userId");
         const response = await fetch(
-          `http://localhost:9999/questionFile/delete/${id}`,
+          `http://localhost:9999/questionFile/delete/${id}?userId=${userId}`,
           {
             method: "DELETE",
           }
@@ -79,18 +83,35 @@ function ViewQuestion() {
     return <div className="error">{error}</div>;
   }
 
+  if (!questionSets.length) return (
+    <div className="empty-state">
+      <h2>Chưa có học phần nào</h2>
+      <p>Hãy tạo học phần đầu tiên của bạn</p>
+      <button className="add-new-button" onClick={handleAddNew}>
+        Thêm Học Phần Mới
+      </button>
+      <button className="back-button" onClick={handleBack}>
+        Trở về
+      </button>
+    </div>
+  );
+
   return (
     <div className="manage-question">
       <h1>Quản lý Học Phần</h1>
-      <button className="add-new-button" onClick={handleAddNew}>
-        Thêm Mới
-      </button>
+      <div className="actions">
+        <button className="add-new-button" onClick={handleAddNew}>
+          Thêm Học Phần Mới
+        </button>
+      </div>
+
       <table className="question-table">
         <thead>
           <tr>
-            <th>Tiêu đề</th> {/* Sửa tiêu đề cột */}
+            <th>Tiêu đề</th>
             <th>Mô tả</th>
             <th>Số câu hỏi</th>
+            <th>Trạng thái</th>
             <th>Hành động</th>
           </tr>
         </thead>
@@ -98,22 +119,21 @@ function ViewQuestion() {
           {questionSets.map((set) => (
             <tr key={set._id}>
               <td>{set.name}</td>
-              <td>{set.description}</td>{" "}
-              <td>{set.arrayQuestion ? set.arrayQuestion.length : 0}</td>
-              <td>
-                <button onClick={() => handleViewDetail(set._id)}>
+              <td>{set.description}</td>
+              <td>{set.arrayQuestion?.length || 0}</td>
+              <td>{set.isPrivate ? 'Riêng tư' : 'Công khai'}</td>
+              <td className="actions-cell">
+                <button 
+                  className="view-button"
+                  onClick={() => handleViewDetail(set._id)}
+                >
                   Xem chi tiết
                 </button>
                 <button
                   className="delete-button"
                   onClick={() => handleDelete(set._id)}
-                  style={{
-                    marginLeft: "10px",
-                    background: "none",
-                    border: "none",
-                  }}
                 >
-                  <i className="bi bi-trash" style={{ color: "black" }}></i>
+                  <Trash size={16} />
                 </button>
               </td>
             </tr>

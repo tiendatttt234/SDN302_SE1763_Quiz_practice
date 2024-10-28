@@ -327,7 +327,7 @@ function EditQuestion() {
                         name={`correct-${q.questionId}`}
                         checked={answer.isCorrect}
                         onChange={() =>
-                          updateAnswer(q.questionId, idx, "isCorrect", true)
+                          updateAnswer(q.questionId, idx, "isCorrect", !answer.isCorrect)
                         }
                       />
                       Đúng

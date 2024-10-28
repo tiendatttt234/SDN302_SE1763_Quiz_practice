@@ -69,7 +69,12 @@ function AddQuestion() {
 
   const handleCreate = async () => {
     if (validateFields()) {
-      const userId = "671b2a90ecde6e67149e114e";
+      const userId = localStorage.getItem("userId"); // Lấy userId từ localStorage
+      if (!userId) {
+        console.error("Không tìm thấy userId trong localStorage.");
+        return;
+      }
+     
       const newQuestionData = {
         name: title,
         description,
@@ -95,9 +100,11 @@ function AddQuestion() {
   
         if (response.ok) {
           const createdQuestion = await response.json(); 
-          navigate(`/user/viewques/${createdQuestion.id}`, { 
-            state: { id: createdQuestion.id, title, description, questions },
-          });
+          console.log(createdQuestion.result._id);
+          navigate(`/user/viewques/${createdQuestion.result._id}`); 
+          // , { 
+          //   state: { id: createdQuestion.id, title, description, questions },
+          // }
         } else {
           console.error("Error saving questions");
         }
