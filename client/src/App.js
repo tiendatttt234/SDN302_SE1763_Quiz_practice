@@ -12,6 +12,8 @@ import Footer from "./components/common/layout/Footer/Footer";
 import UserDefaultPage from "./components/common/layout/user-default-layout";
 import FlashcardPage from "./components/user/FlashCard";
 import ImportFilePage from "./components/admin/adminComponnents/importQuestion";
+import BlogList from "./components/user/BlogList";
+import BlogDetail from "./components/user/BlogDetail";
 function App() {
   return (
     <BrowserRouter>
@@ -24,7 +26,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/no-access" element={<NoAccessPage />} />
           <Route path='/flash' element={<FlashcardPage/>}/>
-
+          <Route path="/blogList" element={<BlogList />} />
+          <Route path="/blog/detail/:blogId" element={<BlogDetail />} />
 
           {/* User Routes  */}
           <Route
@@ -42,7 +45,7 @@ function App() {
             }
           />
 
-
+            <Route path="/addQuestion" element={<ImportFilePage/>}/>
         </Routes>
         <Footer />
       </div>

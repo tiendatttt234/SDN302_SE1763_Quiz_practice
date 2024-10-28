@@ -44,6 +44,9 @@ function ViewQuestion() {
   const handleAddNew = () => {
     navigate("/user/addquestion");
   };
+  const handleAddNewWithFile = () => {
+    navigate("/user/questionUpload");
+  };
 
   const handleDelete = async (id) => {
     const isConfirmed = window.confirm(
@@ -90,6 +93,9 @@ function ViewQuestion() {
       <button className="add-new-button" onClick={handleAddNew}>
         Thêm Học Phần Mới
       </button>
+      <button className="add-new-button" onClick={handleAddNewWithFile}>
+        Thêm Học Phần Mới bằng file
+      </button>
       <button className="back-button" onClick={handleBack}>
         Trở về
       </button>
@@ -102,6 +108,9 @@ function ViewQuestion() {
       <div className="actions">
         <button className="add-new-button" onClick={handleAddNew}>
           Thêm Học Phần Mới
+        </button>
+        <button className="add-new-button" onClick={handleAddNewWithFile}>
+          Thêm Học Phần Mới bằng file
         </button>
       </div>
 
