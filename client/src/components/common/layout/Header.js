@@ -5,7 +5,7 @@ import { Dropdown } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Header = () => {
+const Header1 = () => {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
@@ -219,4 +219,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Header1;
