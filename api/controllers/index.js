@@ -6,4 +6,5 @@ module.exports = {
     QuizController,
     QuestionFileController,
     QuizSubmitController
+    
 }

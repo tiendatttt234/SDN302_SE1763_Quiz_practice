@@ -1,172 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-// BirthdaySelector Component (no changes here)
-const BirthdaySelector = () => {
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
-
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 124 }, (_, i) => currentYear - i);
-
-  const handleUpdate = () => {
-    console.log(`Selected Birthday: ${day}/${month}/${year}`);
-  };
-
-  return (
-    <div style={{ fontFamily: "Arial, sans-serif", color: "#4A4A4A" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            fontSize: "14px",
-            color: "#4A4A4A",
-          }}
-        >
-          Ngày/Tháng/Năm Sinh{" "}
-          <i
-            className="fas fa-info-circle"
-            style={{ marginLeft: "5px", fontSize: "12px", color: "#4A4A4A" }}
-          ></i>
-        </div>
-        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-          <div
-            style={{
-              padding: "10px",
-              border: "1px solid #D1D1D1",
-              borderRadius: "5px",
-              backgroundColor: "#F9F9F9",
-              color: "#4A4A4A",
-              fontSize: "14px",
-              width: "100px",
-              textAlign: "left",
-            }}
-          >
-            <select
-              style={{
-                border: "none",
-                background: "transparent",
-                fontSize: "14px",
-                color: "#4A4A4A",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              value={day}
-              onChange={(e) => setDay(e.target.value)}
-            >
-              <option value="">Ngày</option>
-              {days.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div
-            style={{
-              padding: "10px",
-              border: "1px solid #D1D1D1",
-              borderRadius: "5px",
-              backgroundColor: "#F9F9F9",
-              color: "#4A4A4A",
-              fontSize: "14px",
-              width: "100px",
-              textAlign: "left",
-            }}
-          >
-            <select
-              style={{
-                border: "none",
-                background: "transparent",
-                fontSize: "14px",
-                color: "#4A4A4A",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-            >
-              <option value="">Tháng</option>
-              {months.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div
-            style={{
-              padding: "10px",
-              border: "1px solid #D1D1D1",
-              borderRadius: "5px",
-              backgroundColor: "#F9F9F9",
-              color: "#4A4A4A",
-              fontSize: "14px",
-              width: "100px",
-              textAlign: "left",
-            }}
-          >
-            <select
-              style={{
-                border: "none",
-                background: "transparent",
-                fontSize: "14px",
-                color: "#4A4A4A",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-            >
-              <option value="">Năm</option>
-              {years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <button
-            style={{
-              padding: "10px 15px",
-              backgroundColor: "#007bff",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-            onClick={handleUpdate}
-          >
-            Cập nhật
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// PasswordChange Component
-const PasswordChange = () => {
+const PasswordChange = ({ userName }) => {
   const [showInputs, setShowInputs] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePasswordChange = () => {
-    console.log("Current Password:", currentPassword);
-    console.log("New Password:", newPassword);
-    console.log("Confirm Password:", confirmPassword);
-    // Add password change logic here
+  const handlePasswordChange = async () => {
+    try {
+      setIsLoading(true);
+      setMessage({ text: "", type: "" }); // Clear previous messages
+
+      // Simple required field validation
+      if (!oldPassword || !newPassword) {
+        setMessage({
+          text: "Vui lòng điền đầy đủ thông tin",
+          type: "error",
+        });
+        return;
+      }
+
+      // Make sure userName is available
+      const userNameFromStorage = localStorage.getItem("userName");
+      if (!userNameFromStorage) {
+        setMessage({
+          text: "Không tìm thấy thông tin người dùng",
+          type: "error",
+        });
+        return;
+      }
+
+      const response = await axios.put(
+        `http://localhost:9999/account/changepass/${userNameFromStorage}`,
+        {
+          oldPassword,
+          newPassword,
+        }
+      );
+
+      if (response.data.status) {
+        setMessage({
+          text: response.data.message,
+          type: "success",
+        });
+        setShowInputs(false);
+        setOldPassword("");
+        setNewPassword("");
+      }
+    } catch (error) {
+      console.error("Password change error:", error);
+      setMessage({
+        text: error.response?.data?.message || "Có lỗi xảy ra khi đổi mật khẩu",
+        type: "error",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
-
   return (
     <div style={{ marginTop: "20px" }}>
-      {/* Button to show/hide password inputs */}
       <button
         style={{
           padding: "10px 20px",
@@ -175,13 +69,28 @@ const PasswordChange = () => {
           border: "none",
           borderRadius: "5px",
           cursor: "pointer",
+          opacity: isLoading ? 0.7 : 1,
         }}
         onClick={() => setShowInputs(!showInputs)}
+        disabled={isLoading}
       >
         Đổi mật khẩu
       </button>
 
-      {/* Conditionally render password input fields */}
+      {message.text && (
+        <div
+          style={{
+            marginTop: "10px",
+            padding: "10px",
+            borderRadius: "5px",
+            backgroundColor: message.type === "success" ? "#d4edda" : "#f8d7da",
+            color: message.type === "success" ? "#155724" : "#721c24",
+          }}
+        >
+          {message.text}
+        </div>
+      )}
+
       {showInputs && (
         <div style={{ marginTop: "20px" }}>
           <input
@@ -195,8 +104,9 @@ const PasswordChange = () => {
               borderRadius: "5px",
               border: "1px solid #ddd",
             }}
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            disabled={isLoading}
           />
           <input
             type="password"
@@ -211,20 +121,7 @@ const PasswordChange = () => {
             }}
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Xác nhận mật khẩu mới"
-            style={{
-              display: "block",
-              width: "100%",
-              padding: "10px",
-              marginBottom: "10px",
-              borderRadius: "5px",
-              border: "1px solid #ddd",
-            }}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            disabled={isLoading}
           />
 
           <button
@@ -235,19 +132,119 @@ const PasswordChange = () => {
               border: "none",
               borderRadius: "5px",
               cursor: "pointer",
+              opacity: isLoading ? 0.7 : 1,
+              marginRight: "10px",
             }}
             onClick={handlePasswordChange}
+            disabled={isLoading}
           >
-            Đổi mật khẩu
+            {isLoading ? "Đang xử lý..." : "Xác nhận"}
+          </button>
+
+          <button
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#dc3545",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              opacity: isLoading ? 0.7 : 1,
+            }}
+            onClick={() => {
+              setShowInputs(false);
+              setOldPassword("");
+              setNewPassword("");
+              setMessage({ text: "", type: "" });
+            }}
+            disabled={isLoading}
+          >
+            Hủy
           </button>
         </div>
       )}
     </div>
   );
 };
-
-// Main Profile Component
 const Profile = () => {
+  const [userData, setUserData] = useState({
+    userName: "",
+    phone: "",
+    email: "",
+    birthday: "",
+  });
+  const [editStates, setEditStates] = useState({
+    email: false,
+    userName: false,
+    phone: false,
+  });
+  const [editValues, setEditValues] = useState({
+    email: "",
+    userName: "",
+    phone: "",
+  });
+  const [message, setMessage] = useState({ text: "", type: "" });
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const userName = localStorage.getItem("userName");
+      const response = await axios.get(
+        `http://localhost:9999/account/${userName}`
+      );
+      setUserData(response.data);
+      setEditValues({
+        email: response.data.email,
+        userName: response.data.userName,
+        phone: response.data.phone,
+      });
+    } catch (error) {
+      showMessage("Error fetching user data", "error");
+    }
+  };
+
+  const showMessage = (text, type = "success") => {
+    setMessage({ text, type });
+    setTimeout(() => setMessage({ text: "", type: "" }), 3000);
+  };
+
+  const handleEditToggle = (field) => {
+    setEditStates((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+  const handleFieldUpdate = async (field) => {
+    try {
+      const userName = localStorage.getItem("userName");
+      const response = await axios.patch(
+        `http://localhost:9999/account/${userName}/field`,
+        {
+          field,
+          value: editValues[field],
+        }
+      );
+
+      if (response.data.success) {
+        setUserData((prev) => ({
+          ...prev,
+          [field]: editValues[field],
+        }));
+        handleEditToggle(field);
+        showMessage(`${field} updated successfully`);
+      }
+    } catch (error) {
+      showMessage(
+        error.response?.data?.message || `Error updating ${field}`,
+        "error"
+      );
+    }
+  };
+
   return (
     <div
       style={{
@@ -259,6 +256,18 @@ const Profile = () => {
         padding: "20px",
       }}
     >
+      {message.text && (
+        <div
+          className={`p-4 mb-4 rounded ${
+            message.type === "error"
+              ? "bg-red-100 text-red-700"
+              : "bg-green-100 text-green-700"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
+
       <div style={{ marginBottom: "30px" }}>
         <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>Ảnh hồ sơ</h2>
         <div
@@ -269,19 +278,17 @@ const Profile = () => {
           }}
         >
           <img
-            alt="Profile picture 1"
-            src="http://pm1.aminoapps.com/7239/b508c8e2b879561f650574466b86531cc90138d9r1-768-768v2_uhq.jpg"
+            alt="Profile picture"
+            src={userData.avatar?.[0] || "/default-avatar.jpg"}
             style={{
               width: "100px",
               height: "100px",
               borderRadius: "50%",
               margin: "10px",
+              objectFit: "cover",
             }}
           />
-          <span style={{ color: "#007bff", cursor: "pointer" }}>Chỉnh sửa</span>
-          <div>
-            <i className="fas fa-plus"></i>
-          </div>
+          <input type="file" accept="image/*" style={{ marginTop: "10px" }} />
         </div>
       </div>
 
@@ -289,6 +296,8 @@ const Profile = () => {
         <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>
           Thông tin cá nhân
         </h2>
+
+        {/* Email Section */}
         <div
           style={{
             display: "flex",
@@ -298,9 +307,77 @@ const Profile = () => {
             borderBottom: "1px solid #eee",
           }}
         >
-          <label style={{ flex: 1 }}>Email:</label>
-          <span style={{ flex: 10 }}>email@example.com</span>
+          <label style={{ flex: 1, textAlign: "left" }}>Email:</label>
+          {editStates.email ? (
+            <div
+              style={{
+                flex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <input
+                type="text"
+                value={editValues.email}
+                onChange={(e) =>
+                  setEditValues((prev) => ({
+                    ...prev,
+                    email: e.target.value,
+                  }))
+                }
+                style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
+              />
+              <button
+                onClick={() => handleFieldUpdate("email")}
+                style={{
+                  backgroundColor: "#28a745",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => handleEditToggle("email")}
+                style={{
+                  backgroundColor: "#dc3545",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div
+              style={{
+                flex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>{userData.email}</span>
+              <button
+                onClick={() => handleEditToggle("email")}
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Edit
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Username Section */}
         <div
           style={{
             display: "flex",
@@ -310,19 +387,158 @@ const Profile = () => {
             borderBottom: "1px solid #eee",
           }}
         >
-          <label style={{ flex: 1 }}>Tên:</label>
-          <span style={{ flex: 9 }}>Nguyễn Văn A</span>
-          <span style={{ color: "#007bff", cursor: "pointer" }}>Chỉnh sửa</span>
+          <label style={{ flex: 1, textAlign: "left" }}>Username:</label>
+          {editStates.userName ? (
+            <div
+              style={{
+                flex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <input
+                type="text"
+                value={editValues.userName}
+                onChange={(e) =>
+                  setEditValues((prev) => ({
+                    ...prev,
+                    userName: e.target.value,
+                  }))
+                }
+                style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
+              />
+              <button
+                onClick={() => handleFieldUpdate("userName")}
+                style={{
+                  backgroundColor: "#28a745",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => handleEditToggle("userName")}
+                style={{
+                  backgroundColor: "#dc3545",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div
+              style={{
+                flex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>{userData.userName}</span>
+              <button
+                onClick={() => handleEditToggle("userName")}
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Edit
+              </button>
+            </div>
+          )}
         </div>
-        <BirthdaySelector />
+
+        {/* Phone Section */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "10px 0",
+            borderBottom: "1px solid #eee",
+          }}
+        >
+          <span style={{ flex: 1, textAlign: "left" }}>Phone:</span>
+          {editStates.phone ? (
+            <div
+              style={{
+                flex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <input
+                type="text"
+                value={editValues.phone}
+                onChange={(e) =>
+                  setEditValues((prev) => ({
+                    ...prev,
+                    phone: e.target.value,
+                  }))
+                }
+                style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
+              />
+              <button
+                onClick={() => handleFieldUpdate("phone")}
+                style={{
+                  backgroundColor: "#28a745",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Save
+              </button>
+              <button
+                onClick={() => handleEditToggle("phone")}
+                style={{
+                  backgroundColor: "#dc3545",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <div
+              style={{
+                flex: 2,
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>{userData.phone}</span>
+              <button
+                onClick={() => handleEditToggle("phone")}
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "5px 10px",
+                }}
+              >
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div style={{ marginBottom: "30px" }}>
-        <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>
-          Thiết lập khác
-        </h2>
-        <PasswordChange />
-      </div>
+      <PasswordChange />
     </div>
   );
 };

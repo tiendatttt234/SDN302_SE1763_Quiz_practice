@@ -1,13 +1,27 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-// import { AuthService } from '../../../core/services/auth.service';
+import React from "react";
+import { Navigate } from "react-router-dom";
 
-const PrivateRoute = ({ element: Component, allowedRoles, ...rest }) => {
-  const userRoles = JSON.parse(localStorage.getItem('userRoles')) || []; // Retrieve user roles from local storage
-
-  const hasAccess = allowedRoles.some(role => userRoles.includes(role));
-
-  return hasAccess ? Component : <Navigate to="/no-access" replace />;
+const getUserRole = () => {
+  const roleData = localStorage.getItem("roles");
+  try {
+    const parsedRole = JSON.parse(roleData);
+    console.log("Parsed user role:", parsedRole); // Debug log
+    return parsedRole?.name; // Returns 'manager' or 'admin'
+  } catch (error) {
+    console.error("Failed to parse user role:", error);
+    return null;
+  }
 };
+
+function PrivateRoute({ element, requiredRole }) {
+  const userRole = getUserRole();
+
+  if (userRole === requiredRole) {
+    return element;
+  } else {
+    console.log(`Access denied. Required role: ${requiredRole}, User role: ${userRole}`); // Debug log
+    return <Navigate to="/no-access" replace />;
+  }
+}
 
 export default PrivateRoute;
