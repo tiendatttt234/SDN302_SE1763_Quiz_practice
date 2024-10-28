@@ -21,6 +21,7 @@ export default function AdminDefaultPage() {
           <Route path="/manage/blog/add" element={<ManageCreateBlog/>}/>
 
 
+
           <Route path="/*" element={<PageNotFound/>} />
       </Routes>
     </div>

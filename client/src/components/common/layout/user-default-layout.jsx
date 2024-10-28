@@ -10,6 +10,8 @@ import Profile from "../../authen/Profile";
 import MyCourse from "../../authen/MyCourse";
 import PageNotFound from "../../errorPage/PageNotFound";
 import ImportFilePage from "../../admin/adminComponnents/importQuestion";
+import BlogList from "../../user/BlogList";
+import BlogDetail from "../../user/BlogDetail";
 
 export default function UserDefaultPage() {
   return (
@@ -34,6 +36,9 @@ export default function UserDefaultPage() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/mycourse" element={<MyCourse />} />
 
+
+            <Route path="/blogList" element={<BlogList />} />
+            <Route path="/blog/detail/:blogId" element={<BlogDetail />} />
 
             {/* Error page */}
             <Route path="/*" element={<PageNotFound/>} />
