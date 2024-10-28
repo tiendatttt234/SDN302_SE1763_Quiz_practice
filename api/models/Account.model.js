@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoose_delete = require('mongoose-delete');
 
 const AccountSchema = new mongoose.Schema({
     email: {
@@ -28,7 +29,7 @@ const AccountSchema = new mongoose.Schema({
         type: String
     },
     userName: {
-        type: String,
+        type: String, 
         trim: true
     },
     roles: [{
@@ -38,5 +39,7 @@ const AccountSchema = new mongoose.Schema({
     }]
 });
 
+
+AccountSchema.plugin(mongoose_delete, { overrideMethods: 'all' });
 const Account = mongoose.model("Account", AccountSchema);
 module.exports = Account;

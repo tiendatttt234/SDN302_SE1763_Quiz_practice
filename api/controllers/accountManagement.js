@@ -65,7 +65,7 @@ const updateAccount = async (req, res, next) => {
 };
 
 const addAccount = async (req, res, next) => {
-    const { email, phone, username,password, avatar, roles } = req.body; 
+    const { email, phone, username, password, avatar, roles } = req.body;
 
     try {
         let roleIds = [];
@@ -80,7 +80,7 @@ const addAccount = async (req, res, next) => {
             userName: username,
             password,
             avatar,
-            roles: roleIds  
+            roles: roleIds
         });
 
         await newAccount.save();
@@ -92,7 +92,7 @@ const addAccount = async (req, res, next) => {
                 phone: newAccount.phone,
                 username: newAccount.userName,
                 avatar: newAccount.avatar,
-                roles: roleIds 
+                roles: roleIds
             }
         });
     } catch (error) {
@@ -102,6 +102,19 @@ const addAccount = async (req, res, next) => {
         }
         next(httpError(500, 'Failed to create account'));
     }
-};
+}
 
-module.exports = { listAccount, updateAccount, addAccount };
+const deleteAccount = async (req, res, next) => {
+    try {
+        const accId = req.params.id
+        console.log(accId);
+        
+        let result = await account.deleteById({ _id: accId })
+        res.status(200).json(result)
+    } catch (error) {
+        next(httpError(500, 'Failed to delete account'));
+    } 
+
+}
+
+module.exports = { listAccount, updateAccount, addAccount, deleteAccount };
