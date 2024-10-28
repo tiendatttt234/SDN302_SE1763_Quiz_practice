@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Trash } from "lucide-react"; // Import Trash icon from lucide-react
-import "../UserCSS/Question/ViewQues.css"; // Đảm bảo tạo file CSS này
+import { Trash } from "lucide-react";
+import "../UserCSS/Question/ViewQues.css";
 
 function ViewQuestion() {
   const [questionSets, setQuestionSets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // Giả sử có danh sách câu hỏi trong một mảng `questionFiles`
+  const filteredQuestionFiles = questionSets.filter(file =>
+    file.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   useEffect(() => {
     fetchQuestionSets();
   }, []);
@@ -24,18 +33,13 @@ function ViewQuestion() {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log("Dữ liệu nhận được từ server:", data);
- 
-      
       setQuestionSets(data.questionFileRespone);
     } catch (error) {
-      console.error("Error fetching question sets:", error);
       setError("Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.");
     } finally {
       setIsLoading(false);
     }
   };
-  console.log(questionSets);
 
   const handleViewDetail = (id) => {
     navigate(`/user/viewques/${id}`);
@@ -47,7 +51,7 @@ function ViewQuestion() {
 
   const handleDelete = async (id) => {
     const isConfirmed = window.confirm(
-      `Xóa học phần này?\n\nBạn sắp xoá học phần này và toàn bộ dữ liệu trong đó. Không ai có thể truy cập vào học phần này nữa.\n\nBạn có chắc chắn không? Bạn sẽ không được hoàn tác.`
+      "Xóa học phần này? Bạn có chắc chắn không? Bạn sẽ không được hoàn tác."
     );
 
     if (isConfirmed) {
@@ -55,13 +59,11 @@ function ViewQuestion() {
         const userId = localStorage.getItem("userId");
         const response = await fetch(
           `http://localhost:9999/questionFile/delete/${id}?userId=${userId}`,
-          {
-            method: "DELETE",
-          }
+          { method: "DELETE" }
         );
 
         if (response.ok) {
-          setQuestionSets((prev) => prev.filter((set) => set._id !== id)); // Sửa id thành _id
+          setQuestionSets((prev) => prev.filter((set) => set._id !== id));
         } else {
           console.error("Error deleting question set");
         }
@@ -83,67 +85,41 @@ function ViewQuestion() {
     return <div className="error">{error}</div>;
   }
 
-  if (!questionSets.length) return (
-    <div className="empty-state">
-      <h2>Chưa có học phần nào</h2>
-      <p>Hãy tạo học phần đầu tiên của bạn</p>
-      <button className="add-new-button" onClick={handleAddNew}>
-        Thêm Học Phần Mới
-      </button>
-      <button className="back-button" onClick={handleBack}>
-        Trở về
-      </button>
-    </div>
-  );
-
   return (
     <div className="manage-question">
-      <h1>Quản lý Học Phần</h1>
+      <h1>Thư viện của bạn</h1>
+      {/* <p>Tổng số câu hỏi: {questionSets.length}</p> */}
       <div className="actions">
         <button className="add-new-button" onClick={handleAddNew}>
           Thêm Học Phần Mới
         </button>
       </div>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Tìm kiếm..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </div>
+      <div className="question-set-container">
+        {filteredQuestionFiles.map((set) => (
+          <div className="question-card" key={set._id} onClick={() => handleViewDetail(set._id)}>
+            <div className="card-info">
+              <span>{set.arrayQuestion?.length || 0} thuật ngữ</span> | 
+              <span>{set.description}</span> 
+            </div>
+            <h2>{set.name}</h2>
+            <button className="delete-button" onClick={(e) => { e.stopPropagation(); handleDelete(set._id); }}>
+              <Trash size={16} />
+            </button>
+          </div>
+        ))}
+      </div>
 
-      <table className="question-table">
-        <thead>
-          <tr>
-            <th>Tiêu đề</th>
-            <th>Mô tả</th>
-            <th>Số câu hỏi</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {questionSets.map((set) => (
-            <tr key={set._id}>
-              <td>{set.name}</td>
-              <td>{set.description}</td>
-              <td>{set.arrayQuestion?.length || 0}</td>
-              <td>{set.isPrivate ? 'Riêng tư' : 'Công khai'}</td>
-              <td className="actions-cell">
-                <button 
-                  className="view-button"
-                  onClick={() => handleViewDetail(set._id)}
-                >
-                  Xem chi tiết
-                </button>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(set._id)}
-                >
-                  <Trash size={16} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <button className="back-button" onClick={handleBack}>
+      {/* <button className="back-button" onClick={handleBack}>
         Trở về
-      </button>
+      </button> */}
     </div>
   );
 }

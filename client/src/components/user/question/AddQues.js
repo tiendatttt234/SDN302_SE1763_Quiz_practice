@@ -234,7 +234,7 @@ function AddQuestion() {
   
 
   return (
-    <div className="ques-manager">
+    <div className="ques-manager" style={{maxWidth: "100%"}}>
       <h1 className="title">Tạo học phần mới</h1>
 
       <input
