@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search } from "react-bootstrap-icons";
 import { Dropdown } from "react-bootstrap";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState(null);
-  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,9 +39,15 @@ const Header = () => {
     localStorage.removeItem("roles");
     setUserName("");
     setUserRole(null);
-    setSuccessMessage("Đăng xuất thành công!");
+    toast.success("Đăng xuất thành công!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
     setTimeout(() => {
-      setSuccessMessage("");
       navigate("/login");
     }, 2000);
   };
@@ -103,7 +110,7 @@ const Header = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "10px 20px",
+          padding: "5px 10px",
         }}
       >
         <Link to="/" style={{ textDecoration: "none" }}>
@@ -151,13 +158,13 @@ const Header = () => {
           <input
             type="text"
             placeholder="Tìm kiếm"
-            style={{ padding: "10px", width: "300px" }}
+            style={{ padding: "5px", width: "300px" }}
           />
           <button
             style={{
               backgroundColor: "rgb(66,85,255)",
-              borderRadius: "50%",
-              padding: "10px",
+              borderRadius: "20%",
+              padding: "6px",
             }}
           >
             <Search />
@@ -207,11 +214,7 @@ const Header = () => {
           )}
         </div>
       </div>
-      {successMessage && (
-        <p style={{ textAlign: "center", color: "green", paddingTop: "10px" }}>
-          {successMessage}
-        </p>
-      )}
+      <ToastContainer />
     </header>
   );
 };

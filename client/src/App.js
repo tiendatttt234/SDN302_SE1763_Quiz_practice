@@ -12,6 +12,7 @@ import AdminProfit from "./components/admin/viewProfit";
 import AdminDashboard from "../src/components/admin/adminComponnents/admin";
 import UserManagement from "./components/admin/adminComponnents/usermanagement";
 import Footer from "./components/common/layout/Footer";
+import Profile from "./components/authen/Profile";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/mycourse" element={<MyCourse />} />
           <Route path="/no-access" element={<NoAccessPage />} />
+          <Route path="/profile" element={<Profile />} />
 
           {/* Admin Routes */}
           <Route
