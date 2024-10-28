@@ -29,25 +29,38 @@ const uploadImage = async (fileObject) => {
   }
 };
 async function createNewBlog(req, res, next) {
-  const { title, content, image, createDate, isActive, account } = req.body;
+  const { title, content, image, createDate, isActive } = req.body;
+  let accountId = req.body.account;
   try {
-    if (!mongoose.Types.ObjectId.isValid(account)) {
-      return res.status(400).json({ message: "Invalid account Id" });
+    if (!mongoose.Types.ObjectId.isValid(accountId)) {
+      return res.status(400).json({ message: "Invalid account Id format" });
     }
 
     let imageUrl = "";
     if (!req.files || Object.keys(req.files).length === 0) {
+      console.log("No image uploaded.");
     } else {
+      console.log("Image file received:", req.files.image);
+
       let result = await uploadImage(req.files.image);
       imageUrl = result.path;
       console.log("check result", result.path);
     }
 
+    console.log("Creating blog with data:", {
+      title,
+      content,
+      image: imageUrl,
+      account: accountId,
+      createDate: new Date(),
+      isActive: true,
+    });
+
     const blog = new Blog({
       title,
       content,
       image: imageUrl,
-      account,
+      account: accountId,
       createDate: new Date(),
       isActive: true, // Mặc định là true, có thể thiết lập rõ ràng
     });
@@ -59,6 +72,7 @@ async function createNewBlog(req, res, next) {
       data: newBlog,
     });
   } catch (error) {
+    console.error("Error in createNewBlog:", error);
     if (error.code === 11000 && error.keyPattern && error.keyPattern.title) {
       return res.status(400).json({
         success: false,
@@ -74,6 +88,7 @@ async function createNewBlog(req, res, next) {
         error: messages,
       });
     }
+    console.error("Detailed server error:", error); // Log chi tiết lỗi
 
     // Xử lý các lỗi khác
     res.status(500).json({
@@ -86,7 +101,7 @@ async function createNewBlog(req, res, next) {
 async function listAllBlogs(req, res, next) {
   try {
     // Lấy tất cả các blog và populate thông tin account
-    const blogs = await Blog.find().populate("account", "email userName"); // 'email userName' là các trường bạn muốn lấy từ account
+    const blogs = await Blog.find(); // 'email userName' là các trường bạn muốn lấy từ account
 
     // Kiểm tra nếu không có blog nào
     if (blogs.length === 0) {

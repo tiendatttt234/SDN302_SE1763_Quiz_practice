@@ -41,6 +41,8 @@ function App() {
               <PrivateRoute element={<AdminDefaultPage />} requiredRole="admin" />
             }
           />
+
+
         </Routes>
         <Footer />
       </div>
