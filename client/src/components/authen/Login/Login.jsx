@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
 import axios from "axios";
 import "./Login.css";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -48,7 +50,14 @@ const Login = () => {
         }
       }
   
-      setSuccessMessage("Đăng nhập thành công! Chuyển hướng trong giây lát...");
+      toast.success("Đăng nhập thành công! Chuyển hướng trong giây lát...", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       setTimeout(() => {
         navigate(redirectPath);
       }, 2000);
@@ -57,7 +66,6 @@ const Login = () => {
       setSuccessMessage("");
     }
   };
-    
 
   return (
     <div style={{ display: "flex", height: "100vh", margin: 0 }}>
@@ -122,6 +130,7 @@ const Login = () => {
           </Link>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

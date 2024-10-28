@@ -279,7 +279,10 @@ const Profile = () => {
         >
           <img
             alt="Profile picture"
-            src={userData.avatar?.[0] || "/default-avatar.jpg"}
+            src={
+              userData.avatar?.[0] ||
+              "http://pm1.aminoapps.com/7239/b508c8e2b879561f650574466b86531cc90138d9r1-768-768v2_uhq.jpg"
+            }
             style={{
               width: "100px",
               height: "100px",

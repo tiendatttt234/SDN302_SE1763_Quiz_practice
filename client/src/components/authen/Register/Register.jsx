@@ -80,7 +80,7 @@ const Register = () => {
         <h1>Cách tốt nhất để học. Đăng ký miễn phí.</h1>
         <img
           alt="Colorful notebooks and white headphones"
-          height="800"
+          height="300"
           src="https://th.bing.com/th/id/OIG4._8czaS_hxnpxvorG7z_D?w=1024&h=1024&rs=1&pid=ImgDetMain"
           width="800"
         />

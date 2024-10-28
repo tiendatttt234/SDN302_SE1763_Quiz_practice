@@ -14,6 +14,8 @@ import FlashcardPage from "./components/user/FlashCard";
 import ImportFilePage from "./components/admin/adminComponnents/importQuestion";
 import BlogList from "./components/user/BlogList";
 import BlogDetail from "./components/user/BlogDetail";
+import Profile from "./components/authen/Profile";
+
 function App() {
   return (
     <BrowserRouter>
