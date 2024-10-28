@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Schema cho Question
+
 const QuestionSchema = new mongoose.Schema({
     content: {
         type: String,
