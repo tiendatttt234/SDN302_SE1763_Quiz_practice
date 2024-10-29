@@ -171,4 +171,46 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow when clicked */
     transform: translateY(0); /* Reset movement when clicked */
   }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .edit-add-question-button,
+  .flash-button,
+  .save-button,
+  .back-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-add-question-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+  }
+  
+  .flash-button {
+    background-color: #17a2b8; /* Choose a distinct color */
+    color: #fff;
+    border: none;
+  }
+  
+  .save-button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+  }
+  
+  .back-button {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+  }
+  
   

@@ -27,7 +27,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/no-access" element={<NoAccessPage />} />
-          <Route path='/flash' element={<FlashcardPage/>}/>
+          <Route path='/flash/:id' element={<FlashcardPage/>}/>
           <Route path="/blogList" element={<BlogList />} />
           <Route path="/blog/detail/:blogId" element={<BlogDetail />} />
 

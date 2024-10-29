@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Card, Button } from "react-bootstrap";
 import "./styles/QuizAttempt.css";
 import { useNavigate, useParams } from "react-router-dom";
-import QuestionComponent from "./QuestionComponent"; // Import the QuestionComponent
+import QuestionComponent from "./QuestionComponent";
 
 export default function QuizAttempt() {
   const style = {
@@ -14,23 +14,26 @@ export default function QuizAttempt() {
     },
   };
   
-  const { id } = useParams();
-  const [quizData, setQuizData] = useState(null); 
+  const { id: quizId } = useParams(); // Get quizId from URL params
+  const [quizData, setQuizData] = useState(null);
   const [userAnswers, setUserAnswers] = useState([]);
   const questionRefs = useRef([]);
   const navigate = useNavigate();
 
-  const [userId] = useState("6718b40f01a9ac9b0e084342");
-  const [questionFileId] = useState("671bb0a19dfaf03952134943");
-
-  // Fetch quiz data on component mount
+  const userId = localStorage.getItem("userId"); // Retrieve userId from localStorage
+  const [questionFileId, setQuestionFileId] = useState(null);
+  console.log(questionFileId);
+  
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await fetch(`http://localhost:9999/quiz/getQuizById/${id}`);
+        const response = await fetch(`http://localhost:9999/quiz/getQuizById/${quizId}`);
         if (response.ok) {
           const data = await response.json();
-          setQuizData(data); // Set the fetched data
+          console.log(data);
+          
+          setQuizData(data);
+          setQuestionFileId(data.questionFileId); // Set questionFileId from fetched data
         } else {
           console.error("Failed to fetch quiz data");
         }
@@ -40,9 +43,8 @@ export default function QuizAttempt() {
     };
     
     fetchQuizData();
-  }, [id]);
-  console.log(quizData);
-  
+  }, [quizId]);
+
   const handleAnswerSelect = (questionIndex, answerId) => {
     setUserAnswers((prevAnswers) => {
       const currentAnswers = prevAnswers[questionIndex] || [];
@@ -68,24 +70,20 @@ export default function QuizAttempt() {
     });
   };
 
-  const scrollToQuestion = (index) => {
-    questionRefs.current[index].scrollIntoView({ behavior: "smooth" });
-  };
-
   const handleSubmit = async () => {
     const submissionData = {
       userId,
       questionFileId,
-      quizId: id, // quiz id from the params
+      quizId,
       userAnswers: quizData.questions.map((quizItem, index) => {
         const selectedAnswers = userAnswers[index] || [];
         return {
           questionId: quizItem.questId,
-          selectedAnswerId: Array.isArray(selectedAnswers) ? selectedAnswers : [selectedAnswers], 
+          selectedAnswerId: Array.isArray(selectedAnswers) ? selectedAnswers : [selectedAnswers],
         };
       }),
     };
-    // console.log(submissionData);
+
     try {
       const response = await fetch("http://localhost:9999/quizSubmit/submit", {
         method: "POST",
@@ -96,8 +94,6 @@ export default function QuizAttempt() {
       });
       if (response.ok) {
         const result = await response.json();
-        // console.log("Quiz submitted successfully:", result);
-        // navigate to results page or handle success state
         navigate("/user/quiz-result", { state: { results: result } });
       } else {
         console.error("Failed to submit quiz");
@@ -107,7 +103,6 @@ export default function QuizAttempt() {
     }
   };
 
-  // Show loading or error message until data is available
   if (!quizData) return <p>Loading...</p>;
 
   return (
@@ -118,7 +113,7 @@ export default function QuizAttempt() {
             <li key={index} className="my-2">
               <Button
                 variant="outline-primary"
-                onClick={() => scrollToQuestion(index)}
+                onClick={() => questionRefs.current[index].scrollIntoView({ behavior: "smooth" })}
               >
                 {index + 1}
               </Button>
@@ -141,12 +136,9 @@ export default function QuizAttempt() {
             </Card.Header>
             <Card.Body>
               <Card.Title>
-                {quizItem.type === "MAQ"
-                  ? "Chọn nhiều đáp án"
-                  : "Chọn một đáp án"}
+                {quizItem.type === "MAQ" ? "Chọn nhiều đáp án" : "Chọn một đáp án"}
               </Card.Title>
 
-              {/* Use the QuestionComponent here */}
               <QuestionComponent
                 quizItem={quizItem}
                 userAnswer={userAnswers[index]}

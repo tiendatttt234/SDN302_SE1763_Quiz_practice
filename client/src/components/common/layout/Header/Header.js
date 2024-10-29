@@ -145,7 +145,7 @@ const Header = () => {
               Chủ đề
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item as={Link} to="#">
+              <Dropdown.Item as={Link} to="/user/quizHistory">
               Các bài quiz đã làm
               </Dropdown.Item>
               <Dropdown.Item as={Link} to="#">

@@ -1,0 +1,15 @@
+.quiz-result {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.quiz-result h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.quiz-result p {
+    margin: 5px 0;
+}

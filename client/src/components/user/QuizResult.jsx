@@ -9,7 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 export default function QuizResult() {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const userId = localStorage.getItem("userId");
   
   useEffect(() => {
     if (!location.state || !location.state.results) {
@@ -50,7 +50,7 @@ export default function QuizResult() {
         <Pie data={data} />
       </div>
       <div className="mt-4">
-        <Button variant="primary" onClick={() => navigate("/flash")}>
+        <Button variant="primary" onClick={() => navigate(`/user/viewques`)}>
           Go back your folder
         </Button>
       </div>

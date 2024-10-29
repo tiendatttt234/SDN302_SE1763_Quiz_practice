@@ -26,22 +26,27 @@ async function getAllQuestionFile(req, res, next) {
   }
 }
 
-async function getQuestionFileById(req, res, next) {
+// Updated getQuestionFileById function
+async function getQuestionFileByIdandUserID(req, res, next) {
   try {
     const { id } = req.params;
+    const { userId } = req.query;  
     
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
 
-
-    // Tìm questionFile theo id và userId
+    // Find the question file by both ID and createdBy (userId)
     const questionFile = await QuestionFile.findOne({
       _id: id,
-      
+      createdBy: userId
     });
+
     if (!questionFile) {
       return res.status(404).json({ message: "Question file not found or unauthorized access" });
     }
 
-    // Định dạng dữ liệu trả về
+    // Format the response data
     const formattedResult = {
       name: questionFile.name,
       description: questionFile.description,
@@ -63,6 +68,44 @@ async function getQuestionFileById(req, res, next) {
     next(error);
   }
 }
+
+async function getQuestionFileById(req, res, next) {
+  try {
+    const { id } = req.params;
+
+
+    // Find the question file by both ID and createdBy (userId)
+    const questionFile = await QuestionFile.findOne({
+      _id: id
+    });
+
+    if (!questionFile) {
+      return res.status(404).json({ message: "Question file not found or unauthorized access" });
+    }
+
+    // Format the response data
+    const formattedResult = {
+      name: questionFile.name,
+      description: questionFile.description,
+      isPrivate: questionFile.isPrivate,
+      arrayQuestion: questionFile.arrayQuestion.map((question) => ({
+        questionId: question._id,
+        content: question.content,
+        type: question.type,
+        answers: question.answers.map((answer) => ({
+          answerId: answer._id,
+          answerContent: answer.answerContent,
+          isCorrect: answer.isCorrect,
+        })),
+      })),
+    };
+
+    return res.status(200).json({ questionFile: formattedResult });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function createQuestionFile(req, res, next) {
   try {
     const newQuestionFile = await QuestionFile.create(req.body);
@@ -114,6 +157,7 @@ const QuestionFileController = {
   createQuestionFile,
   updateQuestionFile,
   deleteQuestionFile,
+  getQuestionFileByIdandUserID
 };
 
 module.exports = QuestionFileController;

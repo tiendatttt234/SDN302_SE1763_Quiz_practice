@@ -9,6 +9,7 @@ const upload = multer({ dest: 'uploads/' });
 QuestionFileRouter.post('/upload', upload.single('file'), uploadQuestions);
 QuestionFileRouter.get('/list', listQuestions);
 QuestionFileRouter.get('/getById/:id', QuestionFileController.getQuestionFileById);
+QuestionFileRouter.get('/getByIdandUserId/:id', QuestionFileController.getQuestionFileByIdandUserID);
 QuestionFileRouter.get('/getAll', QuestionFileController.getAllQuestionFile);
 QuestionFileRouter.post('/create', QuestionFileController.createQuestionFile);
 QuestionFileRouter.put('/update/:id', QuestionFileController.updateQuestionFile);

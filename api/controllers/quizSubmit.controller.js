@@ -1,14 +1,14 @@
 const QuizResult = require('../models/QuizResult.model');
 const QuestionFile = require('../models/QuestionFile.model');
 const mongoose = require('mongoose');
-async function getQuiz(req,res,next) {
-    // const getAll = await QuizResult.find({});
-     res.status(200).json({message: "hehe"});
-}
+
 
 async function submitQuiz(req, res, next) {
     try {
         const { userId, quizId, questionFileId, userAnswers } = req.body;
+        console.log("revice data from client... ");
+        console.log(req.body);
+        
         
 
         //Check if quizId are valid ObjectIds
@@ -67,8 +67,45 @@ function isAnswerCorrect(question, userAnswer) {
         return userAnswer.selectedAnswerId[0] === correctAnswerId;
     }
 }
+
+async function getAllQuizResultByUserId(req, res, next) {
+    try {
+        const { userId } = req.body; // Get userId from req.body
+        console.log("revice data from client ..." + userId);
+        
+        // Validate userId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: 'Invalid user ID' });
+        }
+
+        // Fetch all quiz results for the user and populate the questionFile
+        const quizResults = await QuizResult.find({ user: userId })
+            .populate({
+                path: 'questionFile',
+                select: 'name' // Only select the name field of the QuestionFile
+            })
+            .exec();
+            console.log(quizResults);
+            
+        // Format the response to include question file names
+        const formattedResults = quizResults.map(result => ({
+            quizId: result.quiz,
+            questionFileId: result.questionFile._id,
+            questionFileName: result.questionFile.name, // Add question file name
+            userAnswers: result.userAnswers,
+            correctAnswersCount: result.correctAnswersCount,
+            incorrectAnswersCount: result.incorrectAnswersCount,
+            createdAt: result.createdAt,
+            updatedAt: result.updatedAt
+        }));
+
+        res.status(200).json(formattedResults);
+    } catch (error) {
+        next(error);
+    }
+}
 const QuizSubmitController = {
-    getQuiz,
+    getAllQuizResultByUserId,
     submitQuiz
 };
 module.exports = QuizSubmitController;

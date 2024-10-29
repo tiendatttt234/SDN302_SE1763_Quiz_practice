@@ -12,6 +12,7 @@ import PageNotFound from "../../errorPage/PageNotFound";
 import ImportFilePage from "../../admin/adminComponnents/importQuestion";
 import BlogList from "../../user/BlogList";
 import BlogDetail from "../../user/BlogDetail";
+import QuizAttemptHistory from "../../user/QuizAttemptHistory";
 
 export default function UserDefaultPage() {
   return (
@@ -23,9 +24,10 @@ export default function UserDefaultPage() {
             {/* Làm quiz */}
             <Route path="/quiz/attempt/:id" element={<QuizAttempt />} />
             <Route path="/quiz-result" element={<QuizResults />} />
+            <Route path="/quizHistory" element={<QuizAttemptHistory/>}/>
 
             {/* Chỉnh sửa tệp câu hỏi  */}
-            <Route path='/flash' element={<FlashCardPage/>}/>
+            <Route path='/flash/:id' element={<FlashCardPage/>}/>
             <Route path="/addquestion" element={<AddQuestion />} />
             <Route path="/viewques" element={<ViewQuestion />} />
             <Route path="/viewques/:id" element={<ViewQuestionDetail />} />

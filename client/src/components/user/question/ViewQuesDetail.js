@@ -198,24 +198,28 @@ function ViewQuestionDetail() {
         </div>
       ))}
 
-      <div>
-        <button
-          className="edit-add-question-button"
-          onClick={() => navigate(`/user/updatequestion/${id}`)}
-        >
-          Thêm hoặc chỉnh sửa câu hỏi
-        </button>
-      </div>
-      <div className="action-buttons">
-        {editedData && (
-          <button className="save-button" onClick={handleSave}>
-            Lưu
-          </button>
-        )}
-        <button className="back-button" onClick={handleBack}>
-          Trở về
-        </button>
-      </div>
+<div className="button-container">
+  <button
+    className="edit-add-question-button"
+    onClick={() => navigate(`/user/updatequestion/${id}`)}
+  >
+    Thêm hoặc chỉnh sửa câu hỏi
+  </button>
+  <button
+    className="flash-button"
+    onClick={() => navigate(`/flash/${id}`)}
+  >
+    Chuyển đến Flash
+  </button>
+  {editedData && (
+    <button className="save-button" onClick={handleSave}>
+      Lưu
+    </button>
+  )}
+  <button className="back-button" onClick={handleBack}>
+    Trở về
+  </button>
+</div>
     </div>
   );
 }

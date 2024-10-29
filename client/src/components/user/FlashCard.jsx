@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import "./styles/FlashCard.css"; // Assuming you keep your CSS file here
+import { useNavigate, useParams } from "react-router-dom";
+import "./styles/FlashCard.css";
 
 const FlashcardPage = () => {
   const [quizData, setQuizData] = useState([]);
@@ -12,50 +12,54 @@ const FlashcardPage = () => {
   const [questionFileName, setQuestionFileName] = useState("");
   const [questionCount, setQuestionCount] = useState(0);
   const navigate = useNavigate();
-
-  // giả sử có userId và questionfileId của client
-  const [userId] = useState("6718b40f01a9ac9b0e084342");
-  const [questionFileId] = useState("671bb0a19dfaf03952134943");
+  const { id } = useParams(); // Get questionFileId from URL params
+  const userId = localStorage.getItem("userId"); // Get userId from localStorage
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:9999/questionFile/getById/671bb0a19dfaf03952134943"
+          `http://localhost:9999/questionFile/getById/${id}?userId=${userId}`, // Include userId as a query parameter
+          {
+            method: "GET", // Use GET method
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
+  
         const data = await response.json();
         console.log(data);
-
+  
         const fileName = data.questionFile.name || "Tệp câu hỏi";
-
+  
         // Transform the data structure to fit the component format
-        const transformedData = data.questionFile.arrayQuestion.map(
-          (question) => ({
-            id: question.questionId,
-            question: question.content,
-            type: question.type,
-            answers: question.answers.map((answer) => ({
-              id: answer.answerId,
-              text: answer.answerContent,
-            })),
-            correctAnswers: question.answers
-              .filter((answer) => answer.isCorrect)
-              .map((answer) => answer.answerId),
-          })
-        );
-
-        // console.log(transformedData);
+        const transformedData = data.questionFile.arrayQuestion.map((question) => ({
+          id: question.questionId,
+          question: question.content,
+          type: question.type,
+          answers: question.answers.map((answer) => ({
+            id: answer.answerId,
+            text: answer.answerContent,
+          })),
+          correctAnswers: question.answers
+            .filter((answer) => answer.isCorrect)
+            .map((answer) => answer.answerId),
+        }));
+  
         setQuestionFileName(fileName);
         setQuizData(transformedData);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       }
     };
-
+  
     fetchQuizData();
-  }, []);
+  }, [id]);
+  
 
   const handleCreateQuiz = async () => {
+    const questionFileId = id;
     const quizData = {
       quizName,
       questionCount,
@@ -71,16 +75,14 @@ const FlashcardPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(quizData), // Send the data as JSON
+        body: JSON.stringify(quizData), 
       });
 
       if (response.ok) {
-        const data = await response.json(); // Nhận dữ liệu trả về từ server
-        const quizId = data.quiz._id; // Giả sử server trả về { quizId: "your_quiz_id" }
-        // Handle success (you could navigate to another page or show a success message)
-        navigate(`/user/quiz/attempt/${quizId}`);
+        const data = await response.json();
+        const quizId = data.quiz._id; 
+        navigate(`/user/quiz/attempt/${quizId}?questionFileId=${questionFileId}`);
       } else {
-        // Handle server errors
         console.error("Failed to create quiz");
       }
     } catch (error) {

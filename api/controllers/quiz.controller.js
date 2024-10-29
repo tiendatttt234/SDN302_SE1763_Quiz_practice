@@ -10,6 +10,7 @@ async function listAll(req,res,next) {
 
 async function createQuiz(req, res, next) {
     const { quizName, userId, questionFileId, questionCount } = req.body;
+    console.log(req.body);
     
     try {
         // Validate that userId and questionFileId are valid ObjectIds
@@ -75,15 +76,14 @@ async function getQuizById(req, res, next) {
     try {
         const { id } = req.params;
 
-        // Lấy quiz theo ID và populate questionFile
+        // Find the quiz by ID and populate the questionFile, including questionFileId
         const quiz = await Quiz.findById(id)
             .populate({
                 path: 'questionFile',
-                select: 'name arrayQuestion',
+                select: '_id name arrayQuestion', // Ensure _id (questionFileId), name, and arrayQuestion are included
             })
             .lean();
-        // console.log(quiz);
-        
+
         if (!quiz) {
             return res.status(404).json({ message: "Quiz not found" });
         }
@@ -92,26 +92,14 @@ async function getQuizById(req, res, next) {
             return res.status(404).json({ message: "Question file or questions not found" });
         }
 
-        // console.log(quiz.questionFile.arrayQuestion);
-        
-        // Lấy các câu hỏi đã chọn từ arrayQuestion
         const selectedQuestions = quiz.selectedQuestions.map(questionId => {
-            // console.log(questionId);
-            
-            // Tìm câu hỏi tương ứng trong arrayQuestion
-            const question = quiz.questionFile.arrayQuestion.find(q => {
-                // Kiểm tra nếu q tồn tại trước khi gọi .equals()
-                return q && q._id.equals(questionId); // Sử dụng .equals để so sánh ObjectId
-            });
-
-            // Nếu không tìm thấy câu hỏi, trả về null
+            const question = quiz.questionFile.arrayQuestion.find(q => q && q._id.equals(questionId));
             if (!question) {
                 console.log('Question not found for questionId:', questionId);
                 return null;
             }
-
-            // Nếu tìm thấy, format lại dữ liệu của câu hỏi
             return {
+                questionFileId: quiz.questionFile._id, // Include questionFileId
                 questId: question._id,
                 content: question.content,
                 type: question.type,
@@ -120,13 +108,13 @@ async function getQuizById(req, res, next) {
                     text: answer.answerContent
                 }))
             };
-        }).filter(Boolean) ;// Lọc ra các câu hỏi không tồn tại (nếu có)
+        }).filter(Boolean);
 
-        // Format dữ liệu trả về
         const quizData = {
             id: quiz._id,
             name: quiz.quizName,
             duration: quiz.duration,
+            questionFileId: quiz.questionFile._id, // Include questionFileId at the top level
             questionFileName: quiz.questionFile.name,
             questions: selectedQuestions
         };
@@ -136,6 +124,7 @@ async function getQuizById(req, res, next) {
         next(error);
     }
 }
+
 const QuizController = {
     listAll,
     createQuiz,
