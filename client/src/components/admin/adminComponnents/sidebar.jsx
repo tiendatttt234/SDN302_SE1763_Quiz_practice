@@ -35,36 +35,17 @@ const Sidebar = () => {
         </NavLink>
       </Nav.Item>
       <Nav.Item>
-        <NavLink
-          to="/admin/blog"
-          className="admin-nav-link"
-          activeClassName="active"
-        >
-          <FaUsers className="admin-sidebar-icon" /> Blog Management
-        </NavLink>
+        
       </Nav.Item>
-      <Nav.Item>
-        <NavLink
-          to="/admin/orders"
-          className="admin-nav-link"
-          activeClassName="active"
-        >
-          <FaShoppingCart className="admin-sidebar-icon" /> Order Management
-        </NavLink>
-      </Nav.Item>
-      <Nav.Item>
-        <NavLink
-          to="/admin/products"
-          className="admin-nav-link"
-          activeClassName="active"
-        >
-          <FaBox className="admin-sidebar-icon" /> Product Management
-        </NavLink>
-      </Nav.Item>
+     
       <div className="admin-info">
         <span className="admin-name">{adminName}</span>
         <Nav.Item className="logout-button">
-          <NavLink to="/" className="admin-nav-link" activeClassName="active">
+          <NavLink
+            to="/"
+            className="admin-nav-link"
+            activeClassName="active"
+          >
             <FaSignOutAlt className="admin-sidebar-icon" /> Logout
           </NavLink>
         </Nav.Item>

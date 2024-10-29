@@ -3,14 +3,37 @@ import { Table } from 'react-bootstrap';
 import Sidebar from './sidebar';
 import '../adminCSS/dashboard.css';
 import { FaSortUp, FaSortDown } from 'react-icons/fa';
-import { Pie } from 'react-chartjs-2';
+import { Pie, Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 // Fake statistics data
 const fakeStatistics = [
   { id: 1, metric: 'Total Users', value: 100 },
   { id: 2, metric: 'Active Users', value: 80 },
   { id: 3, metric: 'Inactive Users', value: 20 },
-  { id: 4, metric: 'Total Orders', value: 150 },
+  { id: 4, metric: 'Total Quizzes', value: 200 },
+  { id: 5, metric: 'Total Questions', value: 1000 },
+  { id: 6, metric: 'Total Attempts', value: 1500 },
 ];
 
 // Pie chart colors
@@ -21,7 +44,52 @@ const COLORS = {
   quizNotTaken: '#ffc107', // Yellow for quiz not taken
 };
 
-// Dashboard component
+// Chart options to maintain aspect ratio and responsiveness
+const chartOptions = {
+  maintainAspectRatio: true,
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+  },
+};
+
+// Data for pie charts
+const activeInactiveData = {
+  labels: ['Active Users', 'Inactive Users'],
+  datasets: [
+    {
+      data: [80, 20],
+      backgroundColor: [COLORS.active, COLORS.inactive],
+      hoverBackgroundColor: [COLORS.active, COLORS.inactive],
+    },
+  ],
+};
+
+const quizData = {
+  labels: ['Quiz Taken', 'Quiz Not Taken'],
+  datasets: [
+    {
+      data: [60, 40],
+      backgroundColor: [COLORS.quizTaken, COLORS.quizNotTaken],
+      hoverBackgroundColor: [COLORS.quizTaken, COLORS.quizNotTaken],
+    },
+  ],
+};
+
+// Data for bar chart (e.g., popular quizzes)
+const popularQuizzesData = {
+  labels: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4', 'Quiz 5'],
+  datasets: [
+    {
+      label: 'Attempts',
+      data: [50, 75, 30, 90, 45],
+      backgroundColor: '#007bff',
+    },
+  ],
+};
+
 const Dashboard = () => {
   const [statistics, setStatistics] = useState(fakeStatistics);
   const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
@@ -44,62 +112,68 @@ const Dashboard = () => {
     return 0;
   });
 
-  // Data for pie charts
-  const activeInactiveData = {
-    labels: ['Active Users', 'Inactive Users'],
-    datasets: [{
-      data: [80, 20],
-      backgroundColor: [COLORS.active, COLORS.inactive],
-      hoverBackgroundColor: [COLORS.active, COLORS.inactive],
-    }],
-  };
-
-  const quizData = {
-    labels: ['Quiz Taken', 'Quiz Not Taken'],
-    datasets: [{
-      data: [60, 40], // You can replace this with dynamic values
-      backgroundColor: [COLORS.quizTaken, COLORS.quizNotTaken],
-      hoverBackgroundColor: [COLORS.quizTaken, COLORS.quizNotTaken],
-    }],
-  };
-
   return (
     <div className="statistics">
-      <Sidebar /> 
+      <Sidebar />
       <div className="content">
-        <h2>Dashboard Statistics</h2>
+        <h2>Dashboard - Quiz App Statistics</h2>
 
-        {/* Flex container for pie charts */}
-        <div className="chart-container d-flex justify-content-between mb-4">
-          <div className="chart">
-            <h3>User Activity</h3>
-            <Pie data={activeInactiveData} options={{ maintainAspectRatio: false }} />
+        {/* Quick Stats Boxes */}
+        <div className="stat-boxes">
+          <div className="stat-box">
+            <h3>Total Users</h3>
+            <p>1,024</p>
           </div>
-          <div className="chart">
-            <h3>Quiz Participation</h3>
-            <Pie data={quizData} options={{ maintainAspectRatio: false }} />
+          <div className="stat-box">
+            <h3>Total Quizzes</h3>
+            <p>200</p>
+          </div>
+          <div className="stat-box">
+            <h3>Total Questions</h3>
+            <p>1,000</p>
+          </div>
+          <div className="stat-box">
+            <h3>Total Attempts</h3>
+            <p>1,500</p>
           </div>
         </div>
 
+        {/* Pie Charts */}
+        <div className="chart-container">
+          <div className="chart">
+            <h3>User Activity</h3>
+            <Pie data={activeInactiveData} options={chartOptions} />
+          </div>
+          <div className="chart">
+            <h3>Quiz Participation</h3>
+            <Pie data={quizData} options={chartOptions} />
+          </div>
+          <div className="chart popular-chart"> {/* Centered Popular Quizzes chart */}
+            <h3>Popular Quizzes</h3>
+            <Bar data={popularQuizzesData} options={chartOptions} />
+          </div>
+        </div>
+
+        {/* Data Table */}
         <Table striped bordered hover className="table">
           <thead>
             <tr>
               <th onClick={() => requestSort('id')} style={{ cursor: 'pointer' }}>
-                ID 
+                ID
                 {sortConfig.key === 'id' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
               </th>
               <th onClick={() => requestSort('metric')} style={{ cursor: 'pointer' }}>
-                Metric 
+                Metric
                 {sortConfig.key === 'metric' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
               </th>
               <th onClick={() => requestSort('value')} style={{ cursor: 'pointer' }}>
-                Value 
+                Value
                 {sortConfig.key === 'value' && (sortConfig.direction === 'asc' ? <FaSortUp /> : <FaSortDown />)}
               </th>
             </tr>
           </thead>
           <tbody>
-            {sortedStatistics.map(stat => (
+            {sortedStatistics.map((stat) => (
               <tr key={stat.id}>
                 <td>{stat.id}</td>
                 <td>{stat.metric}</td>

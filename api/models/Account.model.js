@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const mongoose_delete = require('mongoose-delete');
 
 const AccountSchema = new mongoose.Schema({
   email: {
@@ -15,6 +16,7 @@ const AccountSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
     trim: true,
+    match: [/^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/, 'Password must be at least 8 characters long and contain both letters and numbers'],
   },
   phone: {
     type: String,
@@ -28,19 +30,21 @@ const AccountSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: "",
   },
-
   userName: {
-    type: String,
+    type: String, 
     trim: true,
   },
-  roles: {
+  roles: [{
     type: mongoose.Schema.ObjectId,
-    ref: "Role",
+    ref: 'Role',
     required: true,
-  },
+  }],
 });
 
+// Apply soft delete plugin to the schema
+AccountSchema.plugin(mongoose_delete, { overrideMethods: 'all' });
+
+// Create the Account model
 const Account = mongoose.model("Account", AccountSchema);
 module.exports = Account;

@@ -4,7 +4,7 @@ const path = require('path');
 const QuestionFile = require('../models/QuestionFile.model');
 const httpError = require('http-errors');
 
-// Xử lý upload file câu hỏi
+
 const uploadQuestions = async (req, res, next) => {
     try {
         console.log("Received file upload request...");
@@ -13,7 +13,7 @@ const uploadQuestions = async (req, res, next) => {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
       
 
-        // Phân tích nội dung file thành danh sách câu hỏi
+       
         const questions = [];
         const lines = fileContent.split('\n');
         let currentQuestion = null;
@@ -24,7 +24,7 @@ const uploadQuestions = async (req, res, next) => {
                 if (currentQuestion) questions.push(currentQuestion);
                 currentQuestion = {
                     content: line.substring(2).trim(),
-                    type: 'MCQ', // Mặc định là MCQ
+                    type: 'MCQ', 
                     answers: []
                 };
             } else if (line.startsWith('A:')) {
@@ -40,7 +40,7 @@ const uploadQuestions = async (req, res, next) => {
 
         if (questions.length === 0) throw new Error("No questions parsed from the file");
 
-        // Chuẩn bị dữ liệu để lưu vào database
+       
         const questionFile = new QuestionFile({
             name: req.body.name || 'Uploaded Question Bank',
             description: req.body.description || '',
@@ -59,7 +59,7 @@ const uploadQuestions = async (req, res, next) => {
     }
 };
 
-// Lấy danh sách câu hỏi
+
 const listQuestions = async (req, res, next) => {
     try {
         const questionFiles = await QuestionFile.find().populate('createdBy', 'username email');

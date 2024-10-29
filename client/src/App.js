@@ -1,6 +1,6 @@
 import React from "react";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import PrivateRoute from "./components/core/PrivateRoute";
 import HomePage from "./components/authen/Homepage";
 import NoAccessPage from "./components/common/pages/NoAccessPage";
@@ -17,10 +17,15 @@ import BlogDetail from "./components/user/BlogDetail";
 import Profile from "./components/authen/Profile";
 
 function App() {
+  const location = useLocation();
+
+  
+  const hideHeaderRoutes = ["/admin/users", "/admin/dashboard"];
+  
   return (
     <BrowserRouter>
       <div className="App">
-        <Header />
+        {!hideHeaderRoutes.includes(location.pathname) && <Header />}
         <Routes>
           {/* Common Routes */}
           <Route path="/" element={<HomePage />} />
@@ -55,4 +60,10 @@ function App() {
   );
 }
 
-export default App;
+export default function AppWrapper() {
+  return (
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}
