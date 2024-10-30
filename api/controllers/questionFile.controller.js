@@ -108,12 +108,40 @@ async function deleteQuestionFile(req, res, next) {
   }
 }
 
+async function togglePrivacy(req, res , next){
+  try{
+    const {id} = req.params;
+    const {userId} = req.query;
+
+    if(!userId){
+      return res.status(404).json({message: "UserId is required"})
+    }
+
+    const questionFile = await QuestionFile.findOne({_id: id, createdBy: userId})
+    if(!questionFile){
+      return res.status(404).json({message: "Question file not found or unauthorized access"})
+    }
+
+    questionFile.isPrivate = !questionFile.isPrivate;
+    await questionFile.save();
+
+    return res.status(200).json({
+      message: "Privacy setting succesfully",
+      isPrivate: questionFile.isPrivate
+    });
+
+  }catch{
+      console.error("Error toggle privacy",error),
+      res.status(500).json({message: error.mesgae})
+  }
+}
 const QuestionFileController = {
   getAllQuestionFile,
   getQuestionFileById,
   createQuestionFile,
   updateQuestionFile,
   deleteQuestionFile,
+  togglePrivacy
 };
 
 module.exports = QuestionFileController;

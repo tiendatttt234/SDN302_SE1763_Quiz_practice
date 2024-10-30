@@ -78,6 +78,7 @@ function AddQuestion() {
       const newQuestionData = {
         name: title,
         description,
+        
         arrayQuestion: questions.map((q) => ({
           content: q.content,
           type: q.type,

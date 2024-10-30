@@ -41,6 +41,35 @@ function ViewQuestion() {
     }
   };
 
+  const handleTogglePrivacy = async (id, currentPrivacy) => {
+    try {
+      const userId = localStorage.getItem("userId");
+  
+      const response = await fetch(
+        `http://localhost:9999/questionFile/togglePrivacy/${id}?userId=${userId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ isPrivate: !currentPrivacy })
+        }
+      );
+  
+      if (response.ok) {
+       
+        setQuestionSets((prev) =>
+          prev.map((set) =>
+            set._id === id ? { ...set, isPrivate: !currentPrivacy } : set
+          )
+        );
+      } else {
+        console.error("Failed to toggle privacy");
+      }
+    } catch (error) {
+      console.error("Error toggling privacy:", error);
+    }
+  };
+  
+
   const handleViewDetail = (id) => {
     navigate(`/user/viewques/${id}`);
   };
@@ -106,13 +135,23 @@ function ViewQuestion() {
         {filteredQuestionFiles.map((set) => (
           <div className="question-card" key={set._id} onClick={() => handleViewDetail(set._id)}>
             <div className="card-info">
-              <span>{set.arrayQuestion?.length || 0} thuật ngữ</span> | 
+              <span>{set.arrayQuestion?.length || 0} câu hỏi</span> | 
               <span>{set.description}</span> 
             </div>
             <h2>{set.name}</h2>
+            <div
+              className={`toggle-switch ${set.isPrivate ? "private" : "public"}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTogglePrivacy(set._id, set.isPrivate);
+              }}
+            >
+              <div className="toggle-thumb" />
+            </div>
             <button className="delete-button" onClick={(e) => { e.stopPropagation(); handleDelete(set._id); }}>
               <Trash size={16} />
             </button>
+            
           </div>
         ))}
       </div>

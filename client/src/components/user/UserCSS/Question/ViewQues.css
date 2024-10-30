@@ -32,6 +32,7 @@
   cursor: pointer;
   transition: box-shadow 0.3s ease;
   position: relative;
+  margin-bottom: 15px;
 }
 
 .question-card:hover {
@@ -45,6 +46,7 @@
   color: #555;
   margin-bottom: 8px;
   gap: 5px;
+  /* justify-content: space-between; */
 }
 
 .card-info span {
@@ -85,4 +87,36 @@
 .add-new-button:hover,
 .back-button:hover {
   background-color: #0056b3;
+}
+.toggle-switch {
+  width: 50px;
+  height: 25px;
+  border-radius: 25px;
+  background-color: #ccc;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-switch.private {
+  background-color: #4caf50; /* Màu cho chế độ Riêng tư */
+}
+
+.toggle-switch.public {
+  background-color: #ccc; /* Màu cho chế độ Công khai */
+}
+
+.toggle-thumb {
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background-color: #fff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s;
+}
+
+.toggle-switch.private .toggle-thumb {
+  left: 27px; /* Vị trí khi ở chế độ Riêng tư */
 }
