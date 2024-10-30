@@ -2,6 +2,7 @@ const express = require("express");
 const Account = require("../models/Account.model");
 const Role = require("../models/Role.model");
 const accountController = require("../controllers/Account.controller");
+const {listAccount, updateAccount, addAccount, deleteAccount } = require("../controllers/accountManagement");
 const bcrypt = require("bcrypt");
 const createError = require("http-errors");
 const {
@@ -15,6 +16,10 @@ const multer = require("multer");
 //api controller
 
 const accountRouter = express.Router();
+accountRouter.get("/list", listAccount);
+accountRouter.delete("/delete/:id", deleteAccount);
+accountRouter.put("/update/:id", updateAccount);
+accountRouter.post("/add", addAccount);
 accountRouter.put("/changepass/:userName", accountController.changePass);
 //[POST] Register
 accountRouter.post("/register", async (req, res, next) => {

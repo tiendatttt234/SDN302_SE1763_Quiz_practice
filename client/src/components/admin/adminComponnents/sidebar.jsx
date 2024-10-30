@@ -35,7 +35,13 @@ const Sidebar = () => {
         </NavLink>
       </Nav.Item>
       <Nav.Item>
-        
+        <NavLink
+          to="/admin/blog"
+          className="admin-nav-link"
+          activeClassName="active"
+        >
+          <FaUsers className="admin-sidebar-icon" /> Blog Management
+        </NavLink>
       </Nav.Item>
      
       <div className="admin-info">

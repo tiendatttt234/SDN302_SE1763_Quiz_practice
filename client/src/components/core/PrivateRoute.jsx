@@ -6,7 +6,7 @@ const getUserRole = () => {
   try {
     const parsedRole = JSON.parse(roleData);
     console.log("Parsed user role:", parsedRole); // Debug log
-    return parsedRole?.name; // Returns 'manager' or 'admin'
+    return parsedRole?.[0]?.name; // Returns 'manager' or 'admin'
   } catch (error) {
     console.error("Failed to parse user role:", error);
     return null;

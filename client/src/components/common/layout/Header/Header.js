@@ -7,16 +7,17 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
   const [userName, setUserName] = useState("");
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const loadUserData = () => {
       const accessToken = localStorage.getItem("accessToken");
       const storedUserName = localStorage.getItem("userName");
       const storedRoles = localStorage.getItem("roles");
-
+      console.log(storedRoles);
+      
       if (accessToken && storedUserName && storedRoles) {
         try {
           const roleObj = JSON.parse(storedRoles);
@@ -52,35 +53,35 @@ const Header = () => {
     }, 2000);
   };
 
-  const renderRoleBasedLinks = () => {
-    if (!userRole) return null;
+  // const renderRoleBasedLinks = () => {
+  //   if (!userRole) return null;
 
-    const roleName = userRole.name.toLowerCase();
-    switch (roleName) {
-      case "admin":
-        return (
-          <Link
-            to="/admin"
-            className="nav-link"
-            style={{ color: "#333", textDecoration: "none", marginRight: "20px" }}
-          >
-            Admin
-          </Link>
-        );
-      case "manager":
-        return (
-          <Link
-            to="/managerdb"
-            className="nav-link"
-            style={{ color: "#333", textDecoration: "none", marginRight: "20px" }}
-          >
-            Manager
-          </Link>
-        );
-      default:
-        return null;
-    }
-  };
+  //   const roleName = userRole.name.toLowerCase();
+  //   switch (roleName) {
+  //     case "admin":
+  //       return (
+  //         <Link
+  //           to="/admin"
+  //           className="nav-link"
+  //           style={{ color: "#333", textDecoration: "none", marginRight: "20px" }}
+  //         >
+  //           Admin
+  //         </Link>
+  //       );
+  //     case "manager":
+  //       return (
+  //         <Link
+  //           to="/managerdb"
+  //           className="nav-link"
+  //           style={{ color: "#333", textDecoration: "none", marginRight: "20px" }}
+  //         >
+  //           Manager
+  //         </Link>
+  //       );
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -125,7 +126,7 @@ const Header = () => {
           <List size={24} />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          {renderRoleBasedLinks()}
+          {/* {renderRoleBasedLinks()} */}
           <Dropdown>
             <Dropdown.Toggle variant="light" id="dropdown-basic">
               Công cụ
