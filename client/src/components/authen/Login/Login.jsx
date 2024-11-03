@@ -27,28 +27,16 @@ const Login = () => {
       
       const { accessToken, roles, id } = response.data;
       console.log(response.data);
-      
+
       // Store user data
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("userName", userName);
       localStorage.setItem("roles", JSON.stringify(roles));
-      localStorage.setItem("userId", id); // Store userId in localStorage
-  
-      // Determine redirect path based on role name
-      let redirectPath = "/"; // Default path for users
-      
-      if (roles && roles.name) {
-        switch (roles.name.toLowerCase()) {
-          case "admin":
-            redirectPath = "/admin";
-            break;
-          case "manager":
-            redirectPath = "/managerdb";
-            break;
-          default:
-            redirectPath = "/";
-        }
-      }
+      localStorage.setItem("userId", id);
+
+      // Determine redirect path based on user roles
+      const isAdmin = roles.some(role => role.name && role.name.toLowerCase() === "admin");
+      const redirectPath = isAdmin ? "/admin" : "/";
   
       toast.success("Đăng nhập thành công! Chuyển hướng trong giây lát...", {
         position: "top-right",
