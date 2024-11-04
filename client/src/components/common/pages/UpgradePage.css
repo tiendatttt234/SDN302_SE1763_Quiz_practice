@@ -1,0 +1,78 @@
+.upgrade-container {
+    background-color: #121242;
+    color: white;
+    padding: 50px;
+    text-align: center;
+  }
+  
+  .upgrade-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  
+  .upgrade-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .upgrade-card {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+  }
+  
+  .plan-column {
+    background-color: #1e1e6d;
+    border-radius: 10px;
+    padding: 30px;
+    width: 300px;
+    text-align: left;
+  }
+  
+  .plan-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .features-list {
+    list-style-type: none;
+    padding: 0;
+    font-size: 1.2rem;
+  }
+  
+  .price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
+  .upgrade-button, .basic-button {
+    background-color: #ffcc00;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .upgrade-button:hover, .basic-button:hover {
+    background-color: #e6b800;
+  }
+  
+  .basic-plan {
+    background-color: #272756;
+  }
+  
+  .basic-button {
+    background-color: #666;
+  }
+  
+  .basic-button:hover {
+    background-color: #555;
+  }
+  
