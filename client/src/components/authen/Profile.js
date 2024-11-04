@@ -283,32 +283,6 @@ const Profile = () => {
       )}
 
       <div style={{ marginBottom: "30px" }}>
-        <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>Ảnh hồ sơ</h2>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <img
-            alt="Profile picture"
-            src={
-              "http://pm1.aminoapps.com/7239/b508c8e2b879561f650574466b86531cc90138d9r1-768-768v2_uhq.jpg"
-            }
-            style={{
-              width: "100px",
-              height: "100px",
-              borderRadius: "50%",
-              margin: "10px",
-              objectFit: "cover",
-            }}
-          />
-          <input type="file" accept="image/*" style={{ marginTop: "10px" }} />
-        </div>
-      </div>
-
-      <div style={{ marginBottom: "30px" }}>
         <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>
           Thông tin cá nhân
         </h2>
