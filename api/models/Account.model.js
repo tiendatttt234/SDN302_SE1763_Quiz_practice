@@ -38,13 +38,13 @@ const AccountSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  roles: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "Role",
-      required: true,
-    },
-  ],
+  roles:[
+  {
+    type: mongoose.Schema.ObjectId,
+    ref: "Role",
+    required: true,
+  }]
+  ,
 });
 
 // Apply soft delete plugin to the schema

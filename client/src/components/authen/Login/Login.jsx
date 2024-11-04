@@ -24,6 +24,7 @@ const Login = () => {
         userName,
         password,
       });
+      console.log(response);
       
       const { accessToken, roles, id } = response.data;
 

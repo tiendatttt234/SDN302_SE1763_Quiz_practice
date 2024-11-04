@@ -67,14 +67,23 @@ accountRouter.post("/login", async (req, res, next) => {
   try {
     const { userName, password } = req.body;
 
+    // Fetch the account by userName
     const account = await Account.findOne({ userName })
       .populate("roles")
       .exec();
-    if (!account) throw createError.NotFound("User not registered");
 
+    console.log(account); // This will now show a single account object or null
+    
+    // Check if the account exists
+    if (!account) {
+      throw createError.NotFound("User not registered");
+    }
+
+    // Compare password with the hashed password stored in the account
     const isMatch = await bcrypt.compare(password, account.password);
-    if (!isMatch)
+    if (!isMatch) {
       throw createError.Unauthorized("Incorrect Username or Password");
+    }
 
     if (!account.roles || account.roles.length === 0) {
       throw createError.Forbidden("No roles assigned to this account");

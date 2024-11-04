@@ -17,11 +17,12 @@ const FlashcardPage = () => {
   const { id } = useParams();
   const userId = localStorage.getItem("userId");
 
+
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:9999/questionFile/getById/${id}?userId=${userId}`,
+          `http://localhost:9999/questionFile/getById/${id}`,
           {
             method: "GET",
             headers: {
@@ -54,11 +55,22 @@ const FlashcardPage = () => {
         console.error("Error fetching quiz data:", error);
       }
     };
+    if(id){
+      fetchQuizData();
+    }
 
-    fetchQuizData();
   }, [id]);
 
   const handleCreateQuiz = async () => {
+
+    if (!userId) {
+      toast.error("Vui lòng đăng nhập để làm bài kiểm tra");
+      setTimeout(() => {
+        navigate(`/login`);
+      }, 1500);
+      return;
+    }
+
     const questionFileId = id;
 
     if (questionCount > quizData.length) {
@@ -79,12 +91,12 @@ const FlashcardPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(quizDataToSend), 
+        body: JSON.stringify(quizDataToSend),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const quizId = data.quiz._id; 
+        const quizId = data.quiz._id;
         toast.success("Tạo bài kiểm tra thành công!");
 
         setTimeout(() => {

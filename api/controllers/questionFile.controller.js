@@ -72,7 +72,8 @@ async function getQuestionFileByIdandUserID(req, res, next) {
 async function getQuestionFileById(req, res, next) {
   try {
     const { id } = req.params;
-
+    console.log(id);
+    
 
     // Find the question file by both ID and createdBy (userId)
     const questionFile = await QuestionFile.findOne({
