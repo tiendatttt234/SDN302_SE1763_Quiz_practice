@@ -1,10 +1,11 @@
 const express = require('express');
+const {json} = require("body-parser");
 const QuestionFileRouter = express.Router();
 const QuestionFileController = require('../controllers/questionFile.controller');
 const multer = require('multer');
 const { uploadQuestions, listQuestions } = require('../controllers/uploadQuestion');
 const upload = multer({ dest: 'uploads/' });
-
+QuestionFileRouter.use(json());
 
 QuestionFileRouter.post('/upload', upload.single('file'), uploadQuestions);
 QuestionFileRouter.get('/list', listQuestions);

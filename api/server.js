@@ -20,7 +20,7 @@ require("dotenv").config();
 const app = express();
 app.use(morgan("dev"));
 app.use(json());
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000' }))
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload());
 app.use("/public", express.static(path.join(__dirname, "public")));
@@ -36,9 +36,8 @@ app.use("/blog", BlogRouter);
 
 //kiem soat cac loi khi xu ly tren router, controller va model
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    message: err.message || "Internal Server Error",
-  });
+  console.error(err.stack);
+  res.status(err.status || 500).json({ error: err.message });
 });
 
 app.listen(process.env.PORT, process.env.HOST_NAME, async () => {
