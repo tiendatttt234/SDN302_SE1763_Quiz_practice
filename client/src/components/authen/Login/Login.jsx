@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import "./Login.css";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -26,41 +26,38 @@ const Login = () => {
       });
       
       const { accessToken, roles, id } = response.data;
-      console.log(response.data);
-      
+
       // Store user data
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("userName", userName);
       localStorage.setItem("roles", JSON.stringify(roles));
-      localStorage.setItem("userId", id); // Store userId in localStorage
+      localStorage.setItem("userId", id);
+
+      // Determine redirect path based on user roles
+      const isAdmin = roles.some(role => role.name && role.name.toLowerCase() === "admin");
+      const redirectPath = isAdmin ? "/admin" : "/";
+
+      // Dispatch storage event
+      window.dispatchEvent(new Event("storage"));
   
-      // Determine redirect path based on role name
-      let redirectPath = "/"; // Default path for users
-      
-      if (roles && roles.name) {
-        switch (roles.name.toLowerCase()) {
-          case "admin":
-            redirectPath = "/admin";
-            break;
-          case "manager":
-            redirectPath = "/managerdb";
-            break;
-          default:
-            redirectPath = "/";
-        }
-      }
-  
-      toast.success("Đăng nhập thành công! Chuyển hướng trong giây lát...", {
+      // Show success toast and handle navigation
+      const toastId = toast.success("Đăng nhập thành công! Chuyển hướng trong giây lát...", {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 1200,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
+        onClose: () => {
+          navigate(redirectPath);
+        }
       });
+
+      // Ensure toast is dismissed before navigation
       setTimeout(() => {
-        navigate(redirectPath);
-      }, 2000);
+        toast.dismiss(toastId);
+      }, 1200);
+
     } catch (error) {
       setErrorMessage("Incorrect username or password. Please try again.");
       setSuccessMessage("");

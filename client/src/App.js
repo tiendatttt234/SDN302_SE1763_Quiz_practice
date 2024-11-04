@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import PrivateRoute from "./components/core/PrivateRoute";
 import HomePage from "./components/authen/Homepage";
@@ -10,10 +11,8 @@ import Register from "./components/authen/Register/Register";
 import Footer from "./components/common/layout/Footer/Footer";
 import UserDefaultPage from "./components/common/layout/user-default-layout";
 import FlashcardPage from "./components/user/FlashCard";
-import ImportFilePage from "./components/admin/adminComponnents/importQuestion";
 import BlogList from "./components/user/BlogList";
 import BlogDetail from "./components/user/BlogDetail";
-import Profile from "./components/authen/Profile";
 
 function App() {
   const location = useLocation();
@@ -29,11 +28,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/no-access" element={<NoAccessPage />} />
-        <Route path='/flash/:id' element={<FlashcardPage/>}/>
+        <Route path="/flash/:id" element={<FlashcardPage />} />
         <Route path="/blogList" element={<BlogList />} />
         <Route path="/blog/detail/:blogId" element={<BlogDetail />} />
 
-        {/* User Routes  */}
+        {/* User Routes */}
         <Route
           path="/user/*"
           element={
@@ -63,3 +62,6 @@ export default function AppWrapper() {
     </BrowserRouter>
   );
 }
+
+// Gọi ReactDOM.render bên ngoài
+ReactDOM.render(<AppWrapper />, document.getElementById("root"));

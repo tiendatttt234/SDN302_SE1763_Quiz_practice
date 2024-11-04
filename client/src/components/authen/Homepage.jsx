@@ -1,165 +1,133 @@
-import React, { useState } from "react";
-import { CaretLeft, CaretRight } from "react-bootstrap-icons";
-import "./Homepage.css";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function HomePage() {
-  const [currentIndex1, setCurrentIndex1] = useState(0);
-  const [currentIndex2, setCurrentIndex2] = useState(0);
+const Homepage = () => {
+  const [questionSets, setQuestionSets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0); // State cho trang hiện tại
+  const itemsPerPage = 4; // Số lượng thẻ câu hỏi hiển thị mỗi trang
+  const navigate = useNavigate();
 
-  const cards1 = [
-    {
-      title: "Test1",
-    },
-    {
-      title: "Test2",
-    },
-    {
-      title: "Test3",
-    },
-    {
-      title: "Ghép thẻ",
-    },
-  ];
+  useEffect(() => {
+    fetchQuestionSets();
+  }, []);
 
-  const cards2 = [
-    {
-      title2: "IELTS Speaking 1: Hometown",
-    },
-    {
-      title2: "CKPX - Business - Auditory",
-    },
-  ];
-
-  const visibleCount1 = 4;
-  const visibleCount2 = 3;
-
-  const visibleCards1 = [...cards1, ...cards1].slice(
-    currentIndex1,
-    currentIndex1 + visibleCount1
-  );
-
-  const visibleCards2 = [...cards2, ...cards2].slice(
-    currentIndex2,
-    currentIndex2 + visibleCount2
-  );
-
-  const next1 = () => {
-    setCurrentIndex1((prevIndex) => (prevIndex + 1) % cards1.length);
+  const fetchQuestionSets = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`http://localhost:9999/questionFile/list`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setQuestionSets(data.questionFiles);
+    } catch (error) {
+      console.error("Error fetching question sets:", error);
+      setError("Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const prev1 = () => {
-    setCurrentIndex1(
-      (prevIndex) => (prevIndex - 1 + cards1.length) % cards1.length
-    );
+  const handleCardClick = (id) => {
+    navigate(`/flash/${id}`);
   };
 
-  const next2 = () => {
-    setCurrentIndex2((prevIndex) => (prevIndex + 1) % cards2.length);
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1); // Chuyển sang trang tiếp theo
   };
 
-  const prev2 = () => {
-    setCurrentIndex2(
-      (prevIndex) => (prevIndex - 1 + cards2.length) % cards2.length
-    );
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1); // Quay lại trang trước
+    }
   };
+
+  if (isLoading) {
+    return <div>Đang tải...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
+
+  // Tính toán chỉ số bắt đầu và kết thúc cho các thẻ cần hiển thị
+  const startIndex = currentPage * itemsPerPage;
+  const currentItems = questionSets.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <div className="homepage-container">
-      <div className="homepage-section">
-        <h2>Section 1</h2>
-        <div className="homepage-content">
-          <button
-            className="homepage-arrow-button homepage-left"
-            onClick={prev1}
-          >
-            <CaretLeft />
-          </button>
-          <div className="homepage-card-container">
-            {visibleCards1.map((card, index) => (
-              <div key={index} className="homepage-card">
-                <h2>{card.title}</h2>
-                <div className="homepage-card-content">
-                  {card.imgSrc && (
-                    <img src={card.imgSrc} alt={card.alt || card.title} />
-                  )}
-                  {card.content && <p>{card.content}</p>}
-                  {card.input && (
-                    <input type="text" placeholder="Nhập đáp án" />
-                  )}
-                  {card.progress && (
-                    <div className="progress-circle">
-                      <div
-                        className="circle-segment"
-                        style={{ "--percentage": card.progress }}
-                      ></div>
-                      <span>{card.progress}%</span>
-                    </div>
-                  )}
-                  {card.time && <p>Thời gian: {card.time}</p>}
-                  {card.correct !== undefined && (
-                    <div className="result-item">
-                      <span className="icon checkmark">✓</span>
-                      <span className="count">{card.correct}</span>
-                    </div>
-                  )}
-                  {card.incorrect !== undefined && (
-                    <div className="result-item">
-                      <span className="icon crossmark">×</span>
-                      <span className="count">{card.incorrect}</span>
-                    </div>
-                  )}
-                  {card.matching && (
-                    <div className="matching-game">
-                      {card.matching.map((match, i) => (
-                        <div key={i} className="item">
-                          <span className="icon checkmark">✓</span>
-                          <p>{match.content}</p>
-                          <img src={match.imgSrc} alt={match.content} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+    <div style={{ padding: '20px', backgroundColor: '#f8f9fc', fontFamily: 'Arial, sans-serif', color: '#333' }}>
+      <div className="section" style={{ marginBottom: '40px' }}>
+        <div className="card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+          {currentItems.map((set) => (
+            <div
+              key={set._id}
+              className="card"
+              style={cardStyle}
+              onClick={() => handleCardClick(set._id)}
+            >
+              <h3 style={cardTitleStyle}>{set.name}</h3>
+              <div className="tags" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                <div className="tag" style={tagStyle}>{set.arrayQuestion?.length || 0} thuật ngữ</div>
               </div>
-            ))}
-          </div>
-          <button
-            className="homepage-arrow-button homepage-right"
-            onClick={next1}
-          >
-            <CaretRight />
-          </button>
+              <div className="user" style={userStyle}>
+                <img
+                  src="https://storage.googleapis.com/a1aa/image/9o6qArE85p6qH9betiMeReHKo95GaSiTgI7uJa2PuxeaS00OB.jpg"
+                  alt="User avatar"
+                  style={userImgStyle}
+                />
+                <span>{set.createdBy?.userName || 'Unknown'}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-
-      <div className="homepage-section">
-        <h2>Section 2</h2>
-        <div className="homepage-content">
-          <button
-            className="homepage-arrow-button homepage-left"
-            onClick={prev2}
-          >
-            <CaretLeft />
-          </button>
-          <div className="homepage-card-container">
-            {visibleCards2.map((card, index) => (
-              <div key={index} className="homepage-card homepage-card2">
-                <h2>{card.title2}</h2>
-                <p>{card.terms2}</p>
-                <p>Giáo viên: {card.teacher2}</p>
-              </div>
-            ))}
-          </div>
-          <button
-            className="homepage-arrow-button homepage-right"
-            onClick={next2}
-          >
-            <CaretRight />
-          </button>
-        </div>
+      {/* Nút điều hướng */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <button onClick={handlePreviousPage} disabled={currentPage === 0}>
+          Quay lại
+        </button>
+        <button onClick={handleNextPage} disabled={startIndex + itemsPerPage >= questionSets.length}>
+          Tiếp theo
+        </button>
       </div>
     </div>
   );
-}
+};
 
-export default HomePage;
+const cardStyle = {
+  backgroundColor: '#fff',
+  border: '1px solid #e0e0e0',
+  borderRadius: '8px',
+  padding: '20px',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  cursor: 'pointer',
+};
+
+const cardTitleStyle = {
+  fontSize: '18px',
+  margin: '0 0 10px',
+};
+
+const tagStyle = {
+  backgroundColor: '#e0e7ff',
+  color: '#4f46e5',
+  padding: '5px 10px',
+  borderRadius: '12px',
+  fontSize: '12px',
+};
+
+const userStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '10px',
+};
+
+const userImgStyle = {
+  borderRadius: '50%',
+  width: '30px',
+  height: '30px',
+};
+
+export default Homepage;
