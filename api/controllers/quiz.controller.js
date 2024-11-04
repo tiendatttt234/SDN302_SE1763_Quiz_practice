@@ -80,7 +80,7 @@ async function getQuizById(req, res, next) {
         const quiz = await Quiz.findById(id)
             .populate({
                 path: 'questionFile',
-                select: '_id name arrayQuestion', // Ensure _id (questionFileId), name, and arrayQuestion are included
+                select: '_id name arrayQuestion',
             })
             .lean();
 
@@ -114,7 +114,7 @@ async function getQuizById(req, res, next) {
             id: quiz._id,
             name: quiz.quizName,
             duration: quiz.duration,
-            questionFileId: quiz.questionFile._id, // Include questionFileId at the top level
+            questionFileId: quiz.questionFile._id,
             questionFileName: quiz.questionFile.name,
             questions: selectedQuestions
         };

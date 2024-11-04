@@ -139,9 +139,6 @@ const Header = () => {
               <Dropdown.Item as={Link} to="/user/quizHistory">
               Các bài quiz đã làm
               </Dropdown.Item>
-              <Dropdown.Item as={Link} to="#">
-              Các học phần đã thích
-              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>

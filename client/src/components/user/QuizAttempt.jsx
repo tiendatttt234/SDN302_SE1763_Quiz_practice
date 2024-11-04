@@ -33,7 +33,7 @@ export default function QuizAttempt() {
           console.log(data);
           
           setQuizData(data);
-          setQuestionFileId(data.questionFileId); // Set questionFileId from fetched data
+          setQuestionFileId(data.questionFileId); 
         } else {
           console.error("Failed to fetch quiz data");
         }

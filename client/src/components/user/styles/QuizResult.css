@@ -1,15 +1,15 @@
-.quiz-result {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px 0;
+.quiz-results-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.quiz-result h2 {
-    margin: 0;
-    font-size: 1.5em;
+.quiz-results-table th,
+.quiz-results-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
 }
 
-.quiz-result p {
-    margin: 5px 0;
+.quiz-results-table th {
+    background-color: #f2f2f2;
 }

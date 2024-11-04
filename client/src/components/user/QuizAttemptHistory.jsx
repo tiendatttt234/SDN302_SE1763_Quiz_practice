@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import "./styles/QuizResult.css"
+import "./styles/QuizResult.css";
+
 const QuizAttemptHistory = () => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,16 +44,30 @@ const QuizAttemptHistory = () => {
             {results.length === 0 ? (
                 <p>No quiz results available.</p>
             ) : (
-                results.map((result) => (
-                    <div key={result.quizId} className="quiz-result">
-                        <h2>{result.questionFileName}</h2>
-                        <p>Quiz ID: {result.quizId}</p>
-                        <p>Correct Answers: {result.correctAnswersCount}</p>
-                        <p>Incorrect Answers: {result.incorrectAnswersCount}</p>
-                        <p>Submission Time: {new Date(result.createdAt).toLocaleString()}</p>
-                        <hr />
-                    </div>
-                ))
+                <table className="quiz-results-table">
+                    <thead>
+                        <tr>
+                            
+                            <th>Question File Name</th>
+                            <th>Correct Answers</th>
+                            <th>Incorrect Answers</th>
+                            <th>Submission Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {results.map((result) => (
+                            <tr key={result.quizId}>
+                                
+                                <td>{result.questionFileName}</td>
+                                <td>{result.correctAnswersCount}</td>
+                                <td>{result.incorrectAnswersCount}</td>
+                                <td>{new Date(result.createdAt).toLocaleString()}</td>
+                                <td>detail</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );
