@@ -57,7 +57,6 @@ const Header = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("userName");
     localStorage.removeItem("roles");
-    localStorage.removeItem("userId");
     setUserName("");
     setUserRole(null);
     toast.success("Đăng xuất thành công!", {
@@ -70,7 +69,7 @@ const Header = () => {
     });
     setTimeout(() => {
       navigate("/login");
-    }, 2000);
+    }, 1200);
   };
 
 

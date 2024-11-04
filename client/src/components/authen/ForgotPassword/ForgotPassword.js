@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const styles = {
     body: {
       fontFamily: "'Inter', sans-serif",
@@ -15,6 +19,11 @@ const ForgotPassword = () => {
       textAlign: "left",
       maxWidth: "400px",
       width: "100%",
+      padding: "20px",
+      border: "1px solid #E5E7EB",
+      borderRadius: "8px",
+      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+      backgroundColor: "#F9FAFB",
     },
     heading: {
       fontSize: "24px",
@@ -38,7 +47,7 @@ const ForgotPassword = () => {
       padding: "12px",
       fontSize: "16px",
       color: "#6B7280",
-      backgroundColor: "#F9FAFB",
+      backgroundColor: "#FFFFFF",
       border: "1px solid #E5E7EB",
       borderRadius: "4px",
       marginBottom: "24px",
@@ -59,6 +68,33 @@ const ForgotPassword = () => {
     },
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        "http://localhost:9999/account/forgot-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+      const data = await response.json();
+      setMessage(data.Status);
+      // Hiển thị thông báo thành công
+      if (data.Status === "Success") {
+        toast.success("Mã đặt lại mật khẩu đã được gửi tới email của bạn!");
+      } else {
+        toast.error(data.Status);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Đã xảy ra lỗi, vui lòng thử lại sau.");
+    }
+  };
+
   return (
     <div style={styles.body}>
       <div style={styles.container}>
@@ -67,7 +103,7 @@ const ForgotPassword = () => {
           Nhập email bạn đã đăng ký. Chúng tôi sẽ gửi cho bạn một liên kết để
           đăng nhập và đặt lại mật khẩu.
         </p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="email" style={styles.label}>
             Email
           </label>
@@ -77,6 +113,9 @@ const ForgotPassword = () => {
             name="email"
             placeholder="name@email.com"
             style={styles.input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <button
             type="submit"
@@ -93,7 +132,9 @@ const ForgotPassword = () => {
             Gửi
           </button>
         </form>
+        {message && <p>{message}</p>}
       </div>
+      <ToastContainer />
     </div>
   );
 };
