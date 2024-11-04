@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const ModalEditUser = ({ show, onClose, onEditUser, user }) => {
   const [updatedUser, setUpdatedUser] = useState({
@@ -14,7 +13,6 @@ const ModalEditUser = ({ show, onClose, onEditUser, user }) => {
 
   useEffect(() => {
     if (user) {
-      console.log("User being edited:", user);
       setUpdatedUser({
         email: user.email || '',
         phone: user.phone || '',
@@ -26,9 +24,8 @@ const ModalEditUser = ({ show, onClose, onEditUser, user }) => {
   }, [user]);
 
   const handleSave = async () => {
-    // Validate required fields
     if (!updatedUser.email || !updatedUser.username || updatedUser.roles.length === 0) {
-      toast.error("Please fill out all required fields (Email, Username, Roles)!", { position: 'top-right' });
+      toast.error("Please fill out all required fields (Email, Username, Roles)!");
       return;
     }
 
@@ -40,22 +37,21 @@ const ModalEditUser = ({ show, onClose, onEditUser, user }) => {
         },
         body: JSON.stringify(updatedUser)
       });
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.errors) {
-          throw new Error(errorData.errors.join(', '));
-        } else {
-          throw new Error(errorData.message || 'Failed to update account');
-        }
-      } else {
-        const data = await response.json();
+      const data = await response.json();
+
+      if (response.ok) {
         onEditUser(data.account);
-        toast.success('Account updated successfully!', { position: 'top-right' });
+        toast.success('Account updated successfully!');
         onClose();
+      } else {
+        if (data.errors) {
+          toast.error(data.errors.join(', '));
+        } else {
+          toast.error(data.message || 'Failed to update account');
+        }
       }
     } catch (error) {
-      console.error('Error:', error);
-      toast.error(`Failed to update account: ${error.message}`, { position: 'top-right' });
+      toast.error(`Failed to update account: ${error.message}`);
     }
   };
 

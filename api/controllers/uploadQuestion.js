@@ -5,15 +5,31 @@ const QuestionFile = require("../models/QuestionFile.model");
 const httpError = require("http-errors");
 
 const uploadQuestions = async (req, res, next) => {
-  try {
-    console.log("Received file upload request...");
+    try {
+        console.log("Received file upload request...");
+        const filePath = path.normalize(req.file.path);
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const questions = [];
+        const lines = fileContent.split('\n');
+        let currentQuestion = null;
 
-    const filePath = path.normalize(req.file.path);
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-
-    const questions = [];
-    const lines = fileContent.split("\n");
-    let currentQuestion = null;
+        lines.forEach(line => {
+            line = line.trim();
+            if (line.startsWith('Q:')) {
+                if (currentQuestion) questions.push(currentQuestion);
+                currentQuestion = {
+                    content: line.substring(2).trim(),
+                    type: 'MCQ', 
+                    answers: []
+                };
+            } else if (line.startsWith('A:')) {
+                const isCorrect = line.endsWith('(correct)');
+                currentQuestion.answers.push({
+                    answerContent: line.replace('(correct)', '').substring(2).trim(),
+                    isCorrect
+                });
+            }
+        });
 
     lines.forEach((line) => {
       line = line.trim();

@@ -1,6 +1,9 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import PrivateRoute from "./components/core/PrivateRoute";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import HomePage from "./components/authen/Homepage";
 import NoAccessPage from "./components/common/pages/NoAccessPage";
 import AdminDefaultPage from "./components/common/layout/admin-default-layout";
