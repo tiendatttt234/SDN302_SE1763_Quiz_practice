@@ -1,6 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import PrivateRoute from "./components/core/PrivateRoute";
 import HomePage from "./components/authen/Homepage";
 import NoAccessPage from "./components/common/pages/NoAccessPage";
@@ -21,7 +20,9 @@ function App() {
   
   return (
     <div className="App">
-      {!hideHeaderRoutes.includes(location.pathname) && <Header />}
+      {!hideHeaderRoutes.includes(location.pathname) && (
+        <Header key={location.pathname} />
+      )}
       <Routes>
         {/* Common Routes */}
         <Route path="/" element={<HomePage />} />
@@ -44,7 +45,7 @@ function App() {
         <Route
           path="/admin/*"
           element={
-            <PrivateRoute element={<AdminDefaultPage />} requiredRole="admin" />
+            <PrivateRoute element={<AdminDefaultPage />} requiredRole="user" />
           }
         />
 
@@ -55,13 +56,4 @@ function App() {
   );
 }
 
-export default function AppWrapper() {
-  return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-}
-
-// Gọi ReactDOM.render bên ngoài
-ReactDOM.render(<AppWrapper />, document.getElementById("root"));
+export default App;

@@ -1,39 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./styles/FlashCard.css";
 
 const FlashcardPage = () => {
   const [quizData, setQuizData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [showModal, setShowModal] = useState(false); // Modal visibility state
+  const [showModal, setShowModal] = useState(false);
   const [quizName, setQuizName] = useState("");
   const [questionFileName, setQuestionFileName] = useState("");
   const [questionCount, setQuestionCount] = useState(0);
   const navigate = useNavigate();
-  const { id } = useParams(); // Get questionFileId from URL params
-  const userId = localStorage.getItem("userId"); // Get userId from localStorage
+  const { id } = useParams();
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:9999/questionFile/getById/${id}?userId=${userId}`, // Include userId as a query parameter
+          `http://localhost:9999/questionFile/getById/${id}?userId=${userId}`,
           {
-            method: "GET", // Use GET method
+            method: "GET",
             headers: {
               "Content-Type": "application/json",
             },
           }
         );
-  
+
         const data = await response.json();
         console.log(data);
-  
+
         const fileName = data.questionFile.name || "Tệp câu hỏi";
-  
-        // Transform the data structure to fit the component format
+
         const transformedData = data.questionFile.arrayQuestion.map((question) => ({
           id: question.questionId,
           question: question.content,
@@ -46,50 +47,58 @@ const FlashcardPage = () => {
             .filter((answer) => answer.isCorrect)
             .map((answer) => answer.answerId),
         }));
-  
+
         setQuestionFileName(fileName);
         setQuizData(transformedData);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
       }
     };
-  
+
     fetchQuizData();
   }, [id]);
-  
 
   const handleCreateQuiz = async () => {
     const questionFileId = id;
-    const quizData = {
+
+    if (questionCount > quizData.length) {
+      toast.error("Số lượng câu hỏi không hợp lệ. Vui lòng nhập lại.");
+      return;
+    }
+
+    const quizDataToSend = {
       quizName,
       questionCount,
       userId,
       questionFileId,
     };
-    if (questionCount > quizData.length) {
-      return;
-    }
+
     try {
       const response = await fetch("http://localhost:9999/quiz/create-quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(quizData), 
+        body: JSON.stringify(quizDataToSend), 
       });
 
       if (response.ok) {
         const data = await response.json();
         const quizId = data.quiz._id; 
-        navigate(`/user/quiz/attempt/${quizId}?questionFileId=${questionFileId}`);
+        toast.success("Tạo bài kiểm tra thành công!");
+
+        setTimeout(() => {
+          navigate(`/user/quiz/attempt/${quizId}?questionFileId=${questionFileId}`);
+        }, 2000);
       } else {
-        console.error("Failed to create quiz");
+        toast.error("Không thể tạo bài kiểm tra");
       }
     } catch (error) {
       console.error("Error creating quiz:", error);
+      toast.error("Lỗi khi tạo bài kiểm tra");
     }
 
-    setShowModal(false); // Close the modal
+    setShowModal(false);
   };
 
   const handleFlip = () => {
@@ -100,14 +109,14 @@ const FlashcardPage = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === quizData.length - 1 ? 0 : prevIndex + 1
     );
-    setIsFlipped(false); // Reset the flip when moving to the next card
+    setIsFlipped(false);
   };
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? quizData.length - 1 : prevIndex - 1
     );
-    setIsFlipped(false); // Reset the flip when moving to the previous card
+    setIsFlipped(false);
   };
 
   if (!quizData.length) {
@@ -116,6 +125,7 @@ const FlashcardPage = () => {
 
   return (
     <div className="flashcard-wrapper">
+      <ToastContainer />
       <div>
         <h1>{questionFileName}</h1>
       </div>
