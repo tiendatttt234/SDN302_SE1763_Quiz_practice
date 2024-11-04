@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const ModalAddNewUser = ({ open, onClose, onAddUser }) => {
   const [newUser, setNewUser] = useState({
@@ -10,13 +9,12 @@ const ModalAddNewUser = ({ open, onClose, onAddUser }) => {
     username: '',
     password: '',
     avatar: '',
-    role: '' // Single role instead of roles array
+    role: ''
   });
 
   const handleSave = async () => {
-    // Validate required fields before sending the request
     if (!newUser.email || !newUser.username || !newUser.password || !newUser.role) {
-      toast.error("Please fill out all required fields (Email, Username, Password, Role)!", { position: 'top-right' });
+      toast.error("Please fill out all required fields (Email, Username, Password, Role)!");
       return;
     }
 
@@ -29,25 +27,24 @@ const ModalAddNewUser = ({ open, onClose, onAddUser }) => {
         body: JSON.stringify(newUser)
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.errors) {
-          errorData.errors.forEach((err) => {
-            toast.error(err, { position: 'top-right' });
+      const data = await response.json();
+
+      if (response.ok) {
+        onAddUser(data.account);
+        toast.success('Account created successfully!');
+        setNewUser({ email: '', phone: '', username: '', password: '', avatar: '', role: '' });
+        onClose();
+      } else {
+        if (data.errors) {
+          data.errors.forEach((err) => {
+            toast.error(err);
           });
         } else {
-          throw new Error(errorData.message || 'Failed to add new account');
+          toast.error(data.message || 'Failed to add new account');
         }
-      } else {
-        const data = await response.json();
-        onAddUser(data.account);
-        setNewUser({ email: '', phone: '', username: '', password: '', avatar: '', role: '' }); // Reset form
-        toast.success('Account created successfully!', { position: 'top-right' });
-        onClose(); // Close modal after successful save
       }
     } catch (error) {
-      console.error('Error:', error);
-      toast.error(`Failed to add new account: ${error.message}`, { position: 'top-right' });
+      toast.error(`Failed to add new account: ${error.message}`);
     }
   };
 
@@ -112,7 +109,6 @@ const ModalAddNewUser = ({ open, onClose, onAddUser }) => {
               as="select"
               value={newUser.role}
               onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-              className="form-select"
               required
             >
               <option value="">Select Role</option>

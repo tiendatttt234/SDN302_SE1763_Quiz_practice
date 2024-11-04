@@ -8,12 +8,8 @@ const httpError = require('http-errors');
 const uploadQuestions = async (req, res, next) => {
     try {
         console.log("Received file upload request...");
-
         const filePath = path.normalize(req.file.path);
         const fileContent = fs.readFileSync(filePath, 'utf-8');
-      
-
-       
         const questions = [];
         const lines = fileContent.split('\n');
         let currentQuestion = null;

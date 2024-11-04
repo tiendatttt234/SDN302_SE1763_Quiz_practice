@@ -1,5 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import HomePage from "./components/authen/Homepage";
 import Login from "./components/authen/Login";
@@ -26,13 +28,15 @@ import ImportFilePage from "./components/admin/adminComponnents/importQuestion";
 function App() {
   const location = useLocation();
 
-  
-  const hideHeaderRoutes = ["/admin/users", "/admin/dashboard"];
+  const hideHeaderAndFooterRoutes = ["/admin/users", "/admin/dashboard"];
 
   return (
     <div className="App">
-    
-      {!hideHeaderRoutes.includes(location.pathname) && <Header />}
+      {/* ToastContainer luôn sẵn sàng hiển thị thông báo */}
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      {/* Hiển thị Header nếu không thuộc các route cần ẩn */}
+      {!hideHeaderAndFooterRoutes.includes(location.pathname) && <Header />}
 
       <Routes>
         <Route path="/user/*" element={<UserDefaultPage />} />
@@ -57,8 +61,8 @@ function App() {
         <Route path="/admin/dashboard" element={<Dashboard />} />
       </Routes>
 
-      
-      <Footer />
+      {/* Hiển thị Footer nếu không thuộc các route cần ẩn */}
+      {!hideHeaderAndFooterRoutes.includes(location.pathname) && <Footer />}
     </div>
   );
 }
