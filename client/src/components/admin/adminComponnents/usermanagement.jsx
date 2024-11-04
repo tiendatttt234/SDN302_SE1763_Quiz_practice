@@ -4,7 +4,6 @@ import ModalAddNewUser from './modalAdd';
 import ModalEditUser from './modalEdit';
 import ModalDeleteUser from './modalDelete';
 import Sidebar from './sidebar';
-import '../adminCSS/usermanagement.css';
 import { FaSortUp, FaSortDown } from 'react-icons/fa';
 
 const UserManagement = () => {

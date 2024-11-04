@@ -52,7 +52,7 @@ function App() {
         <Route path="/flash" element={<Flashcard />} />
         <Route path="/blogList" element={<BlogList />} />
         <Route path="/blogDetail" element={<BlogDetail />} />
-        <Route path="/addQuestion" element={<ImportFilePage />} />
+        <Route path="/user/addQuestion" element={<ImportFilePage />} />
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
       </Routes>
