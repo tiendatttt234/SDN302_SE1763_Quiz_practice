@@ -55,7 +55,7 @@ function ManageBlog() {
     <Container>
       <h2>Blog List</h2>
       <Button variant="primary">
-        <Link to="/managerdb/manageBlog/add-blog" style={{color: "white"}}>
+        <Link to="/admin/manage/blog/add" style={{color: "white"}}>
         Add New
         </Link>
       </Button>

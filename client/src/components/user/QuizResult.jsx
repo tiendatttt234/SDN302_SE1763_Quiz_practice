@@ -45,7 +45,7 @@ export default function QuizResult() {
       <p>
         Correct Answers: {correctCount} / {totalCount}
       </p>
-      <p>Time taken: {results.newQuizResult?.createdAt}</p>
+      <p>Time create quiz: {results.newQuizResult?.createdAt}</p>
       <div style={{ width: "300px", margin: "auto" }}>
         <Pie data={data} />
       </div>

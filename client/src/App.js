@@ -18,12 +18,11 @@ import Profile from "./components/authen/Profile";
 function App() {
   const location = useLocation();
 
-  const hideHeaderRoutes = ["/admin/users", "/admin/dashboard"];
+  const hideHeaderRoutes = ["/admin/users", "/admin/dashboard", "/admin/manage/blog"];
   
   return (
     <div className="App">
-      {/* {!hideHeaderRoutes.includes(location.pathname) && <Header />} */}
-      <Header/>
+      {!hideHeaderRoutes.includes(location.pathname) && <Header />}
       <Routes>
         {/* Common Routes */}
         <Route path="/" element={<HomePage />} />
@@ -50,8 +49,7 @@ function App() {
           }
         />
 
-        <Route path="/addQuestion" element={<ImportFilePage/>}/>
-      <Route path="/*" element={<NoAccessPage />} />
+        <Route path="/*" element={<NoAccessPage />} />
       </Routes>
       <Footer />
     </div>

@@ -1,18 +1,37 @@
 import React from "react";
-import { NavLink } from "react-router-dom"; // Change import from Link to NavLink
+import { NavLink, useNavigate } from "react-router-dom"; // Thêm useNavigate
 import { Nav } from "react-bootstrap";
 import {
   FaTachometerAlt,
   FaUsers,
-  FaShoppingCart,
-  FaBox,
   FaSignOutAlt,
 } from "react-icons/fa"; // Import icons
 
 import "../adminCSS/sidebar.css";
+import { toast } from "react-toastify"; // Import toast for notifications
 
 const Sidebar = () => {
   const adminName = "Admin Name"; // Replace with the actual admin name or prop
+  const navigate = useNavigate(); // useNavigate hook for navigation
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("roles");
+    localStorage.removeItem("userId");
+    toast.success("Đăng xuất thành công!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 2000);
+  };
 
   return (
     <Nav className="flex-column admin-sidebar">
@@ -36,24 +55,23 @@ const Sidebar = () => {
       </Nav.Item>
       <Nav.Item>
         <NavLink
-          to="/admin/blog"
+          to="/admin/manage/blog"
           className="admin-nav-link"
           activeClassName="active"
         >
           <FaUsers className="admin-sidebar-icon" /> Blog Management
         </NavLink>
       </Nav.Item>
-     
+
       <div className="admin-info">
         <span className="admin-name">{adminName}</span>
         <Nav.Item className="logout-button">
-          <NavLink
-            to="/"
-            className="admin-nav-link"
-            activeClassName="active"
+          <button
+            onClick={handleLogout}
+            className="admin-nav-link logout-link"
           >
             <FaSignOutAlt className="admin-sidebar-icon" /> Logout
-          </NavLink>
+          </button>
         </Nav.Item>
       </div>
     </Nav>
