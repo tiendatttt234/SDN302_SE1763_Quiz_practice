@@ -1,22 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, X, List } from "react-bootstrap-icons";
+import { Search, X } from "react-bootstrap-icons";
 import { Dropdown } from "react-bootstrap";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
-  const [userName, setUserName] = useState("");
+  const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
   const [userRole, setUserRole] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+
+  
   
   useEffect(() => {
+    
     const loadUserData = () => {
       const accessToken = localStorage.getItem("accessToken");
       const storedUserName = localStorage.getItem("userName");
       const storedRoles = localStorage.getItem("roles");
-      console.log(storedRoles);
+
+      const handleStorageChange = () => {
+        const updatedUserName = localStorage.getItem("userName");
+        setUserName(updatedUserName || "");
+      };
+  
+      // Lắng nghe sự kiện `storage`
+      window.addEventListener("storage", handleStorageChange);
+      const handleStorageChange1 = (event) => {
+        if (event.key === 'userName') {
+          setUserName(event.newValue);
+        }
+      };
+  
+      window.addEventListener('storage', handleStorageChange1);
       
       if (accessToken && storedUserName && storedRoles) {
         try {
@@ -27,11 +44,13 @@ const Header = () => {
           console.error("Error parsing roles:", error);
         }
       }
-    };
-
-    loadUserData();
+      window.addEventListener("storage", loadUserData);
+    return () => window.removeEventListener("storage", handleStorageChange),
+    window.removeEventListener('storage', handleStorageChange1),
     window.addEventListener("storage", loadUserData);
-    return () => window.removeEventListener("storage", loadUserData);
+    };
+    
+    loadUserData();
   }, []);
 
   const handleLogout = () => {
@@ -42,7 +61,7 @@ const Header = () => {
     setUserRole(null);
     toast.success("Đăng xuất thành công!", {
       position: "top-right",
-      autoClose: 2000,
+      autoClose: 1200,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -53,35 +72,6 @@ const Header = () => {
     }, 2000);
   };
 
-  // const renderRoleBasedLinks = () => {
-  //   if (!userRole) return null;
-
-  //   const roleName = userRole.name.toLowerCase();
-  //   switch (roleName) {
-  //     case "admin":
-  //       return (
-  //         <Link
-  //           to="/admin"
-  //           className="nav-link"
-  //           style={{ color: "#333", textDecoration: "none", marginRight: "20px" }}
-  //         >
-  //           Admin
-  //         </Link>
-  //       );
-  //     case "manager":
-  //       return (
-  //         <Link
-  //           to="/managerdb"
-  //           className="nav-link"
-  //           style={{ color: "#333", textDecoration: "none", marginRight: "20px" }}
-  //         >
-  //           Manager
-  //         </Link>
-  //       );
-  //     default:
-  //       return null;
-  //   }
-  // };
 
   const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
@@ -123,7 +113,6 @@ const Header = () => {
           <h1 style={{ margin: 0 }}>Quiz</h1>
         </Link>
         <div onClick={toggleSidebar} className="sidebar-toggle">
-          <List size={24} />
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
           {/* {renderRoleBasedLinks()} */}
@@ -165,8 +154,8 @@ const Header = () => {
           <button
             style={{
               backgroundColor: "rgb(66,85,255)",
-              borderRadius: "20%",
-              padding: "6px",
+              borderRadius: "25%",
+              padding: "8px",
             }}
           >
             <Search />

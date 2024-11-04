@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import PrivateRoute from "./components/core/PrivateRoute";
 import HomePage from "./components/authen/Homepage";
@@ -19,22 +20,23 @@ function App() {
   const location = useLocation();
 
   const hideHeaderRoutes = ["/admin/users", "/admin/dashboard"];
-  
+
   return (
     <div className="App">
+      {/* Nếu bạn muốn ẩn Header cho một số route, bỏ comment dòng bên dưới */}
       {/* {!hideHeaderRoutes.includes(location.pathname) && <Header />} */}
-      <Header/>
+      <Header />
       <Routes>
         {/* Common Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/no-access" element={<NoAccessPage />} />
-        <Route path='/flash/:id' element={<FlashcardPage/>}/>
+        <Route path="/flash/:id" element={<FlashcardPage />} />
         <Route path="/blogList" element={<BlogList />} />
         <Route path="/blog/detail/:blogId" element={<BlogDetail />} />
 
-        {/* User Routes  */}
+        {/* User Routes */}
         <Route
           path="/user/*"
           element={
@@ -50,8 +52,8 @@ function App() {
           }
         />
 
-        <Route path="/addQuestion" element={<ImportFilePage/>}/>
-      <Route path="/*" element={<NoAccessPage />} />
+        <Route path="/addQuestion" element={<ImportFilePage />} />
+        <Route path="/*" element={<NoAccessPage />} />
       </Routes>
       <Footer />
     </div>
@@ -65,3 +67,6 @@ export default function AppWrapper() {
     </BrowserRouter>
   );
 }
+
+// Gọi ReactDOM.render bên ngoài
+ReactDOM.render(<AppWrapper />, document.getElementById("root"));

@@ -167,6 +167,15 @@ const PasswordChange = ({ userName }) => {
   );
 };
 const Profile = () => {
+  const [userName, setUserName] = useState(
+    localStorage.getItem("userName") || ""
+  );
+
+  const handleUpdateUserName = (e) => {
+    e.preventDefault(); // Ngăn chặn reload trang khi submit form
+    localStorage.setItem("userName", userName); // Cập nhật userName vào localStorage
+    // Có thể gọi API ở đây nếu cần thiết
+  };
   const [userData, setUserData] = useState({
     userName: "",
     phone: "",
@@ -235,6 +244,11 @@ const Profile = () => {
           [field]: editValues[field],
         }));
         handleEditToggle(field);
+
+        // Cập nhật lại `localStorage` khi đổi `username`
+        if (field === "userName") {
+          localStorage.setItem("userName", editValues.userName);
+        }
         showMessage(`${field} updated successfully`);
       }
     } catch (error) {
@@ -280,7 +294,6 @@ const Profile = () => {
           <img
             alt="Profile picture"
             src={
-              userData.avatar?.[0] ||
               "http://pm1.aminoapps.com/7239/b508c8e2b879561f650574466b86531cc90138d9r1-768-768v2_uhq.jpg"
             }
             style={{
@@ -299,249 +312,252 @@ const Profile = () => {
         <h2 style={{ fontSize: "18px", marginBottom: "10px" }}>
           Thông tin cá nhân
         </h2>
+        <form onSubmit={handleUpdateUserName}>
+          {/* Email Section */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px 0",
+              borderBottom: "1px solid #eee",
+            }}
+          >
+            <label style={{ flex: 1, textAlign: "left" }}>Email:</label>
+            {editStates.email ? (
+              <div
+                style={{
+                  flex: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <input
+                  type="text"
+                  value={editValues.email}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
+                  style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
+                />
+                <button
+                  onClick={() => handleFieldUpdate("email")}
+                  style={{
+                    backgroundColor: "#28a745",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => handleEditToggle("email")}
+                  style={{
+                    backgroundColor: "#dc3545",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  flex: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>{userData.email}</span>
+                <button
+                  onClick={() => handleEditToggle("email")}
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+          </div>
 
-        {/* Email Section */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "10px 0",
-            borderBottom: "1px solid #eee",
-          }}
-        >
-          <label style={{ flex: 1, textAlign: "left" }}>Email:</label>
-          {editStates.email ? (
-            <div
-              style={{
-                flex: 2,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <input
-                type="text"
-                value={editValues.email}
-                onChange={(e) =>
-                  setEditValues((prev) => ({
-                    ...prev,
-                    email: e.target.value,
-                  }))
-                }
-                style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
-              />
-              <button
-                onClick={() => handleFieldUpdate("email")}
-                style={{
-                  backgroundColor: "#28a745",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
-                }}
-              >
-                Save
-              </button>
-              <button
-                onClick={() => handleEditToggle("email")}
-                style={{
-                  backgroundColor: "#dc3545",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div
-              style={{
-                flex: 2,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>{userData.email}</span>
-              <button
-                onClick={() => handleEditToggle("email")}
-                style={{
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
-                }}
-              >
-                Edit
-              </button>
-            </div>
-          )}
-        </div>
+          {/* Username Section */}
 
-        {/* Username Section */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "10px 0",
-            borderBottom: "1px solid #eee",
-          }}
-        >
-          <label style={{ flex: 1, textAlign: "left" }}>Username:</label>
-          {editStates.userName ? (
-            <div
-              style={{
-                flex: 2,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <input
-                type="text"
-                value={editValues.userName}
-                onChange={(e) =>
-                  setEditValues((prev) => ({
-                    ...prev,
-                    userName: e.target.value,
-                  }))
-                }
-                style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
-              />
-              <button
-                onClick={() => handleFieldUpdate("userName")}
-                style={{
-                  backgroundColor: "#28a745",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
-                }}
-              >
-                Save
-              </button>
-              <button
-                onClick={() => handleEditToggle("userName")}
-                style={{
-                  backgroundColor: "#dc3545",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div
-              style={{
-                flex: 2,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>{userData.userName}</span>
-              <button
-                onClick={() => handleEditToggle("userName")}
-                style={{
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
-                }}
-              >
-                Edit
-              </button>
-            </div>
-          )}
-        </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px 0",
+              borderBottom: "1px solid #eee",
+            }}
+          >
+            <label style={{ flex: 1, textAlign: "left" }}>Username:</label>
 
-        {/* Phone Section */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "10px 0",
-            borderBottom: "1px solid #eee",
-          }}
-        >
-          <span style={{ flex: 1, textAlign: "left" }}>Phone:</span>
-          {editStates.phone ? (
-            <div
-              style={{
-                flex: 2,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <input
-                type="text"
-                value={editValues.phone}
-                onChange={(e) =>
-                  setEditValues((prev) => ({
-                    ...prev,
-                    phone: e.target.value,
-                  }))
-                }
-                style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
-              />
-              <button
-                onClick={() => handleFieldUpdate("phone")}
+            {editStates.userName ? (
+              <div
                 style={{
-                  backgroundColor: "#28a745",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
+                  flex: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                Save
-              </button>
-              <button
-                onClick={() => handleEditToggle("phone")}
+                <input
+                  type="text"
+                  value={editValues.userName}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      userName: e.target.value,
+                    }))
+                  }
+                  style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
+                />
+                <button
+                  onClick={() => handleFieldUpdate("userName")}
+                  style={{
+                    backgroundColor: "#28a745",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => handleEditToggle("userName")}
+                  style={{
+                    backgroundColor: "#dc3545",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div
                 style={{
-                  backgroundColor: "#dc3545",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
+                  flex: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div
-              style={{
-                flex: 2,
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>{userData.phone}</span>
-              <button
-                onClick={() => handleEditToggle("phone")}
+                <span>{userData.userName}</span>
+                <button
+                  onClick={() => handleEditToggle("userName")}
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Phone Section */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px 0",
+              borderBottom: "1px solid #eee",
+            }}
+          >
+            <span style={{ flex: 1, textAlign: "left" }}>Phone:</span>
+            {editStates.phone ? (
+              <div
                 style={{
-                  backgroundColor: "#007bff",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px",
+                  flex: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                Edit
-              </button>
-            </div>
-          )}
-        </div>
+                <input
+                  type="text"
+                  value={editValues.phone}
+                  onChange={(e) =>
+                    setEditValues((prev) => ({
+                      ...prev,
+                      phone: e.target.value,
+                    }))
+                  }
+                  style={{ flex: 1, marginRight: "10px" }} // Adjusted input style
+                />
+                <button
+                  onClick={() => handleFieldUpdate("phone")}
+                  style={{
+                    backgroundColor: "#28a745",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => handleEditToggle("phone")}
+                  style={{
+                    backgroundColor: "#dc3545",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  flex: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <span>{userData.phone}</span>
+                <button
+                  onClick={() => handleEditToggle("phone")}
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "5px 10px",
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+            )}
+          </div>
+        </form>
       </div>
 
-      <PasswordChange />
+      <PasswordChange userName={userName} />
     </div>
   );
 };

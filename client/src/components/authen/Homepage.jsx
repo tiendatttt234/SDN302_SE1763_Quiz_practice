@@ -5,6 +5,8 @@ const Homepage = () => {
   const [questionSets, setQuestionSets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0); // State cho trang hiện tại
+  const itemsPerPage = 4; // Số lượng thẻ câu hỏi hiển thị mỗi trang
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,16 +16,12 @@ const Homepage = () => {
   const fetchQuestionSets = async () => {
     setIsLoading(true);
     try {
-      const userId = localStorage.getItem("userId");
-      const response = await fetch(
-        `http://localhost:9999/questionFile/getAll?userId=${userId}`
-      );
+      const response = await fetch(`http://localhost:9999/questionFile/list`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      const publicQuestionSets = data.questionFileRespone.filter((set) => !set.isPrivate);
-      setQuestionSets(publicQuestionSets);
+      setQuestionSets(data.questionFiles);
     } catch (error) {
       console.error("Error fetching question sets:", error);
       setError("Có lỗi xảy ra khi tải dữ liệu. Vui lòng thử lại sau.");
@@ -36,6 +34,16 @@ const Homepage = () => {
     navigate(`/flash/${id}`);
   };
 
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1); // Chuyển sang trang tiếp theo
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1); // Quay lại trang trước
+    }
+  };
+
   if (isLoading) {
     return <div>Đang tải...</div>;
   }
@@ -44,11 +52,15 @@ const Homepage = () => {
     return <div className="error">{error}</div>;
   }
 
+  // Tính toán chỉ số bắt đầu và kết thúc cho các thẻ cần hiển thị
+  const startIndex = currentPage * itemsPerPage;
+  const currentItems = questionSets.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div style={{ padding: '20px', backgroundColor: '#f8f9fc', fontFamily: 'Arial, sans-serif', color: '#333' }}>
       <div className="section" style={{ marginBottom: '40px' }}>
-        <div className="card-container" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-          {questionSets.map((set) => (
+        <div className="card-container" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px' }}>
+          {currentItems.map((set) => (
             <div
               key={set._id}
               className="card"
@@ -65,11 +77,20 @@ const Homepage = () => {
                   alt="User avatar"
                   style={userImgStyle}
                 />
-                <span>tiendattt234</span>
+                <span>{set.createdBy?.userName || 'Unknown'}</span>
               </div>
             </div>
           ))}
         </div>
+      </div>
+      {/* Nút điều hướng */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+        <button onClick={handlePreviousPage} disabled={currentPage === 0}>
+          Quay lại
+        </button>
+        <button onClick={handleNextPage} disabled={startIndex + itemsPerPage >= questionSets.length}>
+          Tiếp theo
+        </button>
       </div>
     </div>
   );
@@ -80,9 +101,8 @@ const cardStyle = {
   border: '1px solid #e0e0e0',
   borderRadius: '8px',
   padding: '20px',
-  width: '30%',
   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  cursor: 'pointer', // Thêm con trỏ chuột
+  cursor: 'pointer',
 };
 
 const cardTitleStyle = {

@@ -32,12 +32,6 @@ const Footer = () => {
               <li>
                 <a href="#">Lời giải</a>
               </li>
-              <li>
-                <a href="#">Lặp lại ngắt quãng</a>
-              </li>
-              <li>
-                <a href="#">Quizlet Plus</a>
-              </li>
             </ul>
           </div>
           <div className="footer-column">
@@ -52,20 +46,11 @@ const Footer = () => {
               <li>
                 <a href="#">Blog</a>
               </li>
-              <li>
-                <a href="#">Quizlet Plus cho giáo viên</a>
-              </li>
             </ul>
           </div>
           <div className="footer-column">
             <h3>Tài nguyên</h3>
             <ul>
-              <li>
-                <a href="#">Trung tâm hỗ trợ</a>
-              </li>
-              <li>
-                <a href="#">Đăng ký</a>
-              </li>
               <li>
                 <a href="#">Quy tắc danh dự</a>
               </li>
@@ -77,15 +62,6 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#">Điều khoản</a>
-              </li>
-              <li>
-                <a href="#">Chính sách quảng cáo và cookie</a>
-              </li>
-              <li>
-                <a href="#">Quizlet cho trường học</a>
-              </li>
-              <li>
-                <a href="#">Phụ huynh</a>
               </li>
             </ul>
           </div>
