@@ -15,6 +15,7 @@ import UserDefaultPage from "./components/common/layout/user-default-layout";
 import FlashcardPage from "./components/user/FlashCard";
 import BlogList from "./components/user/BlogList";
 import BlogDetail from "./components/user/BlogDetail";
+import ImportFilePage from "./components/admin/adminComponnents/importQuestion";
 
 function App() {
   const location = useLocation();
@@ -23,6 +24,8 @@ function App() {
   
   return (
     <div className="App">
+      {/* ToastContainer luôn sẵn sàng hiển thị thông báo */}
+      <ToastContainer position="top-right" autoClose={3000} />
       {!hideHeaderRoutes.includes(location.pathname) && (
         <Header key={location.pathname} />
       )}

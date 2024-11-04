@@ -1,10 +1,11 @@
-
+/* Main dashboard container */
 .statistics {
   display: flex;
   height: 100vh;
   background-color: #f4f6f8;
 }
 
+/* Sidebar styling */
 .sidebar {
   width: 250px;
   background-color: #343a40;
@@ -39,7 +40,7 @@
   border-top: 1px solid #495057;
 }
 
-
+/* Content area styling */
 .content {
   margin-left: 250px;
   padding: 20px;
@@ -87,7 +88,7 @@
   font-weight: bold;
 }
 
-
+/* Chart container with responsive grid */
 .chart-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -95,11 +96,11 @@
   margin-bottom: 20px;
 }
 
-
+/* Expand Popular Quizzes chart */
 .chart-container .popular-chart {
-  grid-column: span 2; 
-  max-width: 800px; 
-  justify-self: center; 
+  grid-column: span 2; /* Spans across two columns */
+  max-width: 800px; /* Wider max-width for larger screens */
+  justify-self: center; /* Center align within grid */
 }
 
 .chart {
@@ -145,6 +146,7 @@
   transition: background-color 0.2s ease;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .stat-boxes, .chart-container {
     flex-direction: column;
@@ -162,7 +164,7 @@
   }
 
   .chart-container .popular-chart {
-    grid-column: span 1; 
+    grid-column: span 1; /* Reverts to single column span on smaller screens */
     max-width: 100%;
     justify-self: center;
   }
