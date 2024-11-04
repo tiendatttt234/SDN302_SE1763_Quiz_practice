@@ -2,35 +2,40 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import '../adminCSS/uploadQuestion.css'
+import '../adminCSS/uploadQuestion.css';
 
 const ImportFilePage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileContent, setFileContent] = useState("");
-  const [name, setName] = useState(""); // State for question bank name
-  const [description, setDescription] = useState(""); // State for description
-  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [fileKey, setFileKey] = useState(Date.now()); 
 
-  // Xử lý chọn file
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+
+    if (file && file.type !== "text/plain") {
+      toast.error("Only .txt files are allowed.");
+      setSelectedFile(null);
+      setFileContent("");
+      setFileKey(Date.now()); 
+      return;
+    }
+
     setSelectedFile(file);
     readFileContent(file);
   };
 
-  // Đọc nội dung file
   const readFileContent = (file) => {
     const fileReader = new FileReader();
 
     fileReader.onload = (e) => {
       setFileContent(e.target.result);
-      setIsEditing(true); // Enable editing after loading
     };
 
     fileReader.readAsText(file);
   };
 
-  // Hàm lưu nội dung file đã chỉnh sửa cùng với thông tin bổ sung từ form
   const handleSave = async () => {
     if (!selectedFile || !name) {
       toast.error("Please select a file and fill out all fields.");
@@ -49,24 +54,20 @@ const ImportFilePage = () => {
 
       toast.success("File uploaded and saved successfully!");
       console.log("Response from server:", response.data);
-      setIsEditing(false);
       setName("");
       setDescription("");
       setSelectedFile(null);
       setFileContent("");
+      setFileKey(Date.now()); 
     } catch (error) {
       toast.error("Failed to save file.");
       console.error("Error saving file:", error);
     }
   };
 
-  const handleContentChange = (event) => {
-    setFileContent(event.target.value);
-  };
-
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-      <h2>Import, Edit, and Upload File</h2>
+      <h2>Import and Upload File</h2>
 
       <div style={{ marginBottom: '15px' }}>
         <label style={{ display: 'block', marginBottom: '5px' }}>Question Bank Name:</label>
@@ -90,19 +91,17 @@ const ImportFilePage = () => {
 
       <input 
         type="file" 
+        key={fileKey}
         onChange={handleFileChange} 
         style={{ marginBottom: '10px' }}
       />
       
-      {isEditing && (
+      {fileContent && (
         <>
-          <h3>File Content (Editable):</h3>
-          <textarea
-            value={fileContent}
-            onChange={handleContentChange}
-            rows="10"
-            style={{ width: '100%', marginBottom: '10px' }}
-          />
+          <h3>File Content:</h3>
+          <pre style={{ width: '100%', marginBottom: '10px', background: '#f5f5f5', padding: '10px', borderRadius: '4px', whiteSpace: 'pre-wrap' }}>
+            {fileContent}
+          </pre>
           
           <button onClick={handleSave} style={{ marginBottom: '20px' }}>
             Upload and Save to Database
