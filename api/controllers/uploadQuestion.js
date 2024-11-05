@@ -1,81 +1,64 @@
-// controllers/uploadQuestion.controller.js
+
 const fs = require("fs");
 const path = require("path");
 const QuestionFile = require("../models/QuestionFile.model");
 const httpError = require("http-errors");
 
+
 const uploadQuestions = async (req, res, next) => {
-    try {
-        console.log("Received file upload request...");
-        const filePath = path.normalize(req.file.path);
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const questions = [];
-        const lines = fileContent.split('\n');
-        let currentQuestion = null;
+  try {
+    console.log("Received file upload request...");
+    const file = req.files.file; 
+    if (!file) {
+      throw new Error("No file uploaded");
+    }
+    const fileContent = file.data.toString('utf-8');
+    const questions = [];
+    const lines = fileContent.split('\n');
+    let currentQuestion = null;
 
-        lines.forEach(line => {
-            line = line.trim();
-            if (line.startsWith('Q:')) {
-                if (currentQuestion) questions.push(currentQuestion);
-                currentQuestion = {
-                    content: line.substring(2).trim(),
-                    type: 'MCQ', 
-                    answers: []
-                };
-            } else if (line.startsWith('A:')) {
-                const isCorrect = line.endsWith('(correct)');
-                currentQuestion.answers.push({
-                    answerContent: line.replace('(correct)', '').substring(2).trim(),
-                    isCorrect
-                });
-            }
-        });
-
-    lines.forEach((line) => {
+    lines.forEach(line => {
       line = line.trim();
-      if (line.startsWith("Q:")) {
+      if (line.startsWith('Q:')) {
         if (currentQuestion) questions.push(currentQuestion);
         currentQuestion = {
           content: line.substring(2).trim(),
-          type: "MCQ",
-          answers: [],
+          type: 'MCQ',
+          answers: []
         };
-      } else if (line.startsWith("A:")) {
-        const isCorrect = line.endsWith("(correct)");
+      } else if (line.startsWith('A:')) {      
+        const isCorrect = line.endsWith('(correct)');
         currentQuestion.answers.push({
-          answerContent: line.replace("(correct)", "").substring(2).trim(),
-          isCorrect,
+          answerContent: line.replace('(correct)', '').substring(2).trim(),
+          isCorrect
         });
       }
     });
-
     if (currentQuestion) questions.push(currentQuestion);
-
-    if (questions.length === 0)
-      throw new Error("No questions parsed from the file");
-
+    if (questions.length === 0) throw new Error("No questions parsed from the file");
     const questionFile = new QuestionFile({
       name: req.body.name || "Uploaded Question Bank",
       description: req.body.description || "",
       createdBy: req.body.createdBy || null,
-      arrayQuestion: questions,
+      arrayQuestion: questions
     });
 
     await questionFile.save();
     console.log("Saved question file successfully:", questionFile);
 
+   
     res.json({
       message: "Questions uploaded and saved successfully",
-      questionFile,
+      questionFile
     });
-    fs.unlinkSync(filePath);
+
   } catch (error) {
     console.error("Error during file processing:", error.message);
     next(httpError(500, "Failed to process the uploaded file"));
   }
 };
 
-// controllers/uploadQuestion.controller.js
+
 const listQuestions = async (req, res, next) => {
   try {
     const questionFiles = await QuestionFile.find({
