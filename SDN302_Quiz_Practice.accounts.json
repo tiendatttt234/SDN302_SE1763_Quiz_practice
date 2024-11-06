@@ -1,0 +1,43 @@
+[{
+  "_id": {
+    "$oid": "6728ffbbe6782ef099d952b4"
+  },
+  "email": "annthe170622@fpt.edu.vn",
+  "password": "$2b$10$bLDB7jps/CoS64WwtQQMmO7W6kf4kTfOjaD8ikGIUAG8MFMAT1Sdi",
+  "userName": "thanh2",
+  "roles": {
+    "$oid": "6718b34201a9ac9b0e08433a"
+  },
+  "deleted": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6729688ea6486e08fbcbfea0"
+  },
+  "email": "thanhanbbnss@gmail.com",
+  "password": "$2b$10$izcuLseFTbLDpQBVtWSJc.jnf4FIc/dsbNrnIF6gc9C2EYp2C4c.2",
+  "userName": "thanh1",
+  "roles": [
+    {
+      "$oid": "6718b34201a9ac9b0e08433a"
+    }
+  ],
+  "deleted": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67296a79a6486e08fbcc0314"
+  },
+  "email": "thanhantuky311@gmail.com",
+  "password": "$2b$10$BWFlmVq1rWL9B8QP2K.fwOT3Ntod28F4bSz4g8K0Xx3/Uh10u7IL6",
+  "userName": "thanhAdmin",
+  "roles": [
+    {
+      "$oid": "6718b10401a9ac9b0e084338"
+    }
+  ],
+  "deleted": false,
+  "__v": 0
+}]

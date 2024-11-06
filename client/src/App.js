@@ -23,7 +23,7 @@ import Profile from "./components/authen/Profile";
 function App() {
   const location = useLocation();
 
-  const hideHeaderRoutes = ["/admin/users", "/admin/dashboard"];
+  const hideHeaderRoutes = ["/admin/users", "/admin/dashboard", "/admin/manage/blog"];
 
   return (
     <div className="App">
@@ -55,7 +55,7 @@ function App() {
         <Route
           path="/admin/*"
           element={
-            <PrivateRoute element={<AdminDefaultPage />} requiredRole="user" />
+            <PrivateRoute element={<AdminDefaultPage />} requiredRole="admin" />
           }
         />
         <Route path="/*" element={<NoAccessPage />} />{" "}

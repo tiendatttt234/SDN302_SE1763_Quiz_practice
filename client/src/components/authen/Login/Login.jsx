@@ -13,9 +13,6 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
-  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -36,7 +33,7 @@ const Login = () => {
 
       // Determine redirect path based on user roles
       const isAdmin = roles.some(role => role.name && role.name.toLowerCase() === "admin");
-      const redirectPath = isAdmin ? "/admin" : "/";
+      const redirectPath = isAdmin ? "/admin/dashboard" : "/";
 
       // Dispatch storage event
       window.dispatchEvent(new Event("storage"));

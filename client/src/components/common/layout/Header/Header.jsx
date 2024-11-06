@@ -111,7 +111,7 @@ const Header = () => {
         }}
       >
         <Link to="/" style={{ textDecoration: "none" }}>
-          <h1 style={{ margin: 0 }}>Quiz</h1>
+          <h1 style={{ margin: 0 }}>Quiz-Practice</h1>
         </Link>
         <div onClick={toggleSidebar} className="sidebar-toggle">
         </div>

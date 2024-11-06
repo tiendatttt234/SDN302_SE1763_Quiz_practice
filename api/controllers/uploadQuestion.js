@@ -1,4 +1,3 @@
-
 const fs = require("fs");
 const path = require("path");
 const QuestionFile = require("../models/QuestionFile.model");
@@ -11,6 +10,11 @@ const uploadQuestions = async (req, res, next) => {
     const file = req.files.file; 
     if (!file) {
       throw new Error("No file uploaded");
+      
+    }
+    const fileType = path.extname(file.name).toLowerCase();
+    if (fileType !== ".txt") {
+      return res.status(400).json({ error: "Invalid file format. Only .txt files are allowed." });
     }
     const fileContent = file.data.toString('utf-8');
     const questions = [];
